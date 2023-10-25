@@ -1,4 +1,11 @@
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -23,7 +30,7 @@ export default function MainHome() {
       });
   };
   return (
-    <View style={{backgroundColor: themeColors.white, flex: 1}}>
+    <ScrollView style={{backgroundColor: themeColors.white, flex: 1}}>
       <View
         style={{
           backgroundColor: themeColors.primaryColor,
@@ -49,13 +56,18 @@ export default function MainHome() {
           WELCOME HOME, JONH !
         </Text>
       </View>
+      <View style={{width: '100%', height: 200, alignSelf: 'center'}}>
+        <Image
+          source={require('../../assets/towing.gif')}
+          style={{width: '100%', height: '100%'}}
+        />
+      </View>
       <View style={{margin: 20}}>
         <Text
           style={{
-            color: themeColors.primaryColor4,
+            color: themeColors.primaryColor2,
             fontWeight: '600',
-            fontSize: 20,
-            fontStyle: 'italic',
+            fontSize: 18,
             paddingBottom: 10,
           }}>
           Current Location
@@ -71,8 +83,9 @@ export default function MainHome() {
             style={{
               fontSize: 18,
               fontWeight: '600',
-              color: themeColors.primaryColor7,
+              color: themeColors.primaryColor2,
               paddingLeft: 10,
+              fontStyle: 'italic',
             }}>
             Dong Thanh Can Giuoc Long An
           </Text>
@@ -80,65 +93,132 @@ export default function MainHome() {
       </View>
       <Text
         style={{
-          color: themeColors.primaryColor4,
-          fontWeight: '600',
-          fontSize: 20,
-          fontStyle: 'italic',
-          paddingBottom: 10,
+          color: themeColors.primaryColor7,
+          fontWeight: '800',
+          fontSize: 24,
           marginHorizontal: 20,
         }}>
-        Our Service
+        Top Services
       </Text>
-      <View
+      <LinearGradient
+        colors={[
+          themeColors.white,
+          themeColors.white,
+          themeColors.white,
+          themeColors.primaryColor5,
+          themeColors.primaryColor5,
+          themeColors.white,
+          themeColors.white,
+          themeColors.white,
+        ]}
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           padding: 20,
-          backgroundColor: themeColors.primaryColor5,
-          marginVertical: 20,
+          backgroundColor: themeColors.primaryColor7,
         }}>
         <TouchableOpacity style={styles.box}>
           <Image
             source={require('../../assets/tow.png')}
             style={{width: '100%', height: '80%'}}
           />
-          <Text
-            style={{
-              textAlign: 'center',
-              color: themeColors.primaryColor,
-              fontSize: 20,
-              fontWeight: 600,
-            }}>
-            Emergency
-          </Text>
+          <Text style={styles.textBox}>Emergency</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.box}>
           <Image
             source={require('../../assets/maintain.png')}
             style={{width: '100%', height: '80%'}}
           />
+          <Text style={styles.textBox}>Maintaining</Text>
+        </TouchableOpacity>
+      </LinearGradient>
+      <View
+        style={{
+          backgroundColor: themeColors.white,
+          flex: 1,
+          padding: 20,
+        }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: themeColors.white,
+            paddingHorizontal: 20,
+            width: '100%',
+            borderWidth: 1,
+            borderColor: themeColors.primaryColor5,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20,
+          }}>
           <Text
             style={{
-              textAlign: 'center',
-              color: themeColors.primaryColor,
-              fontSize: 20,
-              fontWeight: 600,
+              fontSize: 18,
+              fontWeight: '500',
+              color: themeColors.primaryColor7,
+              fontStyle: 'italic',
             }}>
-            Maintaining
+            Discover near garage now !!!
+          </Text>
+          <View
+            style={{
+              width: 70,
+              height: 70,
+            }}>
+            <Image
+              source={require('../../assets/booking.gif')}
+              style={{width: '100%', height: '100%'}}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: themeColors.white,
+            width: '100%',
+            borderWidth: 1,
+            borderColor: themeColors.primaryColor5,
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: 100,
+              height: 100,
+              marginRight: 15,
+            }}>
+            <Image
+              source={require('../../assets/baoduong.jpg')}
+              style={{width: '100%', height: '100%'}}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '700',
+              color: themeColors.primaryColor7,
+              width: '70%',
+            }}>
+            Reading More - Maintenance Process
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   box: {
     backgroundColor: themeColors.white,
-    width: '45%',
+    width: '48%',
     height: 150,
-    borderWidth: 2,
-    borderColor: themeColors.primaryColor6,
+    borderWidth: 1,
+    borderColor: themeColors.primaryColor5,
     padding: 20,
-    borderRadius: 20,
+    borderTopLeftRadius: 30,
+  },
+  textBox: {
+    textAlign: 'center',
+    color: themeColors.primaryColor7,
+    fontSize: 20,
+    fontWeight: '800',
   },
 });
