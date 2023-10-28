@@ -9,6 +9,7 @@ import {
 import React from 'react';
 import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/FontAwesome6';
 export default function Profile() {
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
@@ -104,12 +105,114 @@ export default function Profile() {
         </View>
         <View style={styles.btn_group}>
           <TouchableOpacity style={styles.btn}>
-            <Icon name="exchange" color={themeColors.primaryColor6} />
             <Text style={styles.btn_text}>Change Password</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn}>
-            <Icon name="exchange" />
-            <Text style={styles.btn_text}>Update</Text>
+            <Text style={styles.btn_text}>Update Profile</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            marginHorizontal: 35,
+            height: 50,
+          }}>
+          <View
+            style={{
+              backgroundColor: themeColors.white,
+              padding: 15,
+              alignSelf: 'center',
+              backgroundColor: themeColors.primaryColor3,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'baseline',
+              opacity: 0.9,
+              height: '100%',
+            }}>
+            <Icon2 name="gift" size={20} color={themeColors.white} />
+            <Text
+              style={{
+                fontSize: 16,
+                paddingLeft: 10,
+                color: themeColors.white,
+                fontWeight: '700',
+              }}>
+              POINT
+            </Text>
+          </View>
+          <Text
+            style={{
+              width: '64%',
+              textAlign: 'center',
+              fontSize: 30,
+              fontWeight: '800',
+              color: themeColors.primaryColor2,
+              borderWidth: 2,
+              borderColor: themeColors.primaryColor3,
+              height: '100%',
+              opacity: 0.9,
+            }}>
+            100
+          </Text>
+        </View>
+        <View style={{marginHorizontal: 20, padding: 10}}>
+          <TouchableOpacity style={styles.line}>
+            <View style={{width: 30}}>
+              <Icon name="gears" size={20} color={themeColors.primaryColor7} />
+            </View>
+            <Text style={styles.line_text}>Total Orders</Text>
+            <View style={{width: 30}}>
+              <Icon
+                name="chevron-right"
+                size={15}
+                color={themeColors.primaryColor5}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.line}>
+            <View style={{width: 30}}>
+              <Icon2 name="award" size={20} color={themeColors.primaryColor7} />
+            </View>
+            <Text style={styles.line_text}>Loyal Customer</Text>
+            <View style={{width: 30}}>
+              <Icon
+                name="chevron-right"
+                size={15}
+                color={themeColors.primaryColor5}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.line}>
+            <View style={{width: 30}}>
+              <Icon name="star-o" size={20} color={themeColors.primaryColor7} />
+            </View>
+            <Text style={styles.line_text}>My Feedbacks</Text>
+            <View style={{width: 30}}>
+              <Icon
+                name="chevron-right"
+                size={15}
+                color={themeColors.primaryColor5}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.line}>
+            <View style={{width: 30}}>
+              <Icon
+                name="question-circle-o"
+                size={20}
+                color={themeColors.primaryColor7}
+              />
+            </View>
+            <Text style={styles.line_text}>Help Center</Text>
+            <View style={{width: 30}}>
+              <Icon
+                name="chevron-right"
+                size={15}
+                color={themeColors.primaryColor5}
+              />
+            </View>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -119,18 +222,35 @@ export default function Profile() {
 const styles = StyleSheet.create({
   btn: {
     padding: 15,
-    backgroundColor: themeColors.primaryColor5,
+    backgroundColor: themeColors.primaryColor4,
     borderRadius: 10,
+    marginRight: 10,
     width: 160,
   },
   btn_group: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
     marginHorizontal: 20,
   },
   btn_text: {
     textAlign: 'center',
+    color: themeColors.white,
+    fontWeight: '700',
+  },
+  line: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: themeColors.primaryColor5,
+  },
+  line_text: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: themeColors.primaryColor7,
+    width: 300,
   },
 });

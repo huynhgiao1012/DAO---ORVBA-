@@ -8,6 +8,7 @@ import Profile from './Profile';
 import Form from './Form';
 import MainHome from './MainHome';
 import {themeColors} from '../../common/theme';
+import Notification from './Notification';
 
 const Tab = createBottomTabNavigator();
 const Home = () => {
@@ -38,6 +39,7 @@ const Home = () => {
             } else if (rn === 'Form') {
               iconName = focused ? 'receipt' : 'receipt-outline';
             } else if (rn === 'Notification') {
+              iconName = focused ? 'notifications' : 'notifications-outline';
               // return (
               //   <View>
               //     <Icon name="notifications" size={size} color={color} />
@@ -90,6 +92,11 @@ const Home = () => {
         options={{headerShown: false}}
       />
       <Tab.Screen name="Form" component={Form} options={{headerShown: false}} />
+      <Tab.Screen
+        name="Notification"
+        component={Notification}
+        options={{headerShown: false}}
+      />
       <Tab.Screen
         name="Profile"
         component={Profile}

@@ -7,6 +7,7 @@ import SignUp from '../screens/SignUp';
 import Welcome from '../screens/Welcome';
 import ForgotPass from '../screens/ForgotPass';
 import Home from '../screens/CUSTOMER/Home';
+
 const Stack = createStackNavigator();
 export default function Navigation() {
   return (

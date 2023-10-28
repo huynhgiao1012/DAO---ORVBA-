@@ -142,14 +142,20 @@ export default function MainHome() {
           </TouchableOpacity>
         </LinearGradient>
         <Card />
-        <View
+        {/* <View
           style={{
             backgroundColor: themeColors.white,
             flex: 1,
-            padding: 20,
+            padding: 10,
+            alignSelf: 'center',
+            backgroundColor: themeColors.primaryColor5,
+            width: '90%',
+            marginBottom: 20,
           }}>
-          <Text>About App</Text>
-        </View>
+          <Text style={{textAlign: 'center', fontSize: 16, fontWeight: '800'}}>
+            About App
+          </Text>
+        </View> */}
       </View>
     </ScrollView>
   );
