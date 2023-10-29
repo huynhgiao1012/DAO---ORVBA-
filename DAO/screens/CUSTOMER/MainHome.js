@@ -74,7 +74,7 @@ export default function MainHome() {
         <View style={{margin: 20}}>
           <Text
             style={{
-              color: themeColors.primaryColor2,
+              color: themeColors.primaryColor4,
               fontWeight: '600',
               fontSize: 18,
               paddingBottom: 10,
@@ -115,7 +115,7 @@ export default function MainHome() {
             themeColors.white,
             themeColors.white,
             themeColors.primaryColor5,
-            themeColors.primaryColor6,
+            themeColors.primaryColor5,
             themeColors.white,
             themeColors.white,
             themeColors.white,
@@ -162,17 +162,17 @@ export default function MainHome() {
 }
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: themeColors.white,
+    backgroundColor: themeColors.primaryColor,
     width: '48%',
     height: 150,
     borderWidth: 1,
     borderColor: themeColors.primaryColor5,
     padding: 20,
-    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   textBox: {
     textAlign: 'center',
-    color: themeColors.primaryColor7,
+    color: themeColors.white,
     fontSize: 20,
     fontWeight: '800',
   },

@@ -11,9 +11,13 @@ export default function TopTab() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: themeColors.primaryColor7,
+        tabBarActiveTintColor: themeColors.primaryColor,
         tabBarInactiveTintColor: themeColors.primaryColor8,
-        tabBarStyle: {borderBottomColor: themeColors.primaryColor},
+        tabBarIndicatorStyle: {
+          borderBottomColor: themeColors.primaryColor,
+          borderBottomWidth: 3,
+        },
+        tabBarLabelStyle: {fontWeight: '700'},
       }}>
       <Tab.Screen name="All" component={AllForm} />
       <Tab.Screen name="Emergency" component={Emergency} />

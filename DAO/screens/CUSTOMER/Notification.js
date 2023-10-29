@@ -132,6 +132,7 @@ export default function NotiScreen() {
                       </Text>
                     </View>
                   )}
+                  <Text style={styles.text3}>From ABCDEF</Text>
                   <Text style={styles.text1}>{val.text}</Text>
                 </View>
               </TouchableOpacity>
@@ -143,6 +144,7 @@ export default function NotiScreen() {
                 renderRightActions={dragX => rightSwipe(dragX, val._id)}
                 key={val._id}>
                 <View style={styles.container}>
+                  <Text style={styles.text3}>From ABCDEF</Text>
                   <Text style={styles.text2}>{val.text}</Text>
                 </View>
               </Swipeable>
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text1: {
-    color: themeColors.primaryColor2,
+    color: themeColors.primaryColor7,
     fontSize: 18,
     fontWeight: '800',
     width: '90%',
@@ -180,6 +182,12 @@ const styles = StyleSheet.create({
   text2: {
     color: themeColors.primaryColor6,
     fontSize: 18,
+    width: '90%',
+    fontWeight: '700',
+  },
+  text3: {
+    color: themeColors.primaryColor6,
+    fontSize: 14,
     width: '90%',
     fontWeight: '700',
   },
