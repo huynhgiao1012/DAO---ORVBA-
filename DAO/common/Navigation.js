@@ -7,6 +7,10 @@ import SignUp from '../screens/SignUp';
 import Welcome from '../screens/Welcome';
 import ForgotPass from '../screens/ForgotPass';
 import Home from '../screens/CUSTOMER/Home';
+import EmergencyService from '../screens/CUSTOMER/EmergencyService';
+import MaintenanceService from '../screens/CUSTOMER/MaintenanceService';
+import MapScreen from '../screens/CUSTOMER/MapScreen';
+import ListScreen from '../screens/CUSTOMER/ListScreen';
 
 const Stack = createStackNavigator();
 export default function Navigation() {
@@ -37,6 +41,26 @@ export default function Navigation() {
           name="Home"
           options={{headerShown: false}}
           component={Home}
+        />
+        <Stack.Screen
+          name="MaintenanceService"
+          options={{headerShown: false}}
+          component={MaintenanceService}
+        />
+        <Stack.Screen
+          name="EmergencyService"
+          options={{headerShown: false}}
+          component={EmergencyService}
+        />
+        <Stack.Screen
+          name="MapScreen"
+          options={{headerShown: false}}
+          component={MapScreen}
+        />
+        <Stack.Screen
+          name="ListScreen"
+          options={{headerShown: false}}
+          component={ListScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

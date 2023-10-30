@@ -17,7 +17,10 @@ import GetLocation from 'react-native-get-location';
 import Carousel from '../../common/Carousel';
 import Card from '../../common/Card';
 
+import {useNavigation} from '@react-navigation/native';
+
 export default function MainHome() {
+  const navigation = useNavigation();
   useEffect(() => {
     getCurrentLocation();
   }, []);
@@ -126,14 +129,18 @@ export default function MainHome() {
             padding: 20,
             backgroundColor: themeColors.primaryColor7,
           }}>
-          <TouchableOpacity style={styles.box}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => navigation.navigate('EmergencyService')}>
             <Image
               source={require('../../assets/tow.png')}
               style={{width: '100%', height: '80%'}}
             />
             <Text style={styles.textBox}>Emergency</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.box}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => navigation.navigate('MaintenanceService')}>
             <Image
               source={require('../../assets/maintain.png')}
               style={{width: '100%', height: '80%'}}
