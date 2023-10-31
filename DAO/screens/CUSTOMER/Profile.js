@@ -124,7 +124,7 @@ export default function Profile() {
               backgroundColor: themeColors.white,
               padding: 15,
               alignSelf: 'center',
-              backgroundColor: themeColors.primaryColor3,
+              backgroundColor: themeColors.primaryColor,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'baseline',
@@ -148,9 +148,9 @@ export default function Profile() {
               textAlign: 'center',
               fontSize: 30,
               fontWeight: '800',
-              color: themeColors.primaryColor2,
+              color: themeColors.primaryColor,
               borderWidth: 2,
-              borderColor: themeColors.primaryColor3,
+              borderColor: themeColors.primaryColor,
               height: '100%',
               opacity: 0.9,
             }}>
@@ -222,7 +222,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
   btn: {
     padding: 15,
-    backgroundColor: themeColors.primaryColor4,
+    backgroundColor: themeColors.primaryColor8,
     borderRadius: 10,
     marginRight: 10,
     width: 160,
@@ -238,6 +238,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: themeColors.white,
     fontWeight: '700',
+    fontSize: 14,
   },
   line: {
     flexDirection: 'row',

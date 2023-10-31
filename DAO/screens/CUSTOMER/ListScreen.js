@@ -17,6 +17,7 @@ import React from 'react';
 import {useEffect, useState} from 'react';
 import GetLocation from 'react-native-get-location';
 import {useDistanceMatrixMutation} from '../../services/Map';
+import Icon from 'react-native-vector-icons/FontAwesome';
 // import {
 //   useGetCompanyDetailMutation,
 //   useGetCorCompanyQuery,
@@ -266,49 +267,48 @@ export default function ListScreen() {
             borderBottomWidth: 1,
             borderBottomColor: themeColors.gray,
             marginVertical: 10,
+            // flexDirection: 'row',
+            // justifyContent: 'space-between',
           }}>
-          <Text
-            style={{
-              fontSize: 13,
-              color: themeColors.white,
-              fontWeight: '700',
-              position: 'absolute',
-              top: 10,
-              right: 0,
-              backgroundColor: themeColors.primaryColor,
-              padding: 3,
-              width: 100,
-              textAlign: 'center',
-            }}>
-            9km
-          </Text>
-          <Text
-            style={{
-              fontWeight: '900',
-              fontSize: 18,
-              color: themeColors.primaryColor,
-              width: '70%',
-              marginTop: 10,
-            }}>
-            ABC Garage
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              color: themeColors.primaryColor7,
-              fontStyle: 'italic',
-            }}>
-            ABC Street
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              color: themeColors.primaryColor6,
-              fontStyle: 'italic',
-            }}>
-            Hour Working: 6AM - 10PM
-          </Text>
-          <View style={{alignSelf: 'flex-end'}}>
+          <View>
+            <Text
+              style={{
+                fontSize: 13,
+                color: themeColors.white,
+                fontWeight: '700',
+                backgroundColor: themeColors.primaryColor,
+                padding: 3,
+                width: 100,
+                textAlign: 'center',
+              }}>
+              9km
+            </Text>
+            <Text
+              style={{
+                fontWeight: '900',
+                fontSize: 18,
+                color: themeColors.primaryColor,
+                width: '70%',
+                marginTop: 10,
+              }}>
+              ABC Garage
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: themeColors.primaryColor7,
+                fontStyle: 'italic',
+              }}>
+              ABC Street
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                color: themeColors.primaryColor6,
+                fontStyle: 'italic',
+              }}>
+              Hour Working: 6AM - 10PM
+            </Text>
             <Text
               style={{
                 fontSize: 15,
@@ -317,21 +317,41 @@ export default function ListScreen() {
               }}>
               Email: 123@gmail.com
             </Text>
+          </View>
+          {/* <View>
             <TouchableOpacity
               onPress={() => openDialScreen(item?.phoneNo)}
-              style={{
-                marginTop: 2,
-              }}>
+              style={{}}>
               <Text
                 style={{
                   fontSize: 15,
-                  color: themeColors.primaryColor7,
+                  color: themeColors.white,
                   fontWeight: '700',
+                  backgroundColor: themeColors.primaryColor,
+                  padding: 20,
+                  width: 90,
+                  height: 60,
                 }}>
-                Phone: 0832011697
+                BOOK
               </Text>
             </TouchableOpacity>
-          </View>
+            <TouchableOpacity
+              onPress={() => openDialScreen(item?.phoneNo)}
+              style={{}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: themeColors.white,
+                  fontWeight: '700',
+                  backgroundColor: themeColors.primaryColor,
+                  padding: 20,
+                  width: 90,
+                  height: 60,
+                }}>
+                CALL
+              </Text>
+            </TouchableOpacity>
+          </View> */}
         </View>
       </TouchableOpacity>
       {/* <FlatList
