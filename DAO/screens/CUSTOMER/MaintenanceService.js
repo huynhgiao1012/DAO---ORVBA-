@@ -2,7 +2,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ListScreen from './ListScreen';
+import ListScreen2 from './ListScreen2';
 
 export default function MaintenanceService() {
   return (
@@ -29,7 +29,7 @@ export default function MaintenanceService() {
           Maintenance Service
         </Text>
       </View>
-      <ListScreen />
+      <ListScreen2 />
     </View>
   );
 }

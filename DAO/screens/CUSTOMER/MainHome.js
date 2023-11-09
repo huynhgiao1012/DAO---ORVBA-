@@ -78,7 +78,7 @@ export default function MainHome() {
           <Text
             style={{
               color: themeColors.primaryColor4,
-              fontWeight: '600',
+              fontWeight: '700',
               fontSize: 18,
               paddingBottom: 10,
             }}>
@@ -95,7 +95,7 @@ export default function MainHome() {
               style={{
                 fontSize: 18,
                 fontWeight: '600',
-                color: themeColors.primaryColor2,
+                color: themeColors.primaryColor7,
                 paddingLeft: 10,
                 fontStyle: 'italic',
               }}>
@@ -112,7 +112,40 @@ export default function MainHome() {
           }}>
           Top Services
         </Text>
-        <LinearGradient
+        <View>
+          <Text
+            style={{
+              fontStyle: 'italic',
+              fontWeight: '500',
+              color: themeColors.gray60,
+              paddingHorizontal: 20,
+              fontSize: 15,
+            }}>
+            Find the nearest garage to contact in case of an emergency or need
+            maintenance
+          </Text>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => navigation.navigate('EmergencyService')}>
+            <Text style={styles.textBox}>Emergency</Text>
+            <Icon2
+              name="long-arrow-alt-right"
+              size={30}
+              color={themeColors.white}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.box, {backgroundColor: themeColors.primaryColor3}]}
+            onPress={() => navigation.navigate('MaintenanceService')}>
+            <Text style={styles.textBox}>Maintenance</Text>
+            <Icon2
+              name="long-arrow-alt-right"
+              size={30}
+              color={themeColors.white}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* <LinearGradient
           colors={[
             themeColors.white,
             themeColors.white,
@@ -147,7 +180,7 @@ export default function MainHome() {
             />
             <Text style={styles.textBox}>Maintaining</Text>
           </TouchableOpacity>
-        </LinearGradient>
+        </LinearGradient> */}
         <Card />
         {/* <View
           style={{
@@ -169,13 +202,16 @@ export default function MainHome() {
 }
 const styles = StyleSheet.create({
   box: {
-    backgroundColor: themeColors.primaryColor,
-    width: '48%',
-    height: 150,
-    borderWidth: 1,
-    borderColor: themeColors.primaryColor5,
-    padding: 20,
-    borderTopRightRadius: 30,
+    width: '90%',
+    backgroundColor: themeColors.primaryColor4,
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
   },
   textBox: {
     textAlign: 'center',

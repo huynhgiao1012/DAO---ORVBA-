@@ -11,6 +11,8 @@ import EmergencyService from '../screens/CUSTOMER/EmergencyService';
 import MaintenanceService from '../screens/CUSTOMER/MaintenanceService';
 import MapScreen from '../screens/CUSTOMER/MapScreen';
 import ListScreen from '../screens/CUSTOMER/ListScreen';
+import GarageDetail from '../screens/CUSTOMER/GarageDetail';
+import Booking from '../screens/CUSTOMER/Booking';
 
 const Stack = createStackNavigator();
 export default function Navigation() {
@@ -61,6 +63,16 @@ export default function Navigation() {
           name="ListScreen"
           options={{headerShown: false}}
           component={ListScreen}
+        />
+        <Stack.Screen
+          name="GarageDetail"
+          options={{headerShown: false}}
+          component={GarageDetail}
+        />
+        <Stack.Screen
+          name="Booking"
+          options={{headerShown: false}}
+          component={Booking}
         />
       </Stack.Navigator>
     </NavigationContainer>

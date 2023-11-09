@@ -26,7 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
 
 // subscribe for more videos like this :)
-export default function ListScreen() {
+export default function ListScreen2() {
   const navigation = useNavigation();
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -269,8 +269,6 @@ export default function ListScreen() {
             borderBottomWidth: 1,
             borderBottomColor: themeColors.gray,
             marginVertical: 10,
-            // flexDirection: 'row',
-            // justifyContent: 'space-between',
           }}>
           <View>
             <Text
@@ -304,6 +302,10 @@ export default function ListScreen() {
               <Text style={styles.content_text}>6:00 - 22:00</Text>
             </View>
             <View style={styles.content}>
+              <Icon name="phone" size={18} color={themeColors.primaryColor7} />
+              <Text style={styles.content_text}>0832011697</Text>
+            </View>
+            <View style={styles.content}>
               <Icon
                 name="envelope"
                 size={16}
@@ -312,127 +314,121 @@ export default function ListScreen() {
               <Text style={styles.content_text}>huynhgiaolethi0@gmail.com</Text>
             </View>
           </View>
-          <View style={{alignSelf: 'flex-end'}}>
-            <TouchableOpacity
-              onPress={() => openDialScreen(item?.phoneNo)}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: themeColors.white,
-                paddingHorizontal: 20,
-                paddingVertical: 5,
-                borderRadius: 18,
-                marginVertical: 5,
-                borderColor: themeColors.primaryColor,
-                borderWidth: 2,
-              }}>
-              <Icon name="phone" size={20} color={themeColors.primaryColor4} />
-              <Text
-                style={[
-                  styles.content_text,
-                  {color: themeColors.primaryColor4},
-                ]}>
-                0832011697
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Booking')}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: themeColors.primaryColor,
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              borderRadius: 14,
+              marginVertical: 5,
+              borderColor: themeColors.white,
+              borderWidth: 2,
+              alignSelf: 'flex-end',
+            }}>
+            <Text style={[styles.content_text, {color: themeColors.white}]}>
+              BOOK SERVICE
+            </Text>
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
       {/* <FlatList
-        style={{marginBottom: 150}}
-        ItemSeparatorComponent={
-          Platform.OS !== 'android' &&
-          (({highlighted}) => (
-            <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
-          ))
-        }
-        data={places.length === 0 ? [] : places}
-        renderItem={({item, index, separators}) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => navigation.navigate('GarageDetail', {id: item.id})}>
-            <View
-              style={{
-                paddingHorizontal: 20,
-                paddingVertical: 10,
-                borderWidth: 1,
-                marginHorizontal: 20,
-                borderColor: themeColors.gray,
-                marginVertical: 10,
-                borderRadius: 20,
-              }}>
-              <Text
+          style={{marginBottom: 150}}
+          ItemSeparatorComponent={
+            Platform.OS !== 'android' &&
+            (({highlighted}) => (
+              <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
+            ))
+          }
+          data={places.length === 0 ? [] : places}
+          renderItem={({item, index, separators}) => (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => navigation.navigate('GarageDetail', {id: item.id})}>
+              <View
                 style={{
-                  fontSize: 13,
-                  color: themeColors.white,
-                  fontWeight: '600',
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  backgroundColor: themeColors.blue,
-                  padding: 3,
-                  borderTopRightRadius: 20,
-                  borderBottomLeftRadius: 20,
-                  width: 100,
-                  textAlign: 'center',
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  borderWidth: 1,
+                  marginHorizontal: 20,
+                  borderColor: themeColors.gray,
+                  marginVertical: 10,
+                  borderRadius: 20,
                 }}>
-                {item.distance}
-              </Text>
-              <Text
-                style={{
-                  fontWeight: '900',
-                  fontSize: 18,
-                  color: themeColors.blue,
-                  width: '70%',
-                  marginTop: 10,
-                }}>
-                {item.title}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: themeColors.gray60,
-                  fontStyle: 'italic',
-                }}>
-                {item.address}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: themeColors.blue,
-                  fontStyle: 'italic',
-                }}>
-                Hour Working: {item.openTime} - {item.closeTime}
-              </Text>
-              <View style={{alignSelf: 'flex-end'}}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: themeColors.white,
+                    fontWeight: '600',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: themeColors.blue,
+                    padding: 3,
+                    borderTopRightRadius: 20,
+                    borderBottomLeftRadius: 20,
+                    width: 100,
+                    textAlign: 'center',
+                  }}>
+                  {item.distance}
+                </Text>
+                <Text
+                  style={{
+                    fontWeight: '900',
+                    fontSize: 18,
+                    color: themeColors.blue,
+                    width: '70%',
+                    marginTop: 10,
+                  }}>
+                  {item.title}
+                </Text>
                 <Text
                   style={{
                     fontSize: 14,
-                    color: themeColors.primaryColor,
-                    fontWeight: '700',
+                    color: themeColors.gray60,
+                    fontStyle: 'italic',
                   }}>
-                  Email: {item.email}
+                  {item.address}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => openDialScreen(item?.phoneNo)}
+                <Text
                   style={{
-                    marginTop: 2,
+                    fontSize: 14,
+                    color: themeColors.blue,
+                    fontStyle: 'italic',
                   }}>
+                  Hour Working: {item.openTime} - {item.closeTime}
+                </Text>
+                <View style={{alignSelf: 'flex-end'}}>
                   <Text
                     style={{
                       fontSize: 14,
                       color: themeColors.primaryColor,
                       fontWeight: '700',
                     }}>
-                    Phone: {item.phoneNo}
+                    Email: {item.email}
                   </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => openDialScreen(item?.phoneNo)}
+                    style={{
+                      marginTop: 2,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: themeColors.primaryColor,
+                        fontWeight: '700',
+                      }}>
+                      Phone: {item.phoneNo}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      /> */}
+            </TouchableOpacity>
+          )}
+        /> */}
     </View>
   );
 }

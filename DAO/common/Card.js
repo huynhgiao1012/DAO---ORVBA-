@@ -54,13 +54,14 @@ export default function Card() {
             <Text
               style={{
                 paddingVertical: 10,
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: '700',
-                backgroundColor: themeColors.primaryColor6,
+                backgroundColor: themeColors.primaryColor4,
                 textAlign: 'center',
                 color: themeColors.white,
                 borderBottomLeftRadius: 20,
                 borderBottomRightRadius: 20,
+                fontStyle: 'italic',
               }}>
               {val.title}
             </Text>
