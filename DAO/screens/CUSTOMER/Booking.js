@@ -80,152 +80,173 @@ export default function Booking() {
             time: '',
           }}>
           {({errors, handleChange, handleSubmit, touched, isValid}) => {
-            console.log(isValid);
             return (
-              <View style={{flex: 1}}>
-                <ProgressSteps>
-                  <ProgressStep
-                    label="First Step"
-                    onNext={handleSubmit}
-                    nextBtnDisabled={!isValid}>
-                    <View style={styles.form}>
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          color: themeColors.primaryColor7,
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                          marginBottom: 15,
-                          fontStyle: 'italic',
-                        }}>
-                        Appointment Information
-                      </Text>
-                      <View style={styles.titleText}>
-                        <Text style={styles.title}>Full Name</Text>
-                        {errors.name && touched.name && (
-                          <Text style={styles.errorText}> {errors.name} </Text>
-                        )}
-                      </View>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={handleChange('name')}
+              <View style={styles.form}>
+                <View style={{margin: 20}}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: themeColors.primaryColor7,
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      marginBottom: 15,
+                      fontStyle: 'italic',
+                    }}>
+                    Appointment Information
+                  </Text>
+                  <View style={styles.titleText}>
+                    <Text style={styles.title}>Full Name</Text>
+                    {errors.name && touched.name && (
+                      <Text style={styles.errorText}> {errors.name} </Text>
+                    )}
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('name')}
+                  />
+                  <View style={styles.titleText}>
+                    <Text style={styles.title}>Address</Text>
+                    {errors.address && touched.address && (
+                      <Text style={styles.errorText}> {errors.address} </Text>
+                    )}
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('address')}
+                  />
+                  <View style={styles.titleText}>
+                    <Text style={styles.title}>Phone Number</Text>
+                    {errors.phone && touched.phone && (
+                      <Text style={styles.errorText}> {errors.phone} </Text>
+                    )}
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('phone')}
+                  />
+                  <View style={styles.titleText}>
+                    <Text style={styles.title}>Date</Text>
+                    {errors.date && touched.date && (
+                      <Text style={styles.errorText}> {errors.date} </Text>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 5,
+                    }}>
+                    <TextInput
+                      style={{
+                        width: '80%',
+                        borderWidth: 1,
+                        borderColor: themeColors.primaryColor5,
+                        marginVertical: 5,
+                        paddingHorizontal: 10,
+                        color: themeColors.primaryColor7,
+                        fontWeight: '700',
+                        fontSize: 16,
+                        borderTopLeftRadius: 10,
+                        borderBottomLeftRadius: 10,
+                      }}
+                      onChangeText={handleChange('date')}
+                      value={selectedDate}
+                      readOnly={true}
+                    />
+                    <TouchableOpacity
+                      onPress={showModal}
+                      style={{
+                        backgroundColor: themeColors.primaryColor7,
+                        padding: 10,
+                        width: '20%',
+                        height: 50,
+                        alignItems: 'center',
+                        borderTopRightRadius: 10,
+                        borderBottomRightRadius: 10,
+                      }}>
+                      <Icon
+                        name="calendar"
+                        color={themeColors.white}
+                        size={26}
                       />
-                      <View style={styles.titleText}>
-                        <Text style={styles.title}>Address</Text>
-                        {errors.address && touched.address && (
-                          <Text style={styles.errorText}>
-                            {' '}
-                            {errors.address}{' '}
-                          </Text>
-                        )}
-                      </View>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={handleChange('address')}
-                      />
-                      <View style={styles.titleText}>
-                        <Text style={styles.title}>Phone Number</Text>
-                        {errors.phone && touched.phone && (
-                          <Text style={styles.errorText}> {errors.phone} </Text>
-                        )}
-                      </View>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={handleChange('phone')}
-                      />
-                      <View style={styles.titleText}>
-                        <Text style={styles.title}>Date</Text>
-                        {errors.date && touched.date && (
-                          <Text style={styles.errorText}> {errors.date} </Text>
-                        )}
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          marginBottom: 5,
-                        }}>
-                        <TextInput
-                          style={{
-                            width: '80%',
-                            borderWidth: 1,
-                            borderColor: themeColors.primaryColor5,
-                            marginVertical: 5,
-                            paddingHorizontal: 10,
-                            color: themeColors.primaryColor7,
-                            fontWeight: '700',
-                            fontSize: 16,
-                            borderTopLeftRadius: 10,
-                            borderBottomLeftRadius: 10,
-                          }}
-                          onChangeText={handleChange('date')}
-                          value={selectedDate}
-                          readOnly={true}
-                        />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.titleText}>
+                    <Text style={styles.title}>Available Time</Text>
+                    {errors.time && touched.time && (
+                      <Text style={styles.errorText}> {errors.time} </Text>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                      flexWrap: 'wrap',
+                    }}>
+                    {time.map(val => {
+                      return (
                         <TouchableOpacity
-                          onPress={showModal}
+                          key={val}
                           style={{
-                            backgroundColor: themeColors.primaryColor,
+                            borderWidth: 1,
+                            borderColor: themeColors.primaryColor8,
+                            borderRadius: 10,
                             padding: 10,
-                            width: '20%',
-                            height: 50,
-                            alignItems: 'center',
-                            borderTopRightRadius: 10,
-                            borderBottomRightRadius: 10,
+                            marginVertical: 15,
+                            width: 80,
                           }}>
-                          <Icon
-                            name="calendar"
-                            color={themeColors.white}
-                            size={26}
-                          />
+                          <Text
+                            style={{
+                              color: themeColors.primaryColor8,
+                              fontWeight: '700',
+                              fontSize: 16,
+                              textAlign: 'center',
+                            }}>
+                            {val}
+                          </Text>
                         </TouchableOpacity>
-                      </View>
-                      <View style={styles.titleText}>
-                        <Text style={styles.title}>Available Time</Text>
-                        {errors.time && touched.time && (
-                          <Text style={styles.errorText}> {errors.time} </Text>
-                        )}
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-evenly',
-                          flexWrap: 'wrap',
-                        }}>
-                        {time.map(val => {
-                          return (
-                            <Button
-                              mode="outlined"
-                              style={{
-                                borderRadius: 10,
-                                borderColor: '#e8e8e8',
-                                borderWidth: 2,
-                                width: 100,
-                                marginVertical: 5,
-                              }}
-                              key={val}
-                              textColor={themeColors.primaryColor8}
-                              labelStyle={{fontSize: 14, fontWeight: '700'}}
-                              onPress={() => console.log('Pressed')}>
-                              {val}
-                            </Button>
-                          );
-                        })}
-                      </View>
-                    </View>
-                  </ProgressStep>
-                  <ProgressStep label="Second Step">
-                    <View style={{alignItems: 'center'}}>
-                      <Text>This is the content within step 2!</Text>
-                    </View>
-                  </ProgressStep>
-                  <ProgressStep label="Third Step">
-                    <View style={{alignItems: 'center'}}>
-                      <Text>This is the content within step 3!</Text>
-                    </View>
-                  </ProgressStep>
-                </ProgressSteps>
+                      );
+                    })}
+                  </View>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: '#f5f5f5',
+                    borderTopLeftRadius: 50,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: themeColors.primaryColor2,
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      marginVertical: 15,
+                      fontStyle: 'italic',
+                    }}>
+                    Vehicle Information
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  style={{
+                    alignSelf: 'center',
+                    backgroundColor: themeColors.primaryColor,
+                    padding: 10,
+                    width: '90%',
+                    borderRadius: 10,
+                    marginTop: 30,
+                  }}>
+                  <Text
+                    style={{
+                      color: themeColors.white,
+                      textAlign: 'center',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    Next
+                  </Text>
+                </TouchableOpacity>
               </View>
             );
           }}
@@ -261,10 +282,7 @@ export default function Booking() {
   );
 }
 const styles = StyleSheet.create({
-  form: {
-    marginHorizontal: 30,
-    marginVertical: 20,
-  },
+  form: {},
   title: {
     fontSize: 16,
     color: themeColors.primaryColor7,
