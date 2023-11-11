@@ -14,12 +14,12 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import CalendarPicker from 'react-native-calendar-picker';
 import {Button, Divider} from 'react-native-paper';
+import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
 const signUpValidationSchema = yup.object().shape({
   name: yup.string().required('Required'),
   address: yup.string().required('Required'),
-  info: yup.string().required('Required'),
-  date: yup.string().required('Required'),
-  time: yup.string().required('Required'),
+  date: yup.string(),
+  time: yup.string(),
   phone: yup
     .string()
     .required('Required')
@@ -30,12 +30,16 @@ export default function Booking() {
   const minDate = new Date();
   const time = ['7:00', '10:00', '13:00', '15:00'];
   const [visible, setVisible] = useState(false);
+  const [nextStep, setNext] = useState(true);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const onDateChange = date => {
     setDate(new Date(date).toLocaleDateString('en-GB'));
     hideModal();
+  };
+  const AppointmentFill = values => {
+    console.log(values);
   };
   return (
     <ScrollView style={{backgroundColor: themeColors.white, flex: 1}}>
@@ -66,191 +70,162 @@ export default function Booking() {
       <View>
         <Formik
           validationSchema={signUpValidationSchema}
-          onSubmit={values => Register(values)}
+          onSubmit={values => AppointmentFill(values)}
+          validateOnMount={true}
           initialValues={{
             name: '',
             address: '',
             phone: '',
-            info: '',
             date: '',
             time: '',
           }}>
-          {({errors, handleChange, handleSubmit, touched}) => {
+          {({errors, handleChange, handleSubmit, touched, isValid}) => {
+            console.log(isValid);
             return (
-              <View style={styles.form}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: themeColors.primaryColor7,
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    marginBottom: 15,
-                    fontStyle: 'italic',
-                  }}>
-                  Appointment Information
-                </Text>
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Full Name</Text>
-                  {errors.name && touched.name && (
-                    <Text style={styles.errorText}> {errors.name} </Text>
-                  )}
-                </View>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={handleChange('name')}
-                />
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Address</Text>
-                  {errors.address && touched.address && (
-                    <Text style={styles.errorText}> {errors.address} </Text>
-                  )}
-                </View>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={handleChange('address')}
-                />
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Phone Number</Text>
-                  {errors.phone && touched.phone && (
-                    <Text style={styles.errorText}> {errors.phone} </Text>
-                  )}
-                </View>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={handleChange('phone')}
-                />
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Date</Text>
-                  {errors.date && touched.date && (
-                    <Text style={styles.errorText}> {errors.date} </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: 5,
-                  }}>
-                  <TextInput
-                    style={{
-                      width: '80%',
-                      borderWidth: 1,
-                      borderColor: themeColors.primaryColor5,
-                      marginVertical: 5,
-                      paddingHorizontal: 10,
-                      color: themeColors.primaryColor7,
-                      fontWeight: '700',
-                      fontSize: 16,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                    }}
-                    onChangeText={handleChange('date')}
-                    value={selectedDate}
-                    readOnly={true}
-                  />
-                  <TouchableOpacity
-                    onPress={showModal}
-                    style={{
-                      backgroundColor: themeColors.primaryColor,
-                      padding: 10,
-                      width: '20%',
-                      height: 50,
-                      alignItems: 'center',
-                      borderTopRightRadius: 10,
-                      borderBottomRightRadius: 10,
-                    }}>
-                    <Icon name="calendar" color={themeColors.white} size={26} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Available Time</Text>
-                  {errors.time && touched.time && (
-                    <Text style={styles.errorText}> {errors.time} </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                    flexWrap: 'wrap',
-                  }}>
-                  {time.map(val => {
-                    return (
-                      <Button
-                        mode="outlined"
+              <View style={{flex: 1}}>
+                <ProgressSteps>
+                  <ProgressStep
+                    label="First Step"
+                    onNext={handleSubmit}
+                    nextBtnDisabled={!isValid}>
+                    <View style={styles.form}>
+                      <Text
                         style={{
-                          borderRadius: 10,
-                          borderColor: '#e8e8e8',
-                          borderWidth: 2,
-                          width: 100,
-                          marginVertical: 5,
-                        }}
-                        key={val}
-                        textColor={themeColors.primaryColor8}
-                        labelStyle={{fontSize: 14, fontWeight: '700'}}
-                        onPress={() => console.log('Pressed')}>
-                        {val}
-                      </Button>
-                    );
-                  })}
-                </View>
-                <Divider
-                  style={{
-                    marginVertical: 15,
-                    borderColor: themeColors.primaryColor8,
-                    borderWidth: 2,
-                  }}
-                />
-                {/* Car Information */}
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: themeColors.primaryColor7,
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    marginBottom: 15,
-                    fontStyle: 'italic',
-                  }}>
-                  Vehicle Information
-                </Text>
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Automaker</Text>
-                  {errors.info && touched.info && (
-                    <Text style={styles.errorText}> {errors.info} </Text>
-                  )}
-                </View>
-                <TextInput
-                  style={styles.input}
-                  secureTextEntry
-                  onChangeText={handleChange('info')}
-                />
-                <View style={styles.titleText}>
-                  <Text style={styles.title}>Type Of Service</Text>
-                  {errors.info && touched.info && (
-                    <Text style={styles.errorText}> {errors.info} </Text>
-                  )}
-                </View>
-                <TouchableOpacity
-                  onPress={handleSubmit}
-                  style={{
-                    alignSelf: 'center',
-                    backgroundColor: themeColors.primaryColor,
-                    padding: 10,
-                    width: '90%',
-                    borderRadius: 10,
-                    marginTop: 30,
-                  }}>
-                  <Text
-                    style={{
-                      color: themeColors.white,
-                      textAlign: 'center',
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}>
-                    Book Appointment
-                  </Text>
-                </TouchableOpacity>
+                          fontSize: 20,
+                          color: themeColors.primaryColor7,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                          marginBottom: 15,
+                          fontStyle: 'italic',
+                        }}>
+                        Appointment Information
+                      </Text>
+                      <View style={styles.titleText}>
+                        <Text style={styles.title}>Full Name</Text>
+                        {errors.name && touched.name && (
+                          <Text style={styles.errorText}> {errors.name} </Text>
+                        )}
+                      </View>
+                      <TextInput
+                        style={styles.input}
+                        onChangeText={handleChange('name')}
+                      />
+                      <View style={styles.titleText}>
+                        <Text style={styles.title}>Address</Text>
+                        {errors.address && touched.address && (
+                          <Text style={styles.errorText}>
+                            {' '}
+                            {errors.address}{' '}
+                          </Text>
+                        )}
+                      </View>
+                      <TextInput
+                        style={styles.input}
+                        onChangeText={handleChange('address')}
+                      />
+                      <View style={styles.titleText}>
+                        <Text style={styles.title}>Phone Number</Text>
+                        {errors.phone && touched.phone && (
+                          <Text style={styles.errorText}> {errors.phone} </Text>
+                        )}
+                      </View>
+                      <TextInput
+                        style={styles.input}
+                        onChangeText={handleChange('phone')}
+                      />
+                      <View style={styles.titleText}>
+                        <Text style={styles.title}>Date</Text>
+                        {errors.date && touched.date && (
+                          <Text style={styles.errorText}> {errors.date} </Text>
+                        )}
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginBottom: 5,
+                        }}>
+                        <TextInput
+                          style={{
+                            width: '80%',
+                            borderWidth: 1,
+                            borderColor: themeColors.primaryColor5,
+                            marginVertical: 5,
+                            paddingHorizontal: 10,
+                            color: themeColors.primaryColor7,
+                            fontWeight: '700',
+                            fontSize: 16,
+                            borderTopLeftRadius: 10,
+                            borderBottomLeftRadius: 10,
+                          }}
+                          onChangeText={handleChange('date')}
+                          value={selectedDate}
+                          readOnly={true}
+                        />
+                        <TouchableOpacity
+                          onPress={showModal}
+                          style={{
+                            backgroundColor: themeColors.primaryColor,
+                            padding: 10,
+                            width: '20%',
+                            height: 50,
+                            alignItems: 'center',
+                            borderTopRightRadius: 10,
+                            borderBottomRightRadius: 10,
+                          }}>
+                          <Icon
+                            name="calendar"
+                            color={themeColors.white}
+                            size={26}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.titleText}>
+                        <Text style={styles.title}>Available Time</Text>
+                        {errors.time && touched.time && (
+                          <Text style={styles.errorText}> {errors.time} </Text>
+                        )}
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly',
+                          flexWrap: 'wrap',
+                        }}>
+                        {time.map(val => {
+                          return (
+                            <Button
+                              mode="outlined"
+                              style={{
+                                borderRadius: 10,
+                                borderColor: '#e8e8e8',
+                                borderWidth: 2,
+                                width: 100,
+                                marginVertical: 5,
+                              }}
+                              key={val}
+                              textColor={themeColors.primaryColor8}
+                              labelStyle={{fontSize: 14, fontWeight: '700'}}
+                              onPress={() => console.log('Pressed')}>
+                              {val}
+                            </Button>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  </ProgressStep>
+                  <ProgressStep label="Second Step">
+                    <View style={{alignItems: 'center'}}>
+                      <Text>This is the content within step 2!</Text>
+                    </View>
+                  </ProgressStep>
+                  <ProgressStep label="Third Step">
+                    <View style={{alignItems: 'center'}}>
+                      <Text>This is the content within step 3!</Text>
+                    </View>
+                  </ProgressStep>
+                </ProgressSteps>
               </View>
             );
           }}
