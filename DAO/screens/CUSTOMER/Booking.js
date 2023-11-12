@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import CalendarPicker from 'react-native-calendar-picker';
 import {Button, Divider} from 'react-native-paper';
 import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
+import CheckBox from '@react-native-community/checkbox';
 const signUpValidationSchema = yup.object().shape({
   name: yup.string().required('Required'),
   address: yup.string().required('Required'),
@@ -24,14 +25,17 @@ const signUpValidationSchema = yup.object().shape({
     .string()
     .required('Required')
     .matches(/^(84|0[3|5|7|8|9])+([0-9]{8})\b/, 'Must be a valid phone'),
+  automaker: yup.string().required('Required'),
+  service: yup.array().required('Required'),
 });
 export default function Booking() {
   const [selectedDate, setDate] = useState('');
   const minDate = new Date();
   const time = ['7:00', '10:00', '13:00', '15:00'];
+  const serviceType = ['service 1', 'service 2', 'service 3', 'service 4'];
   const [visible, setVisible] = useState(false);
   const [nextStep, setNext] = useState(true);
-
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const onDateChange = date => {
@@ -78,6 +82,8 @@ export default function Booking() {
             phone: '',
             date: '',
             time: '',
+            automaker: '',
+            service: [],
           }}>
           {({errors, handleChange, handleSubmit, touched, isValid}) => {
             return (
@@ -214,6 +220,7 @@ export default function Booking() {
                   style={{
                     backgroundColor: '#f5f5f5',
                     borderTopLeftRadius: 50,
+                    padding: 20,
                   }}>
                   <Text
                     style={{
@@ -221,11 +228,64 @@ export default function Booking() {
                       color: themeColors.primaryColor2,
                       textAlign: 'center',
                       fontWeight: 'bold',
-                      marginVertical: 15,
                       fontStyle: 'italic',
+                      marginBottom: 20,
                     }}>
                     Vehicle Information
                   </Text>
+                  <View style={styles.titleText}>
+                    <Text style={styles.title2}>Automaker</Text>
+                    {errors.automaker && touched.automaker && (
+                      <Text style={styles.errorText}> {errors.automaker} </Text>
+                    )}
+                  </View>
+                  <TextInput
+                    style={styles.input2}
+                    onChangeText={handleChange('automaker')}
+                  />
+                  <View style={styles.titleText}>
+                    <Text style={styles.title2}>Service</Text>
+                    {errors.automaker && touched.automaker && (
+                      <Text style={styles.errorText}> {errors.automaker} </Text>
+                    )}
+                  </View>
+                  <ScrollView
+                    nestedScrollEnabled={true}
+                    style={{
+                      backgroundColor: themeColors.white,
+                      marginVertical: 10,
+                      borderRadius: 10,
+                      paddingHorizontal: 20,
+                      height: 150,
+                    }}>
+                    {serviceType.map(val => {
+                      return (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            marginVertical: 5,
+                          }}>
+                          <CheckBox
+                            disabled={false}
+                            onValueChange={handleChange('service')}
+                            key={val}
+                            value={toggleCheckBox}
+                            tintColors={themeColors.primaryColor7}
+                          />
+                          <Text
+                            style={{
+                              fontWeight: '700',
+                              color: themeColors.primaryColor7,
+                              fontSize: 16,
+                            }}>
+                            {val}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </ScrollView>
                 </View>
                 <TouchableOpacity
                   onPress={handleSubmit}
@@ -235,7 +295,7 @@ export default function Booking() {
                     padding: 10,
                     width: '90%',
                     borderRadius: 10,
-                    marginTop: 30,
+                    marginVertical: 30,
                   }}>
                   <Text
                     style={{
@@ -298,6 +358,23 @@ const styles = StyleSheet.create({
     color: themeColors.primaryColor8,
     fontWeight: '700',
     fontSize: 16,
+  },
+  title2: {
+    fontSize: 16,
+    color: themeColors.primaryColor2,
+    fontWeight: '700',
+    fontStyle: 'italic',
+  },
+  input2: {
+    borderWidth: 1,
+    borderColor: themeColors.primaryColor5,
+    marginVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    color: themeColors.primaryColor7,
+    fontWeight: '700',
+    fontSize: 16,
+    backgroundColor: themeColors.white,
   },
   errorText: {
     fontSize: 12,
