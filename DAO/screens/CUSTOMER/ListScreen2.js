@@ -248,19 +248,6 @@ export default function ListScreen2() {
           <Text style={styles.text}>50 km</Text>
         </TouchableOpacity>
       </View>
-      <Text
-        style={{
-          color: themeColors.primaryColor,
-          fontStyle: 'italic',
-          paddingHorizontal: 20,
-          fontSize: 18,
-          fontWeight: '700',
-          borderBottomColor: '#e8e8e8',
-          borderBottomWidth: 2,
-          paddingBottom: 10,
-        }}>
-        Nearby places in {distanceNum}km
-      </Text>
       <TouchableOpacity onPress={() => navigation.navigate('GarageDetail')}>
         <View
           style={{
@@ -323,7 +310,7 @@ export default function ListScreen2() {
               backgroundColor: themeColors.primaryColor,
               paddingHorizontal: 20,
               paddingVertical: 5,
-              borderRadius: 14,
+              borderRadius: 10,
               marginVertical: 5,
               borderColor: themeColors.white,
               borderWidth: 2,
@@ -446,6 +433,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    marginVertical: 10,
   },
   distance: {
     borderWidth: 1,

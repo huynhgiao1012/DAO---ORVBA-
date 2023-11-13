@@ -13,10 +13,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import CalendarPicker from 'react-native-calendar-picker';
-import {Button, Divider} from 'react-native-paper';
-import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
 import CheckBox from '@react-native-community/checkbox';
-const signUpValidationSchema = yup.object().shape({
+import Header2 from '../../common/Header2';
+const personalInfor = yup.object().shape({
   name: yup.string().required('Required'),
   address: yup.string().required('Required'),
   date: yup.string(),
@@ -47,33 +46,10 @@ export default function Booking() {
   };
   return (
     <ScrollView style={{backgroundColor: themeColors.white, flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          backgroundColor: themeColors.white,
-          borderBottomWidth: 3,
-          borderBlockColor: '#e8e8e8',
-        }}>
-        <TouchableOpacity>
-          <Icon name="angle-left" size={35} color={themeColors.primaryColor} />
-        </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: '800',
-            color: themeColors.primaryColor,
-            marginLeft: 20,
-          }}>
-          Booking Service
-        </Text>
-      </View>
-      <View>
+      <Header2 name="Booking Service" />
+      <View style={{marginTop: 15}}>
         <Formik
-          validationSchema={signUpValidationSchema}
+          validationSchema={personalInfor}
           onSubmit={values => AppointmentFill(values)}
           validateOnMount={true}
           initialValues={{
@@ -88,14 +64,18 @@ export default function Booking() {
           {({errors, handleChange, handleSubmit, touched, isValid}) => {
             return (
               <View style={styles.form}>
-                <View style={{margin: 20}}>
+                <View style={{marginVertical: 10, paddingHorizontal: 20}}>
                   <Text
                     style={{
                       fontSize: 20,
-                      color: themeColors.primaryColor7,
-                      textAlign: 'center',
+                      color: themeColors.white,
+                      textAlign: 'right',
                       fontWeight: 'bold',
                       marginBottom: 15,
+                      alignSelf: 'flex-end',
+                      backgroundColor: themeColors.primaryColor7,
+                      paddingHorizontal: 8,
+                      paddingVertical: 3,
                       fontStyle: 'italic',
                     }}>
                     Appointment Information
@@ -196,17 +176,17 @@ export default function Booking() {
                           key={val}
                           style={{
                             borderWidth: 1,
-                            borderColor: themeColors.primaryColor8,
+                            borderColor: themeColors.primaryColor7,
                             borderRadius: 10,
                             padding: 10,
                             marginVertical: 15,
-                            width: 80,
+                            width: 70,
                           }}>
                           <Text
                             style={{
-                              color: themeColors.primaryColor8,
+                              color: themeColors.primaryColor7,
                               fontWeight: '700',
-                              fontSize: 16,
+                              fontSize: 15,
                               textAlign: 'center',
                             }}>
                             {val}
@@ -218,18 +198,20 @@ export default function Booking() {
                 </View>
                 <View
                   style={{
-                    backgroundColor: '#f5f5f5',
                     borderTopLeftRadius: 50,
-                    padding: 20,
+                    paddingHorizontal: 20,
                   }}>
                   <Text
                     style={{
                       fontSize: 20,
-                      color: themeColors.primaryColor2,
-                      textAlign: 'center',
+                      color: themeColors.white,
+                      textAlign: 'left',
                       fontWeight: 'bold',
-                      fontStyle: 'italic',
-                      marginBottom: 20,
+                      marginBottom: 15,
+                      backgroundColor: themeColors.primaryColor,
+                      alignSelf: 'flex-start',
+                      paddingVertical: 3,
+                      paddingHorizontal: 8,
                     }}>
                     Vehicle Information
                   </Text>
@@ -252,10 +234,9 @@ export default function Booking() {
                   <ScrollView
                     nestedScrollEnabled={true}
                     style={{
-                      backgroundColor: themeColors.white,
+                      backgroundColor: '#f8f8f8',
                       marginVertical: 10,
                       borderRadius: 10,
-                      paddingHorizontal: 20,
                       height: 150,
                     }}>
                     {serviceType.map(val => {
@@ -272,12 +253,12 @@ export default function Booking() {
                             onValueChange={handleChange('service')}
                             key={val}
                             value={toggleCheckBox}
-                            tintColors={themeColors.primaryColor7}
+                            tintColors={themeColors.primaryColor2}
                           />
                           <Text
                             style={{
                               fontWeight: '700',
-                              color: themeColors.primaryColor7,
+                              color: themeColors.primaryColor2,
                               fontSize: 16,
                             }}>
                             {val}
@@ -345,7 +326,7 @@ const styles = StyleSheet.create({
   form: {},
   title: {
     fontSize: 16,
-    color: themeColors.primaryColor7,
+    color: themeColors.black,
     fontWeight: '700',
     fontStyle: 'italic',
   },
@@ -361,7 +342,7 @@ const styles = StyleSheet.create({
   },
   title2: {
     fontSize: 16,
-    color: themeColors.primaryColor2,
+    color: themeColors.primaryColor,
     fontWeight: '700',
     fontStyle: 'italic',
   },
