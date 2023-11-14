@@ -45,8 +45,8 @@ export default function LoginScreen() {
         themeColors.white,
         themeColors.white,
         themeColors.white,
-        themeColors.primaryColor5,
-        themeColors.primaryColor6,
+        themeColors.white,
+        themeColors.primaryColor,
       ]}>
       <View style={{marginVertical: 80}}>
         {/* {isLoading && (
@@ -66,7 +66,7 @@ export default function LoginScreen() {
         <Text
           style={{
             marginVertical: 20,
-            fontSize: 30,
+            fontSize: 36,
             fontWeight: '800',
             textAlign: 'center',
             color: themeColors.primaryColor,
@@ -129,19 +129,19 @@ export default function LoginScreen() {
                     style={{
                       alignSelf: 'center',
                       backgroundColor: themeColors.primaryColor,
-                      padding: 15,
+                      padding: 10,
                       width: '50%',
-                      borderRadius: 20,
+                      borderRadius: 10,
                       marginTop: 15,
                     }}>
                     <Text
                       style={{
                         color: themeColors.white,
                         textAlign: 'center',
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: 'bold',
                       }}>
-                      Login
+                      LOGIN
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     color: themeColors.primaryColor2,
     height: 50,
     paddingHorizontal: 15,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   errorText: {
     fontSize: 12,

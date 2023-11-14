@@ -135,7 +135,7 @@ export default function MainHome() {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.box, {backgroundColor: themeColors.primaryColor3}]}
+            style={[styles.box, {backgroundColor: themeColors.primaryColor8}]}
             onPress={() => navigation.navigate('MaintenanceService')}>
             <Text style={styles.textBox}>Maintenance</Text>
             <Icon2

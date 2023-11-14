@@ -48,7 +48,7 @@ export default function ForgotPassword() {
   return (
     <View style={{flex: 1, backgroundColor: '#fffaf0'}}>
       <ImageBackground
-        source={require('../assets/bg2.png')}
+        source={require('../assets/bg.png')}
         resizeMode="stretch"
         style={{flex: 1}}>
         <View
@@ -76,9 +76,9 @@ export default function ForgotPassword() {
                     marginHorizontal: 30,
                     backgroundColor: themeColors.white,
                     padding: 20,
-                    borderRadius: 10,
+                    borderRadius: 20,
                     borderColor: themeColors.gray,
-                    borderWidth: 3,
+                    borderWidth: 1,
                   }}>
                   <Text
                     style={{

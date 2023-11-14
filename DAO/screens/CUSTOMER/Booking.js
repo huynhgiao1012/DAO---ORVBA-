@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import CalendarPicker from 'react-native-calendar-picker';
-import CheckBox from '@react-native-community/checkbox';
+import SelectDropdown from 'react-native-select-dropdown';
 import Header2 from '../../common/Header2';
 const personalInfor = yup.object().shape({
   name: yup.string().required('Required'),
@@ -26,6 +26,7 @@ const personalInfor = yup.object().shape({
     .matches(/^(84|0[3|5|7|8|9])+([0-9]{8})\b/, 'Must be a valid phone'),
   automaker: yup.string().required('Required'),
   service: yup.array().required('Required'),
+  note: yup.array().required('Required'),
 });
 export default function Booking() {
   const [selectedDate, setDate] = useState('');
@@ -33,8 +34,6 @@ export default function Booking() {
   const time = ['7:00', '10:00', '13:00', '15:00'];
   const serviceType = ['service 1', 'service 2', 'service 3', 'service 4'];
   const [visible, setVisible] = useState(false);
-  const [nextStep, setNext] = useState(true);
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const onDateChange = date => {
@@ -59,7 +58,8 @@ export default function Booking() {
             date: '',
             time: '',
             automaker: '',
-            service: [],
+            service: '',
+            note: '',
           }}>
           {({errors, handleChange, handleSubmit, touched, isValid}) => {
             return (
@@ -231,42 +231,48 @@ export default function Booking() {
                       <Text style={styles.errorText}> {errors.automaker} </Text>
                     )}
                   </View>
-                  <ScrollView
-                    nestedScrollEnabled={true}
-                    style={{
-                      backgroundColor: '#f8f8f8',
+                  <SelectDropdown
+                    buttonStyle={{
+                      width: '100%',
                       marginVertical: 10,
                       borderRadius: 10,
-                      height: 150,
-                    }}>
-                    {serviceType.map(val => {
-                      return (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            marginVertical: 5,
-                          }}>
-                          <CheckBox
-                            disabled={false}
-                            onValueChange={handleChange('service')}
-                            key={val}
-                            value={toggleCheckBox}
-                            tintColors={themeColors.primaryColor2}
-                          />
-                          <Text
-                            style={{
-                              fontWeight: '700',
-                              color: themeColors.primaryColor2,
-                              fontSize: 16,
-                            }}>
-                            {val}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
+                      borderColor: themeColors.primaryColor5,
+                      borderWidth: 1,
+                      backgroundColor: themeColors.white,
+                    }}
+                    rowStyle={{backgroundColor: '#f8f8f8'}}
+                    rowTextStyle={{
+                      color: themeColors.primaryColor4,
+                      fontWeight: '600',
+                    }}
+                    buttonTextStyle={{
+                      fontSize: 16,
+                      fontWeight: '700',
+                      color: themeColors.primaryColor,
+                    }}
+                    data={serviceType}
+                    onSelect={(selectedItem, index) => {
+                      console.log(selectedItem, index);
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      return selectedItem;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      return item;
+                    }}
+                  />
+                  <View style={styles.titleText}>
+                    <Text style={styles.title2}>Note</Text>
+                    {errors.note && touched.note && (
+                      <Text style={styles.errorText}> {errors.note} </Text>
+                    )}
+                  </View>
+                  <TextInput
+                    style={styles.input2}
+                    onChangeText={handleChange('note')}
+                    numberOfLines={4}
+                    maxLength={50}
+                  />
                 </View>
                 <TouchableOpacity
                   onPress={handleSubmit}
@@ -285,7 +291,7 @@ export default function Booking() {
                       fontSize: 18,
                       fontWeight: 'bold',
                     }}>
-                    Next
+                    Book Appointment
                   </Text>
                 </TouchableOpacity>
               </View>

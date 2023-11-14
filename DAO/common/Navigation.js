@@ -13,7 +13,8 @@ import MapScreen from '../screens/CUSTOMER/MapScreen';
 import ListScreen from '../screens/CUSTOMER/ListScreen';
 import GarageDetail from '../screens/CUSTOMER/GarageDetail';
 import Booking from '../screens/CUSTOMER/Booking';
-
+import MyFeedback from '../screens/CUSTOMER/MyFeedback';
+import HelpCenter from '../screens/CUSTOMER/HelpCenter';
 const Stack = createStackNavigator();
 export default function Navigation() {
   return (
@@ -73,6 +74,16 @@ export default function Navigation() {
           name="Booking"
           options={{headerShown: false}}
           component={Booking}
+        />
+        <Stack.Screen
+          name="MyFeedback"
+          options={{headerShown: false}}
+          component={MyFeedback}
+        />
+        <Stack.Screen
+          name="HelpCenter"
+          options={{headerShown: false}}
+          component={HelpCenter}
         />
       </Stack.Navigator>
     </NavigationContainer>
