@@ -1,9 +1,18 @@
 exports.ROLES = {
   ADMIN: "admin",
   CUSTOMER: "customer",
-  COMPANY: "company",
+  MANAGER: "manager",
+  MECHANIC: "mechanic",
+  ACCOUNTANT: "accountant",
 };
-
+exports.GROUP = {
+  EMERGENCY: "emergency",
+  MAINTENANCE: "maintenance",
+};
+exports.PAYTYPE = {
+  CASH: "cash",
+  TRANSFER: "transfer",
+};
 exports.FORM_STATUS = {
   AWAIT: "await",
   PROCESS: "process",

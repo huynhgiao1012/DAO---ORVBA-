@@ -1,15 +1,26 @@
 const mongoose = require("mongoose");
+const { PAYTYPE } = require("../constant");
 const Schema = mongoose.Schema;
+
 const PaymentSchema = new Schema(
   {
-    paymentStatus: {
+    PayStatus: {
       type: Boolean,
       default: false,
-      required: [true, "Payment Status is required"],
+      required: [true, "Payment status is required"],
     },
-    formID: {
+    PayType: {
+      type: String,
+      enum: PAYTYPE,
+      required: [true, "Payment type is required"],
+    },
+    FormID: {
       type: mongoose.Types.ObjectId,
       ref: "orderForm",
+    },
+    AccountantId: {
+      type: mongoose.Types.ObjectId,
+      ref: "account",
     },
   },
   {

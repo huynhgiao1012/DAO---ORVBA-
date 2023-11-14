@@ -4,12 +4,12 @@ const { ROLES } = require("../constant");
 const Schema = mongoose.Schema;
 const AccountSchema = new Schema(
   {
-    name: {
+    Name: {
       type: String,
       required: [true, "Name is required"],
       minlength: [3, "Name must have at least 3 characters"],
     },
-    email: {
+    Email: {
       type: String,
       trim: true,
       lowercase: true,
@@ -20,13 +20,13 @@ const AccountSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    phone: {
+    Phone: {
       type: String,
       unique: true,
       require: [true, "Phone number is required"],
       unique: true,
     },
-    password: {
+    Password: {
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must have at least 6 characters"],
@@ -36,15 +36,15 @@ const AccountSchema = new Schema(
         "Password must contain uppercase, special character, number",
       ],
     },
-    role: {
+    Role: {
       type: String,
       enum: ROLES,
       default: ROLES.CUSTOMER,
     },
-    img: {
+    Img: {
       type: String,
     },
-    isActive: {
+    IsActive: {
       type: Boolean,
       default: false,
     },
@@ -57,10 +57,10 @@ const AccountSchema = new Schema(
 mongoose.set("runValidators", true);
 //middleware
 AccountSchema.pre("save", function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("Password")) return next();
   const salt = bcrypt.genSaltSync(); //round : độ phức tạp , thời gian cần 2^10
-  const hashedPassword = bcrypt.hashSync(this.password, salt);
-  this.password = hashedPassword;
+  const hashedPassword = bcrypt.hashSync(this.Password, salt);
+  this.Password = hashedPassword;
   next();
 });
 

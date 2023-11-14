@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const ServiceSchema = new Schema(
+const SubServiceSchema = new Schema(
   {
-    GarageId: {
+    ServiceId: {
       type: Schema.Types.ObjectId,
-      ref: "garage",
+      ref: "service",
     },
-    ServiceName: {
+    SubName: {
       type: String,
       required: [true, "Service's name is required"],
     },
-    EstimatedPrice: {
+    SubPrice: {
       type: Number,
-      required: [true, "Estimated price is required"],
+      required: [true, "Subservice price is required"],
     },
     createAt: {
       type: Date,
@@ -20,9 +20,9 @@ const ServiceSchema = new Schema(
     },
   },
   {
-    collection: "Service",
+    collection: "SubService",
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Service", ServiceSchema);
+module.exports = mongoose.model("SubService", SubServiceSchema);

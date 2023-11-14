@@ -15,12 +15,12 @@ const { findByIdAndUpdate } = require("../models/timeAccess");
 const notification = require("../models/notification");
 
 exports.register = catchAsync(async (req, res) => {
-  const { name, email, phone, password } = req.body;
+  const { Name, Email, Phone, Password } = req.body;
   const account = await Account.create({
-    name,
-    email,
-    phone,
-    password,
+    Name,
+    Email,
+    Phone,
+    Password,
   });
   var otpcode = otpGenerator.generate(4, {
     upperCaseAlphabets: false,
@@ -35,7 +35,7 @@ exports.register = catchAsync(async (req, res) => {
   console.log(otpcode);
   await EmailService.sendMail(
     process.env.EMAIL,
-    `${account.email}`,
+    `${account.Email}`,
     "OTP VERIFICATION",
     `Your OTP code: ${otpcode}`
   );

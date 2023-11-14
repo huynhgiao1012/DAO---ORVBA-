@@ -1,21 +1,19 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
-const CustomerSchema = new Schema(
+const { GROUP } = require("../constant");
+
+const ManagerSchema = new Schema(
   {
     AccountId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "account",
     },
-    Point: {
-      type: Number,
+    GarageId: {
+      type: Schema.Types.ObjectId,
       required: true,
-      default: 0,
-    },
-    IsVIP: {
-      type: Boolean,
-      default: false,
+      ref: "garage",
     },
     createAt: {
       type: Date,
@@ -23,9 +21,9 @@ const CustomerSchema = new Schema(
     },
   },
   {
-    collection: "Customer",
+    collection: "Manager",
     timestamps: true,
   }
 );
 mongoose.set("runValidators", true);
-module.exports = mongoose.model("Customer", CustomerSchema);
+module.exports = mongoose.model("Manager", ManagerSchema);
