@@ -11,9 +11,6 @@ const Account = require("../models/account");
 const Otp = require("../models/OTP");
 const otpGenerator = require("otp-generator");
 
-const { findByIdAndUpdate } = require("../models/timeAccess");
-const notification = require("../models/notification");
-
 exports.register = catchAsync(async (req, res) => {
   const { Name, Email, Phone, Password } = req.body;
   const account = await Account.create({
@@ -29,8 +26,8 @@ exports.register = catchAsync(async (req, res) => {
     lowerCaseAlphabets: false,
   });
   await Otp.create({
-    accountId: account._id,
-    otp: otpcode,
+    AccountId: account._id,
+    Otp: otpcode,
   });
   console.log(otpcode);
   await EmailService.sendMail(
@@ -48,25 +45,25 @@ exports.register = catchAsync(async (req, res) => {
 exports.verifyOTP = catchAsync(async (req, res) => {
   const { otp } = req.body;
   const { id } = req.params;
-  const checkOtp = await Otp.findOne({ accountId: id });
+  const checkOtp = await Otp.findOne({ AccountId: id });
   if (!checkOtp) {
     throw new ApiError(400, "OTP has expired !");
   } else {
-    const isMatch = bcrypt.compareSync(otp, checkOtp.otp);
+    const isMatch = bcrypt.compareSync(otp, checkOtp.Otp);
     if (!isMatch) {
       // different
       throw new ApiError(400, "OTP code is not corrrect !");
     } else {
       // same
-      await Account.findByIdAndUpdate(id, { isActive: true });
+      await Account.findByIdAndUpdate(id, { IsActive: true });
       await checkOtp.remove();
       res.status(200).json({
         success: true,
         message: "Verify successfully !",
       });
-      const isPoint = await Customer.findOne({ accountId: id });
+      const isPoint = await Customer.findOne({ AccountId: id });
       if (!isPoint) {
-        await Customer.create({ accountId: id, point: 0 });
+        await Customer.create({ AccountId: id, Point: 0 });
       }
     }
   }

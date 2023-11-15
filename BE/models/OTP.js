@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const OTPSchema = new Schema(
   {
-    accountId: {
+    AbortControllerccountId: {
       type: Schema.Types.ObjectId,
       ref: "account",
     },
-    otp: {
+    Otp: {
       type: String,
       required: true,
     },
@@ -23,10 +23,10 @@ const OTPSchema = new Schema(
   }
 );
 OTPSchema.pre("save", function (next) {
-  if (!this.isModified("otp")) return next();
+  if (!this.isModified("Otp")) return next();
   const salt = bcrypt.genSaltSync(); //round : độ phức tạp , thời gian cần 2^10
-  const hashedOTP = bcrypt.hashSync(this.otp, salt);
-  this.otp = hashedOTP;
+  const hashedOTP = bcrypt.hashSync(this.Otp, salt);
+  this.Otp = hashedOTP;
   next();
 });
 module.exports = mongoose.model("OTP", OTPSchema);
