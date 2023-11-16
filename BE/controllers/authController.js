@@ -12,12 +12,12 @@ const Otp = require("../models/OTP");
 const otpGenerator = require("otp-generator");
 
 exports.register = catchAsync(async (req, res) => {
-  const { Name, Email, Phone, Password } = req.body;
+  const { name, email, phone, password } = req.body;
   const account = await Account.create({
-    Name,
-    Email,
-    Phone,
-    Password,
+    name,
+    email,
+    phone,
+    password,
   });
   var otpcode = otpGenerator.generate(4, {
     upperCaseAlphabets: false,
@@ -26,13 +26,13 @@ exports.register = catchAsync(async (req, res) => {
     lowerCaseAlphabets: false,
   });
   await Otp.create({
-    AccountId: account._id,
-    Otp: otpcode,
+    accountId: account._id,
+    otp: otpcode,
   });
   console.log(otpcode);
   await EmailService.sendMail(
     process.env.EMAIL,
-    `${account.Email}`,
+    `${account.email}`,
     "OTP VERIFICATION",
     `Your OTP code: ${otpcode}`
   );
@@ -45,25 +45,25 @@ exports.register = catchAsync(async (req, res) => {
 exports.verifyOTP = catchAsync(async (req, res) => {
   const { otp } = req.body;
   const { id } = req.params;
-  const checkOtp = await Otp.findOne({ AccountId: id });
+  const checkOtp = await Otp.findOne({ accountId: id });
   if (!checkOtp) {
     throw new ApiError(400, "OTP has expired !");
   } else {
-    const isMatch = bcrypt.compareSync(otp, checkOtp.Otp);
+    const isMatch = bcrypt.compareSync(otp, checkOtp.otp);
     if (!isMatch) {
       // different
       throw new ApiError(400, "OTP code is not corrrect !");
     } else {
       // same
-      await Account.findByIdAndUpdate(id, { IsActive: true });
+      await Account.findByIdAndUpdate(id, { isActive: true });
       await checkOtp.remove();
       res.status(200).json({
         success: true,
         message: "Verify successfully !",
       });
-      const isPoint = await Customer.findOne({ AccountId: id });
+      const isPoint = await Customer.findOne({ accountId: id });
       if (!isPoint) {
-        await Customer.create({ AccountId: id, Point: 0 });
+        await Customer.create({ accountId: id, point: 0 });
       }
     }
   }
@@ -117,7 +117,6 @@ exports.login = catchAsync(async (req, res) => {
             expiresIn: "1h",
           }
         );
-
         res.json({
           success: true,
           token,

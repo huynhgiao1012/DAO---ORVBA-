@@ -2,23 +2,23 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const FeedbackSchema = new Schema(
   {
-    CustomerId: {
+    customerId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },
-    GarageId: {
+    garageId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },
-    FormID: {
+    formID: {
       type: mongoose.Types.ObjectId,
       ref: "orderForm",
     },
-    Rating: {
+    rating: {
       type: Number,
       required: true,
     },
-    Review: {
+    review: {
       type: String,
       required: true,
     },

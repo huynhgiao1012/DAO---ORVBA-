@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const ServiceSchema = new Schema(
   {
-    GarageId: {
+    garageId: {
       type: Schema.Types.ObjectId,
       ref: "garage",
     },
-    ServiceName: {
+    serviceName: {
       type: String,
       required: [true, "Service's name is required"],
     },
-    EstimatedPrice: {
+    estimatedPrice: {
       type: Number,
       required: [true, "Estimated price is required"],
     },

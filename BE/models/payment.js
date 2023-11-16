@@ -4,21 +4,21 @@ const Schema = mongoose.Schema;
 
 const PaymentSchema = new Schema(
   {
-    PayStatus: {
+    payStatus: {
       type: Boolean,
       default: false,
       required: [true, "Payment status is required"],
     },
-    PayType: {
+    payType: {
       type: String,
       enum: PAYTYPE,
       required: [true, "Payment type is required"],
     },
-    FormID: {
+    formID: {
       type: mongoose.Types.ObjectId,
       ref: "orderForm",
     },
-    AccountantId: {
+    accountantId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },

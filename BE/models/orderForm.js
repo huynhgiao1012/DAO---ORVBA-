@@ -3,67 +3,67 @@ const { FORM_STATUS } = require("../constant");
 const Schema = mongoose.Schema;
 const OrderFormSchema = new Schema(
   {
-    CustomerId: {
+    customerId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },
-    ManagerId: {
+    managerId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },
-    MechanicId: {
+    mechanicId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },
-    GarageId: {
+    garageId: {
       type: mongoose.Types.ObjectId,
       ref: "garage",
     },
-    Service: {
+    service: {
       type: String,
       required: true,
     },
-    Address: {
+    address: {
       type: String,
       required: true,
     },
-    Date: {
+    date: {
       type: Date,
       required: true,
     },
-    Time: {
+    time: {
       type: String,
       required: true,
     },
-    Automaker: {
+    automaker: {
       type: String,
       required: true,
     },
-    Status: {
+    status: {
       type: String,
       enum: FORM_STATUS,
       default: FORM_STATUS.AWAIT,
     },
-    IsFeedback: {
+    isFeedback: {
       type: Boolean,
       default: false,
     },
-    Price: {
+    price: {
       type: Number,
       required: true,
     },
-    Note: {
+    note: {
       type: String,
     },
-    IsPaid: {
+    isPaid: {
       type: Boolean,
       default: false,
     },
-    ImgAf: {
+    imgAf: {
       type: String,
       required: true,
     },
-    ImgBf: {
+    imgBf: {
       type: String,
       required: true,
     },

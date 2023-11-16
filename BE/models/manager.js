@@ -5,12 +5,12 @@ const { GROUP } = require("../constant");
 
 const ManagerSchema = new Schema(
   {
-    AccountId: {
+    accountId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "account",
     },
-    GarageId: {
+    garageId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "garage",

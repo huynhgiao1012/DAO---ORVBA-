@@ -60,12 +60,13 @@ exports.deleteUser = catchAsync(async (req, res) => {
     data: user,
   });
 });
+// users can update their information
 exports.updateUser = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { name, phone } = req.body;
+  const { name, phone, img } = req.body;
   const user = await User.findByIdAndUpdate(
     id,
-    { name: name, phone: phone },
+    { name: name, phone: phone, img: img },
     { new: true }
   );
   if (!user) {
@@ -94,6 +95,7 @@ exports.updateUserDetail = catchAsync(async (req, res) => {
     .status(200)
     .json({ success: true, message: "Update successfully", data: user });
 });
+// admin gets all users
 exports.getAllUser = catchAsync(async (req, res) => {
   const data = await User.find({});
   res.status(200).json({
@@ -101,6 +103,7 @@ exports.getAllUser = catchAsync(async (req, res) => {
     data,
   });
 });
+// admin gets account's information
 exports.getUser = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = await User.findById(id);
@@ -112,6 +115,7 @@ exports.getUser = catchAsync(async (req, res) => {
     data,
   });
 });
+// each users get their information
 exports.getUserDetails = catchAsync(async (req, res) => {
   const id = req.user.id;
   const data = await User.findById(id);
@@ -123,6 +127,7 @@ exports.getUserDetails = catchAsync(async (req, res) => {
     data,
   });
 });
+// customer and manager can view customer's point
 exports.getUserPoint = catchAsync(async (req, res) => {
   const id = req.user.id;
   const data = await Customer.findOne({ accountId: id });
@@ -134,6 +139,7 @@ exports.getUserPoint = catchAsync(async (req, res) => {
     data,
   });
 });
+// update point of user after using service
 exports.updateUserPoint = catchAsync(async (req, res) => {
   const id = req.user.id;
   const { point } = req.body;
@@ -150,7 +156,7 @@ exports.updateUserPoint = catchAsync(async (req, res) => {
     data,
   });
 });
-
+// user update their password after singing in
 exports.updatePassword = catchAsync(async (req, res) => {
   const { email } = req.user;
   const { oldPassword, newPassword } = req.body;
@@ -170,38 +176,3 @@ exports.updatePassword = catchAsync(async (req, res) => {
     message: "Change successfully !",
   });
 });
-// exports.rechargeUserBalance = catchAsync(async (req, res) => {
-//   const { id } = req.params;
-//   const { amount } = req.body;
-//   const user = await User.findById(id);
-//   const balance = user.balance + amount;
-//   const newUser = await User.findByIdAndUpdate(id, { balance }, { new: true });
-//   res.status(200).json({
-//     success: true,
-//     newUser,
-//     message: `Successful. The new balance is ${newUser.balance}`,
-//   });
-// });
-// exports.rechargeBalance = catchAsync(async (req, res) => {
-//   const { amount, cardNum, CVV, expiredDate } = req.body;
-//   const userID = req.user.id;
-//   const recharge = await Recharge.create({
-//     amount,
-//     userID,
-//     cardNum,
-//     CVV,
-//     expiredDate,
-//   });
-//   const user = await User.findById(userID);
-//   const balance = user.balance + amount;
-//   const newUser = await User.findByIdAndUpdate(
-//     userID,
-//     { balance },
-//     { new: true }
-//   );
-//   res.status(200).json({
-//     success: true,
-//     recharge,
-//     message: `Successful. The new balance is ${newUser.balance}`
-//   });
-// });

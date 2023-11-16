@@ -5,22 +5,22 @@ const { GROUP } = require("../constant");
 
 const MechanicSchema = new Schema(
   {
-    AccountId: {
+    accountId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "account",
     },
-    GarageId: {
+    garageId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "garage",
     },
-    MePoint: {
+    mePoint: {
       type: Number,
       required: true,
       default: 0,
     },
-    Group: {
+    group: {
       type: String,
       enum: GROUP,
     },

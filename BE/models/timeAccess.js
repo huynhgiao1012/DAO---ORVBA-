@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const timeAccessSchema = new Schema(
   {
-    userId: {
+    accountId: {
       type: mongoose.Types.ObjectId,
       require: true,
-      ref: "User",
+      ref: "account",
     },
     times: {
       type: Number,
@@ -20,7 +20,7 @@ const timeAccessSchema = new Schema(
     },
   },
   {
-    collection: "tcat-times",
+    collection: "Time Access",
     timestamps: true,
   }
 );

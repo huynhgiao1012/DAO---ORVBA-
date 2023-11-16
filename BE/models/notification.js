@@ -3,19 +3,19 @@ const { NOTI_STATUS } = require("../constant");
 const Schema = mongoose.Schema;
 const NotificationSchema = new Schema(
   {
-    CustomerId: {
+    customerId: {
       type: mongoose.Types.ObjectId,
       ref: "account",
     },
-    GarageId: {
+    garageId: {
       type: mongoose.Types.ObjectId,
       ref: "garage",
     },
-    Text: {
+    text: {
       type: String,
       required: "true",
     },
-    Status: {
+    status: {
       type: String,
       enum: NOTI_STATUS,
       default: NOTI_STATUS.UNREAD,

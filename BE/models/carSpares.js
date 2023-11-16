@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const CarSparesSchema = new Schema(
   {
-    GarageId: {
+    garageId: {
       type: Schema.Types.ObjectId,
       ref: "garage",
     },
-    AccountantId: {
+    accountantId: {
       type: Schema.Types.ObjectId,
       ref: "accountant",
     },
-    Name: {
+    name: {
       type: String,
       required: [true, "Name is required"],
     },
-    Price: {
+    price: {
       type: Number,
       required: [true, "Price is required"],
     },

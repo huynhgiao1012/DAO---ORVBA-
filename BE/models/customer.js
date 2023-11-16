@@ -3,17 +3,17 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const CustomerSchema = new Schema(
   {
-    AccountId: {
+    accountId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "account",
     },
-    Point: {
+    point: {
       type: Number,
       required: true,
       default: 0,
     },
-    IsVIP: {
+    isVIP: {
       type: Boolean,
       default: false,
     },

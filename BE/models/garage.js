@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const GarageSchema = new Schema(
   {
-    Name: {
+    name: {
       type: String,
       required: [true, "Name is required"],
       minlength: [3, "Name must have at least 3 characters"],
     },
-    Email: {
+    email: {
       type: String,
       trim: true,
       lowercase: true,
@@ -19,33 +19,33 @@ const GarageSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    Phone: {
+    phone: {
       type: String,
       unique: true,
       require: [true, "Phone number is required"],
       unique: true,
     },
-    Longitude: {
+    longitude: {
       type: Number,
       required: [true, "Longtitude is required"],
     },
-    Latitude: {
+    latitude: {
       type: Number,
       required: [true, "Latitude is required"],
     },
-    Address: {
+    address: {
       type: String,
       required: [true, "Address is required"],
     },
-    Description: {
+    description: {
       type: String,
       required: [true, "Description is required"],
     },
-    OpenTime: {
+    openTime: {
       type: String,
       required: [true, "Open time is required"],
     },
-    CloseTime: {
+    closeTime: {
       type: String,
       required: [true, "close time is required"],
     },
