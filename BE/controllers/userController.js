@@ -39,6 +39,8 @@ const ApiError = require("../utils/ApiError");
 //     message: "Successfull create new user",
 //   });
 // });
+
+// admin delete users' account
 exports.deleteUser = catchAsync(async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);

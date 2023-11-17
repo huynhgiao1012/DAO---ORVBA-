@@ -47,7 +47,12 @@ const GarageSchema = new Schema(
     },
     closeTime: {
       type: String,
-      required: [true, "close time is required"],
+      required: [true, "Close time is required"],
+    },
+    transferInfo: {
+      type: Array,
+      default: [],
+      required: [true, "Transfer information is required"],
     },
     createAt: {
       type: Date,
