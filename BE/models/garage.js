@@ -27,7 +27,7 @@ const GarageSchema = new Schema(
     },
     longitude: {
       type: Number,
-      required: [true, "Longtitude is required"],
+      required: [true, "Longitude is required"],
     },
     latitude: {
       type: Number,

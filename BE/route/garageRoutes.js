@@ -1,15 +1,10 @@
 const express = require("express");
 const garageController = require("../controllers/garageController");
+const managerController = require("../controllers/managerController");
 const { jwtAuth } = require("../middleware/jwtAuth");
 const { authorize } = require("../middleware/authorize");
 const router = express.Router();
 
-// router.get(
-//   "/getAllCompany",
-//   jwtAuth,
-//   authorize("admin"),
-//   companyController.getAllCompany
-// );
 // router.get(
 //   "/getCorCompany",
 //   jwtAuth,
@@ -22,17 +17,30 @@ const router = express.Router();
 //   authorize("company"),
 //   companyController.getSpecificCorCompany
 // );
-// router.get(
-//   "/getCompanyDetail/:id",
-//   jwtAuth,
-//   authorize("admin", "customer"),
-//   companyController.getCompany
-// );
+router.get(
+  "/getGarageDetail/:id",
+  jwtAuth,
+  authorize("admin", "customer"),
+  garageController.getGarageDetails
+);
 router.post(
   "/create",
   jwtAuth,
   authorize("admin"),
   garageController.createGarage
+);
+router.get(
+  "/getAllGarage",
+  jwtAuth,
+  authorize("admin"),
+  garageController.getAllGarage
+);
+
+router.post(
+  "/createManagerAccount/:id",
+  jwtAuth,
+  authorize("admin"),
+  garageController.createManagerAccount
 );
 // router.delete(
 //   "/:id",

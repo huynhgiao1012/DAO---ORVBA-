@@ -1,6 +1,7 @@
 const catchAsync = require("../middleware/async");
 const Account = require("../models/account");
-const Company = require("../models/company");
+const Garage = require("../models/garage");
+const Manager = require("../models/manager");
 const ApiError = require("../utils/ApiError");
 var generator = require("generate-password");
 const EmailService = require("../utils/EmailService");
@@ -13,52 +14,83 @@ exports.createGarage = catchAsync(async (req, res) => {
     name,
     email,
     phone,
-    logitude,
+    longitude,
     latitude,
     address,
     description,
     openTime,
     closeTime,
+    transferInfo,
   } = req.body;
-  var password = generator.generateMultiple(1, {
-    length: 10,
-    numbers: true,
-    symbols: true,
-    lowercase: true,
-    uppercase: true,
-    strict: true,
-  })[0];
-  const account = await Account.create({
+  const garage = await Garage.create({
     name,
     email,
     phone,
-    password,
-    role: ROLES.MANAGER,
-  });
-  const company = await Company.create({
-    accountId: account.id,
+    longitude,
+    latitude,
+    address,
+    description,
     openTime,
     closeTime,
-    long,
-    lat,
-    address,
+    transferInfo,
   });
-  await EmailService.sendMail(
-    process.env.EMAIL,
-    `${email}`,
-    "REGISTER COMPANY SUCCESS",
-    `Your passwors: ${password}`
-  );
   res.status(200).json({
     success: true,
     message: "Successfull",
-    account,
-    company,
+    garage,
   });
 });
-// exports.deleteCompany = catchAsync(async (req, res) => {
+// exports.createGarage = catchAsync(async (req, res) => {
+//   const {
+//     name,
+//     email,
+//     phone,
+//     logitude,
+//     latitude,
+//     address,
+//     description,
+//     openTime,
+//     closeTime,
+//   } = req.body;
+//   var password = generator.generateMultiple(1, {
+//     length: 10,
+//     numbers: true,
+//     symbols: true,
+//     lowercase: true,
+//     uppercase: true,
+//     strict: true,
+//   })[0];
+//   const account = await Account.create({
+//     name,
+//     email,
+//     phone,
+//     password,
+//     role: ROLES.MANAGER,
+//   });
+//   const company = await Company.create({
+//     accountId: account.id,
+//     openTime,
+//     closeTime,
+//     long,
+//     lat,
+//     address,
+//   });
+//   await EmailService.sendMail(
+//     process.env.EMAIL,
+//     `${email}`,
+//     "REGISTER COMPANY SUCCESS",
+//     `Your passwors: ${password}`
+//   );
+//   res.status(200).json({
+//     success: true,
+//     message: "Successfull",
+//     account,
+//     company,
+//   });
+// });
+// exports.deleteGarage = catchAsync(async (req, res) => {
 //   const { id } = req.params;
-//   const account = await Account.findById(id);
+//   const account = await Garage.findById(id);
 //   const company = await Company.findOne({ accountId: id });
 //   if (!account || !company) {
 //     throw new ApiError(400, "This company is not available");
@@ -93,16 +125,18 @@ exports.createGarage = catchAsync(async (req, res) => {
 //     companyInfo: company,
 //   });
 // });
-// exports.getAllCompany = catchAsync(async (req, res) => {
-//   const data = await Account.find({ role: ROLES.COMPANY });
-//   if (!data) {
-//     throw new ApiError(400, "This company is not available");
-//   }
-//   res.status(200).json({
-//     success: true,
-//     data,
-//   });
-// });
+
+// admin get all garages
+exports.getAllGarage = catchAsync(async (req, res) => {
+  const data = await Garage.find({});
+  if (!data) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
 // exports.getCorCompany = catchAsync(async (req, res) => {
 //   const data = await Company.find({});
 //   if (!data) {
@@ -124,16 +158,50 @@ exports.createGarage = catchAsync(async (req, res) => {
 //     data,
 //   });
 // });
-// exports.getCompany = catchAsync(async (req, res) => {
-//   const { id } = req.params;
-//   const data = await Account.findById(id);
-//   const companyDetail = await Company.findOne({ accountId: id });
-//   if (!data || !companyDetail) {
-//     throw new ApiError(400, "This company is not available");
-//   }
-//   res.status(200).json({
-//     success: true,
-//     data,
-//     companyDetail,
-//   });
-// });
+exports.getGarageDetails = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const data = await Garage.findById(id);
+  if (!data) {
+    throw new ApiError(400, "This company is not available");
+  }
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
+exports.createManagerAccount = catchAsync(async (req, res) => {
+  const { name, email, phone } = req.body;
+  const garageId = req.params;
+  var password = generator.generateMultiple(1, {
+    length: 10,
+    numbers: true,
+    symbols: true,
+    lowercase: true,
+    uppercase: true,
+    strict: true,
+  })[0];
+  const account = await Account.create({
+    name,
+    email,
+    phone,
+    password,
+    role: ROLES.MANAGER,
+    isActive: true,
+  });
+  const manager = await Manager.create({
+    accountId: account._id,
+    garageId: garageId.id,
+  });
+  await EmailService.sendMail(
+    process.env.EMAIL,
+    `${email}`,
+    "YOUR ACCOUNT IS ACTIVE",
+    `Your passwors: ${password}`
+  );
+  res.status(200).json({
+    success: true,
+    message: "Successfull",
+    account: account,
+    manager: manager,
+  });
+});

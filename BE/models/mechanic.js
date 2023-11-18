@@ -23,6 +23,11 @@ const MechanicSchema = new Schema(
     group: {
       type: String,
       enum: GROUP,
+      required: true,
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true,
     },
     createAt: {
       type: Date,

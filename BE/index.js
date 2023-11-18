@@ -12,11 +12,12 @@ const io = new Server(server);
 const EmailService = require("./utils/EmailService");
 const catchError = require("./middleware/error");
 const authRoutes = require("./route/authRoutes");
-const companyRoutes = require("./route/companyRoutes");
+const garageRoutes = require("./route/garageRoutes");
 const serviceRoutes = require("./route/serviceRoutes");
 const userRoutes = require("./route/userRoutes");
 const notiRoutes = require("./route/notiRoutes");
 const formRoutes = require("./route/formRoutes");
+const managerRoutes = require("./route/managerRoutes");
 const feedbackRoutes = require("./route/feedbackRoutes");
 app.use(express.json());
 app.use(cors());
@@ -24,12 +25,13 @@ EmailService.init();
 Mongo.connect();
 
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/company", companyRoutes);
+app.use("/api/v1/garage", garageRoutes);
 app.use("/api/v1/service", serviceRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/notification", notiRoutes);
 app.use("/api/v1/form", formRoutes);
 app.use("/api/v1/feedback", feedbackRoutes);
+app.use("/api/v1/manager", managerRoutes);
 app.use(catchError);
 const port = process.env.PORT || 3000;
 
