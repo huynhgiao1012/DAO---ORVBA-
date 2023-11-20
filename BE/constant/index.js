@@ -16,7 +16,7 @@ exports.PAYTYPE = {
 exports.FORM_STATUS = {
   AWAIT: "await",
   PROCESS: "process",
-  DONE: "done",
+  HOLDING: "holding",
 };
 
 exports.NOTI_STATUS = {

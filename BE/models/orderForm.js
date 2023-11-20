@@ -5,21 +5,33 @@ const OrderFormSchema = new Schema(
   {
     customerId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
     managerId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
     mechanicId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
     garageId: {
       type: mongoose.Types.ObjectId,
-      ref: "garage",
+      ref: "Garage",
+    },
+    customerName: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      require: [true, "Phone number is required"],
     },
     service: {
+      type: String,
+      required: true,
+    },
+    type: {
       type: String,
       required: true,
     },
@@ -51,6 +63,7 @@ const OrderFormSchema = new Schema(
     price: {
       type: Number,
       required: true,
+      default: 0,
     },
     note: {
       type: String,

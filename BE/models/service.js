@@ -4,7 +4,7 @@ const ServiceSchema = new Schema(
   {
     garageId: {
       type: Schema.Types.ObjectId,
-      ref: "garage",
+      ref: "Garage",
     },
     serviceName: {
       type: String,

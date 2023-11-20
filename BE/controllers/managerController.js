@@ -7,7 +7,10 @@ const ApiError = require("../utils/ApiError");
 var generator = require("generate-password");
 const EmailService = require("../utils/EmailService");
 const { ROLES } = require("../constant");
-const mechanic = require("../models/mechanic");
+const OrderForm = require("../models/orderForm");
+const Service = require("../models/service");
+const SubService = require("../models/subService");
+const Garage = require("../models/garage");
 // const { Manager } = require("socket.io-client");
 exports.createMechanicAccount = catchAsync(async (req, res) => {
   const { name, email, phone, group } = req.body;
@@ -84,26 +87,224 @@ exports.createAccountantAccount = catchAsync(async (req, res) => {
     accountant: accountant,
   });
 });
-// exports.updateCompany = catchAsync(async (req, res) => {
-//   const { id } = req.params;
-//   const { name, phone, openTime, closeTime, long, lat, address } = req.body;
-//   const account = await Account.findByIdAndUpdate(
-//     id,
-//     { name, phone },
-//     { new: true }
-//   );
-//   const company = await Company.findOneAndUpdate(
-//     { accountId: id },
-//     { openTime, closeTime, long, lat, address },
-//     { new: true }
-//   );
-//   if (!account || !company) {
-//     throw new ApiError(400, "This company is not available");
-//   }
-//   res.status(200).json({
-//     success: true,
-//     message: "Update successfully",
-//     accountInfo: account,
-//     companyInfo: company,
-//   });
-// });
+exports.getAllAccountant = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const accountant = await Accountant.find({
+    garageId: manager.garageId,
+  }).populate("accountId", "name email phone img _id");
+  if (!accountant) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    accountant,
+  });
+});
+exports.getAllMechanic = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const mechanic = await Mechanic.find({ garageId: manager.garageId }).populate(
+    "accountId",
+    "name email phone img _id"
+  );
+  if (!mechanic) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    mechanic,
+  });
+});
+exports.getAllEmployee = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const mechanic = await Mechanic.find({ garageId: manager.garageId }).populate(
+    "accountId",
+    "name email phone img _id"
+  );
+  const accountant = await Accountant.find({
+    garageId: manager.garageId,
+  }).populate("accountId", "name email phone img _id");
+  if (!mechanic || !accountant) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    data: mechanic.concat(accountant),
+  });
+});
+exports.createEmergencyForm = catchAsync(async (req, res) => {
+  const { customerName, phone, service, address, date, time, price } = req.body;
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const customer = await Account.findOne({ phone: phone });
+  const orderForm = await OrderForm.create({
+    customerName,
+    phone,
+    service,
+    address,
+    date,
+    time,
+    managerId: manager._id,
+    customerId: customer._id,
+    imgAf: "None",
+    imgBf: "None",
+    automaker: "None",
+    type: "emergency",
+    price,
+  });
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.createService = catchAsync(async (req, res) => {
+  const { serviceName, estimatedPrice } = req.body;
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const service = await Service.create({
+    serviceName,
+    estimatedPrice,
+    garageId: manager.garageId,
+  });
+  if (service) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: service,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.createSubService = catchAsync(async (req, res) => {
+  const { subName, subPrice } = req.body;
+  const serviceId = req.params;
+  const service = await SubService.create({
+    subName,
+    subPrice,
+    serviceId: serviceId.id,
+  });
+  if (service) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: service,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.getAllService = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const services = await Service.find({
+    garageId: manager.garageId,
+  });
+  if (!services) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    services,
+  });
+});
+exports.getSubService = catchAsync(async (req, res) => {
+  const serviceId = req.params;
+  const subServices = await SubService.find({
+    serviceId: serviceId.id,
+  });
+  if (!subServices) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    subServices,
+  });
+});
+exports.createEmergencyForm = catchAsync(async (req, res) => {
+  const { customerName, phone, service, address, date, time, price } = req.body;
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const customer = await Account.findOne({ phone: phone });
+  const orderForm = await OrderForm.create({
+    customerName,
+    phone,
+    service,
+    address,
+    date,
+    time,
+    managerId: manager._id,
+    customerId: customer._id,
+    imgAf: "None",
+    imgBf: "None",
+    automaker: "None",
+    type: "emergency",
+    price,
+  });
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.updateGarage = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const {
+    name,
+    phone,
+    openTime,
+    closeTime,
+    longitude,
+    latitude,
+    address,
+    description,
+    transferInfo,
+  } = req.body;
+  const gara = await Garage.findOneAndUpdate(
+    { id: manager.garageId },
+    {
+      name,
+      phone,
+      openTime,
+      closeTime,
+      longitude,
+      latitude,
+      address,
+      description,
+      transferInfo,
+    },
+    { new: true }
+  );
+  if (!gara) {
+    throw new ApiError(400, "This garage is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Update successfully",
+    garage: gara,
+  });
+});

@@ -8,12 +8,12 @@ const MechanicSchema = new Schema(
     accountId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "account",
+      ref: "Account",
     },
     garageId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "garage",
+      ref: "Garage",
     },
     mePoint: {
       type: Number,

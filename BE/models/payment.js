@@ -16,11 +16,11 @@ const PaymentSchema = new Schema(
     },
     formID: {
       type: mongoose.Types.ObjectId,
-      ref: "orderForm",
+      ref: "OrderForm",
     },
     accountantId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
   },
   {

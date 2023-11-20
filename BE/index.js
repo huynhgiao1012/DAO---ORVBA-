@@ -19,6 +19,7 @@ const notiRoutes = require("./route/notiRoutes");
 const formRoutes = require("./route/formRoutes");
 const managerRoutes = require("./route/managerRoutes");
 const feedbackRoutes = require("./route/feedbackRoutes");
+const mechanicRoutes = require("./route/mechanicRoutes");
 app.use(express.json());
 app.use(cors());
 EmailService.init();
@@ -32,6 +33,7 @@ app.use("/api/v1/notification", notiRoutes);
 app.use("/api/v1/form", formRoutes);
 app.use("/api/v1/feedback", feedbackRoutes);
 app.use("/api/v1/manager", managerRoutes);
+app.use("/api/v1/mechanic", mechanicRoutes);
 app.use(catchError);
 const port = process.env.PORT || 3000;
 

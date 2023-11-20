@@ -6,7 +6,7 @@ const CustomerSchema = new Schema(
     accountId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "account",
+      ref: "Account",
     },
     point: {
       type: Number,

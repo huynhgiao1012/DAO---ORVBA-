@@ -4,15 +4,15 @@ const FeedbackSchema = new Schema(
   {
     customerId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
     garageId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
     formID: {
       type: mongoose.Types.ObjectId,
-      ref: "orderForm",
+      ref: "OrderForm",
     },
     rating: {
       type: Number,

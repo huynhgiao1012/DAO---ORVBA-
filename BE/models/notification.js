@@ -5,11 +5,11 @@ const NotificationSchema = new Schema(
   {
     customerId: {
       type: mongoose.Types.ObjectId,
-      ref: "account",
+      ref: "Account",
     },
     garageId: {
       type: mongoose.Types.ObjectId,
-      ref: "garage",
+      ref: "Garage",
     },
     text: {
       type: String,

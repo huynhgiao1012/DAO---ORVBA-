@@ -4,7 +4,7 @@ const SubServiceSchema = new Schema(
   {
     serviceId: {
       type: Schema.Types.ObjectId,
-      ref: "service",
+      ref: "Service",
     },
     subName: {
       type: String,

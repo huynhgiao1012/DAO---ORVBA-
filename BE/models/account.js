@@ -24,7 +24,6 @@ const AccountSchema = new Schema(
       type: String,
       unique: true,
       require: [true, "Phone number is required"],
-      unique: true,
     },
     password: {
       type: String,

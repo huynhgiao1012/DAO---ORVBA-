@@ -4,11 +4,11 @@ const CarSparesSchema = new Schema(
   {
     garageId: {
       type: Schema.Types.ObjectId,
-      ref: "garage",
+      ref: "Garage",
     },
     accountantId: {
       type: Schema.Types.ObjectId,
-      ref: "accountant",
+      ref: "Accountant",
     },
     name: {
       type: String,

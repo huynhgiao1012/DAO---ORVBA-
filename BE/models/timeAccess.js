@@ -6,7 +6,7 @@ const timeAccessSchema = new Schema(
     accountId: {
       type: mongoose.Types.ObjectId,
       require: true,
-      ref: "account",
+      ref: "Account",
     },
     times: {
       type: Number,
