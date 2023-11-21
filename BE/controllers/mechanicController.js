@@ -6,36 +6,23 @@ const Manager = require("../models/manager");
 const ApiError = require("../utils/ApiError");
 var generator = require("generate-password");
 const EmailService = require("../utils/EmailService");
-const { ROLES } = require("../constant");
+const { ROLES, FORM_STATUS } = require("../constant");
 const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
 const SubService = require("../models/subService");
 const Garage = require("../models/garage");
 exports.pickForm = catchAsync(async (req, res) => {
-  const { customerName, phone, service, address, date, time, price } = req.body;
-  const accountId = req.user;
-  const manager = await Manager.findOne({ accountId: accountId.id });
-  const customer = await Account.findOne({ phone: phone });
-  const orderForm = await OrderForm.create({
-    customerName,
-    phone,
-    service,
-    address,
-    date,
-    time,
-    managerId: manager._id,
-    customerId: customer._id,
-    imgAf: "None",
-    imgBf: "None",
-    automaker: "None",
-    type: "emergency",
-    price,
+  const mechanicId = req.user;
+  const id = req.params;
+  const orderForm = await OrderForm.findByIdAndUpdate(id.id, {
+    mechanicId: mechanicId.id,
+    status: FORM_STATUS.PROCESS,
   });
   if (orderForm) {
     res.status(200).json({
       success: true,
-      message: "Successfull",
-      orderForm: orderForm,
+      message: "Successfully",
+      orderForm,
     });
   } else {
     res.status(400).json({

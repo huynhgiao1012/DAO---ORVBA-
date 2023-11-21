@@ -4,12 +4,12 @@ const { jwtAuth } = require("../middleware/jwtAuth");
 const { authorize } = require("../middleware/authorize");
 const router = express.Router();
 
-// router.patch(
-//   "/updateGarage",
-//   jwtAuth,
-//   authorize("mechanic"),
-//   managerController.updateGarage
-// );
+router.patch(
+  "/pickForm/:id",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.pickForm
+);
 router.get(
   "/getForms",
   jwtAuth,
