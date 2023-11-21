@@ -11,13 +11,67 @@ const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
 const SubService = require("../models/subService");
 const Garage = require("../models/garage");
+const Payment = require("../models/payment");
 exports.pickForm = catchAsync(async (req, res) => {
   const mechanicId = req.user;
   const id = req.params;
-  const orderForm = await OrderForm.findByIdAndUpdate(id.id, {
-    mechanicId: mechanicId.id,
-    status: FORM_STATUS.PROCESS,
-  });
+  const orderForm = await OrderForm.findByIdAndUpdate(
+    id.id,
+    {
+      mechanicId: mechanicId.id,
+      status: FORM_STATUS.PROCESS,
+    },
+    { new: true }
+  );
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfully",
+      orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.updateBefore = catchAsync(async (req, res) => {
+  const id = req.params;
+  const { automaker, imgBf } = req.body;
+  const orderForm = await OrderForm.findByIdAndUpdate(
+    id.id,
+    {
+      automaker: automaker,
+      imgBf: imgBf,
+    },
+    { new: true }
+  );
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfully",
+      orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.updateFinish = catchAsync(async (req, res) => {
+  const id = req.params;
+  const { imgAf, payType } = req.body;
+  const orderForm = await OrderForm.findByIdAndUpdate(
+    id.id,
+    {
+      imgAf: imgAf,
+      payType: payType,
+      status: FORM_STATUS.HOLDING,
+    },
+    { new: true }
+  );
   if (orderForm) {
     res.status(200).json({
       success: true,

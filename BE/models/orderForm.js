@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { FORM_STATUS } = require("../constant");
+const { FORM_STATUS, PAYTYPE } = require("../constant");
 const Schema = mongoose.Schema;
 const OrderFormSchema = new Schema(
   {
@@ -12,6 +12,10 @@ const OrderFormSchema = new Schema(
       ref: "Account",
     },
     mechanicId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Account",
+    },
+    accountantId: {
       type: mongoose.Types.ObjectId,
       ref: "Account",
     },
@@ -79,6 +83,12 @@ const OrderFormSchema = new Schema(
     imgBf: {
       type: String,
       required: true,
+    },
+    payType: {
+      type: String,
+      enum: PAYTYPE,
+      required: [true, "Payment type is required"],
+      default: PAYTYPE.CASH,
     },
     creatAt: {
       type: Date,

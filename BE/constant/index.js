@@ -17,6 +17,7 @@ exports.FORM_STATUS = {
   AWAIT: "await",
   PROCESS: "process",
   HOLDING: "holding",
+  DONE: "done",
 };
 
 exports.NOTI_STATUS = {

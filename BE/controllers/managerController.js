@@ -2,6 +2,7 @@ const catchAsync = require("../middleware/async");
 const Account = require("../models/account");
 const Mechanic = require("../models/mechanic");
 const Accountant = require("../models/accountant");
+const Customer = require("../models/customer");
 const Manager = require("../models/manager");
 const ApiError = require("../utils/ApiError");
 var generator = require("generate-password");
@@ -135,10 +136,12 @@ exports.getAllEmployee = catchAsync(async (req, res) => {
   });
 });
 exports.createEmergencyForm = catchAsync(async (req, res) => {
-  const { customerName, phone, service, address, date, time, price } = req.body;
+  const { customerName, phone, service, address, date, time, price, note } =
+    req.body;
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
-  const customer = await Account.findOne({ phone: phone });
+  const accountInfo = await Account.findOne({ phone: phone });
+  const customer = await Customer.findOne({ accountId: accountInfo._id });
   const orderForm = await OrderForm.create({
     customerName,
     phone,
@@ -153,6 +156,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
     automaker: "None",
     type: "emergency",
     price,
+    note,
   });
   if (orderForm) {
     res.status(200).json({
@@ -237,39 +241,39 @@ exports.getSubService = catchAsync(async (req, res) => {
     subServices,
   });
 });
-exports.createEmergencyForm = catchAsync(async (req, res) => {
-  const { customerName, phone, service, address, date, time, price } = req.body;
-  const accountId = req.user;
-  const manager = await Manager.findOne({ accountId: accountId.id });
-  const customer = await Account.findOne({ phone: phone });
-  const orderForm = await OrderForm.create({
-    customerName,
-    phone,
-    service,
-    address,
-    date,
-    time,
-    managerId: manager._id,
-    customerId: customer._id,
-    imgAf: "None",
-    imgBf: "None",
-    automaker: "None",
-    type: "emergency",
-    price,
-  });
-  if (orderForm) {
-    res.status(200).json({
-      success: true,
-      message: "Successfull",
-      orderForm: orderForm,
-    });
-  } else {
-    res.status(400).json({
-      success: false,
-      message: "Failed",
-    });
-  }
-});
+// exports.createEmergencyForm = catchAsync(async (req, res) => {
+//   const { customerName, phone, service, address, date, time, price } = req.body;
+//   const accountId = req.user;
+//   const manager = await Manager.findOne({ accountId: accountId.id });
+//   const customer = await Account.findOne({ phone: phone });
+//   const orderForm = await OrderForm.create({
+//     customerName,
+//     phone,
+//     service,
+//     address,
+//     date,
+//     time,
+//     managerId: manager._id,
+//     customerId: customer._id,
+//     imgAf: "None",
+//     imgBf: "None",
+//     automaker: "None",
+//     type: "emergency",
+//     price,
+//   });
+//   if (orderForm) {
+//     res.status(200).json({
+//       success: true,
+//       message: "Successfull",
+//       orderForm: orderForm,
+//     });
+//   } else {
+//     res.status(400).json({
+//       success: false,
+//       message: "Failed",
+//     });
+//   }
+// });
 exports.updateGarage = catchAsync(async (req, res) => {
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
