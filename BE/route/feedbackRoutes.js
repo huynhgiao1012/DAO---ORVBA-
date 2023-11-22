@@ -6,7 +6,7 @@ const router = express.Router();
 router.get(
   "/getAllFeedbacks/:id",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("manager", "customer"),
   feedbackController.getAllFeedback
 );
 
@@ -16,11 +16,11 @@ router.post(
   authorize("customer"),
   feedbackController.createFeedback
 );
-router.delete(
-  "/:id",
-  jwtAuth,
-  authorize("company"),
-  feedbackController.deleteFeedback
-);
+// router.delete(
+//   "/:id",
+//   jwtAuth,
+//   authorize("company"),
+//   feedbackController.deleteFeedback
+// );
 
 module.exports = router;

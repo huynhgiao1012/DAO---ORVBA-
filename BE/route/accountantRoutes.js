@@ -10,10 +10,28 @@ router.post(
   authorize("accountant"),
   accountantController.updateDone
 );
+router.post(
+  "/addCarSpares",
+  jwtAuth,
+  authorize("accountant"),
+  accountantController.addCarSpares
+);
+router.post(
+  "/updateCarSpares/:id",
+  jwtAuth,
+  authorize("accountant"),
+  accountantController.updateCarSpares
+);
 router.get(
   "/getUnPaidForms",
   jwtAuth,
   authorize("accountant"),
   accountantController.getUnPaidForms
+);
+router.get(
+  "/getAllCarSpares",
+  jwtAuth,
+  authorize("accountant"),
+  accountantController.getAllCarSpares
 );
 module.exports = router;

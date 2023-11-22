@@ -7,7 +7,7 @@ const Manager = require("../models/manager");
 const ApiError = require("../utils/ApiError");
 var generator = require("generate-password");
 const EmailService = require("../utils/EmailService");
-const { ROLES } = require("../constant");
+const { ROLES, FORM_STATUS, GROUP } = require("../constant");
 const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
 const SubService = require("../models/subService");
@@ -151,6 +151,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
     time,
     managerId: manager._id,
     customerId: customer._id,
+    garageId: manager.garageId,
     imgAf: "None",
     imgBf: "None",
     automaker: "None",
@@ -241,39 +242,107 @@ exports.getSubService = catchAsync(async (req, res) => {
     subServices,
   });
 });
-// exports.createEmergencyForm = catchAsync(async (req, res) => {
-//   const { customerName, phone, service, address, date, time, price } = req.body;
-//   const accountId = req.user;
-//   const manager = await Manager.findOne({ accountId: accountId.id });
-//   const customer = await Account.findOne({ phone: phone });
-//   const orderForm = await OrderForm.create({
-//     customerName,
-//     phone,
-//     service,
-//     address,
-//     date,
-//     time,
-//     managerId: manager._id,
-//     customerId: customer._id,
-//     imgAf: "None",
-//     imgBf: "None",
-//     automaker: "None",
-//     type: "emergency",
-//     price,
-//   });
-//   if (orderForm) {
-//     res.status(200).json({
-//       success: true,
-//       message: "Successfull",
-//       orderForm: orderForm,
-//     });
-//   } else {
-//     res.status(400).json({
-//       success: false,
-//       message: "Failed",
-//     });
-//   }
-// });
+exports.getEmergencyForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.find({
+    garageId: manager.garageId,
+    type: GROUP.EMERGENCY,
+    isPaid: false,
+  });
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    orderForm,
+  });
+});
+exports.getMaintenanceForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.find({
+    garageId: manager.garageId,
+    type: GROUP.MAINTENANCE,
+    isPaid: false,
+  });
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    orderForm,
+  });
+});
+exports.updateIsVip = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const customer = await Customer.findOneAndUpdate(id, {
+    isVIP: true,
+  });
+  if (!customer) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Update successfully",
+  });
+});
+// manager update lai form trong truong hop can doi ngay
+exports.updateForm = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { date, time } = req.body;
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.findOneAndUpdate(
+    id,
+    {
+      date,
+      time,
+      managerId: manager._id,
+      status: FORM_STATUS.BOOKED,
+    },
+    { new: true }
+  );
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+// truong hop book lich bao duong thuan loi => manager confirms form => gui thong bao den khach hang
+exports.formConfirm = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.findOneAndUpdate(
+    id,
+    {
+      managerId: manager._id,
+      status: FORM_STATUS.BOOKED,
+    },
+    { new: true }
+  );
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+
 exports.updateGarage = catchAsync(async (req, res) => {
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });

@@ -21,6 +21,7 @@ const managerRoutes = require("./route/managerRoutes");
 const feedbackRoutes = require("./route/feedbackRoutes");
 const mechanicRoutes = require("./route/mechanicRoutes");
 const accountantRoutes = require("./route/accountantRoutes");
+const customerRoutes = require("./route/customerRoutes");
 app.use(express.json());
 app.use(cors());
 EmailService.init();
@@ -36,6 +37,7 @@ app.use("/api/v1/feedback", feedbackRoutes);
 app.use("/api/v1/manager", managerRoutes);
 app.use("/api/v1/mechanic", mechanicRoutes);
 app.use("/api/v1/accountant", accountantRoutes);
+app.use("/api/v1/customer", customerRoutes);
 app.use(catchError);
 const port = process.env.PORT || 3000;
 

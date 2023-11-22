@@ -11,6 +11,7 @@ const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
 const SubService = require("../models/subService");
 const Garage = require("../models/garage");
+const CarSpares = require("../models/carSpares");
 
 exports.updateDone = catchAsync(async (req, res) => {
   const id = req.params;
@@ -50,6 +51,72 @@ exports.getUnPaidForms = catchAsync(async (req, res) => {
       success: true,
       message: "Successfull",
       orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.addCarSpares = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const { name, price } = req.body;
+  const accountant = await Accountant.findOne({ accountId: accountId.id });
+  const carSpares = await CarSpares.create({
+    garageId: accountant.garageId,
+    accountantId: accountId.id,
+    name,
+    price,
+  });
+  if (carSpares) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      carSpares: carSpares,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.updateCarSpares = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+  const carSpares = await CarSpares.findOneAndUpdate(
+    id,
+    {
+      name,
+      price,
+    },
+    { new: true }
+  );
+  if (carSpares) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      carSpares: carSpares,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.getAllCarSpares = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const accountant = await Accountant.findOne({ accountId: accountId.id });
+  const carSpares = await CarSpares.find({
+    garageId: accountant.garageId,
+  });
+  if (carSpares) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      carSpares: carSpares,
     });
   } else {
     res.status(400).json({

@@ -15,6 +15,7 @@ exports.PAYTYPE = {
 };
 exports.FORM_STATUS = {
   AWAIT: "await",
+  BOOKED: "booked",
   PROCESS: "process",
   HOLDING: "holding",
   DONE: "done",

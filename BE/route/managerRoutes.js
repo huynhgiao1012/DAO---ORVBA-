@@ -58,11 +58,41 @@ router.get(
   authorize("manager"),
   managerController.getAllService
 );
-router.patch(
+router.get(
+  "/getEmergencyForm",
+  jwtAuth,
+  authorize("manager"),
+  managerController.getEmergencyForm
+);
+router.get(
+  "/getMaintenanceForm",
+  jwtAuth,
+  authorize("manager"),
+  managerController.getMaintenanceForm
+);
+router.post(
   "/updateGarage",
   jwtAuth,
   authorize("manager"),
   managerController.updateGarage
+);
+router.post(
+  "/updateIsVip",
+  jwtAuth,
+  authorize("manager"),
+  managerController.updateIsVip
+);
+router.post(
+  "/formConfirm/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.formConfirm
+);
+router.post(
+  "/updateForm/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.updateForm
 );
 router.get("/getSubService/:id", jwtAuth, managerController.getSubService);
 module.exports = router;
