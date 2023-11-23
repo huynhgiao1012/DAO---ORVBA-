@@ -16,15 +16,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import GetLocation from 'react-native-get-location';
 import Carousel from '../../common/Carousel';
 import Card from '../../common/Card';
-
 import {useNavigation} from '@react-navigation/native';
+import {useReverseGeoMutation} from '../../services/Map';
 
 export default function MainHome() {
   const navigation = useNavigation();
+  const [address, setAddress] = useState('');
+  const [reverseGeo] = useReverseGeoMutation();
   useEffect(() => {
     getCurrentLocation();
   }, []);
-
   const getCurrentLocation = () => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: false,
@@ -32,6 +33,11 @@ export default function MainHome() {
     })
       .then(location => {
         console.log(location);
+        reverseGeo({latitude: location.latitude, longitude: location.longitude})
+          .then(payload => {
+            setAddress(payload.data.results[0].formatted_address);
+          })
+          .catch(error => console.log(error));
       })
       .catch(error => {
         return error;
@@ -99,7 +105,7 @@ export default function MainHome() {
                 paddingLeft: 10,
                 fontStyle: 'italic',
               }}>
-              Dong Thanh Can Giuoc Long An
+              {address}
             </Text>
           </View>
         </View>

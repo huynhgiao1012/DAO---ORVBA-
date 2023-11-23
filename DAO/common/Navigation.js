@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
+import OTPScreen from '../screens/OTPScreen';
 import Welcome from '../screens/Welcome';
 import ForgotPass from '../screens/ForgotPass';
 import Home from '../screens/CUSTOMER/Home';
@@ -34,6 +35,11 @@ export default function Navigation() {
           name="SignUp"
           options={{headerShown: false}}
           component={SignUp}
+        />
+        <Stack.Screen
+          name="OTPScreen"
+          options={{headerShown: false}}
+          component={OTPScreen}
         />
         <Stack.Screen
           name="ForgotPassword"

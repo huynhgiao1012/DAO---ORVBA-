@@ -13,6 +13,7 @@ import React, {useState} from 'react';
 import {Formik} from 'formik';
 import {themeColors} from '../common/theme';
 import {useNavigation} from '@react-navigation/native';
+import {useRegisterMutation} from '../services/Auth';
 import * as yup from 'yup';
 const signUpValidationSchema = yup.object().shape({
   name: yup.string().required('Required'),
@@ -32,23 +33,51 @@ const signUpValidationSchema = yup.object().shape({
 // subscribe for more videos like this :)
 export default function SignUpScreen() {
   const navigation = useNavigation();
-  const Register = async data => {};
+  const [registerQuery, {isLoading}] = useRegisterMutation();
+  const Register = async data => {
+    await registerQuery(data)
+      .then(payload => {
+        console.log('payload', payload);
+        if (payload.data) {
+          Alert.alert(
+            payload.message,
+            'Please verify your account before login!',
+            [
+              {
+                text: 'OK',
+                onPress: () =>
+                  navigation.navigate('OTPScreen', {id: payload.data.data._id}),
+              },
+            ],
+          );
+        } else {
+          Alert.alert('SIGN UP', payload.error.data.message.duplicate, [
+            {
+              text: 'OK',
+            },
+          ]);
+        }
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
   return (
     <View style={{backgroundColor: themeColors.white, flex: 1}}>
-      {/* {isLoading && (
-          <Modal isVisible={true} transparent={true}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: '90%',
-                alignSelf: 'center',
-              }}>
-              <ActivityIndicator size={40} color={themeColors.primaryColor} />
-            </View>
-          </Modal>
-        )} */}
+      {isLoading && (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginVertical: '90%',
+              alignSelf: 'center',
+            }}>
+            <ActivityIndicator size={40} color={themeColors.primaryColor} />
+          </View>
+        </Modal>
+      )}
       <Text
         style={{
           fontSize: 30,
@@ -93,6 +122,7 @@ export default function SignUpScreen() {
                 <TextInput
                   style={styles.input}
                   onChangeText={handleChange('email')}
+                  keyboardType="email-address"
                 />
                 <View style={styles.titleText}>
                   <Text style={styles.title}>Phone</Text>
@@ -102,6 +132,7 @@ export default function SignUpScreen() {
                 </View>
                 <TextInput
                   style={styles.input}
+                  keyboardType="numeric"
                   onChangeText={handleChange('phone')}
                 />
                 <View style={styles.titleText}>
@@ -140,41 +171,6 @@ export default function SignUpScreen() {
             );
           }}
         </Formik>
-        {/* <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
-              color: themeColors.black,
-            }}>
-            Or
-          </Text> */}
-        {/* <View
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignContent: 'center',
-              flexDirection: 'row',
-              marginTop: 5,
-            }}>
-            <TouchableOpacity style={{paddingHorizontal: 10}}>
-              <Image
-                source={require('../../assets/icons/google.png')}
-                className="w-10 h-10"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{paddingHorizontal: 10}}>
-              <Image
-                source={require('../../assets/icons/apple.png')}
-                className="w-10 h-10"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{paddingHorizontal: 10}}>
-              <Image
-                source={require('../../assets/icons/facebook.png')}
-                className="w-10 h-10"
-              />
-            </TouchableOpacity>
-          </View> */}
         <View
           style={{
             display: 'flex',
@@ -223,6 +219,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     padding: 10,
     borderRadius: 10,
+    color: themeColors.primaryColor7,
+    fontWeight: '600',
+    fontSize: 18,
   },
   errorText: {
     fontSize: 12,

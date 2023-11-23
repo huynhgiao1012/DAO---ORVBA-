@@ -18,6 +18,14 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import {useLoginMutation} from '../services/Auth';
+import {
+  clearStorage,
+  getLocalStorageByKey,
+  saveStorage,
+} from '../common/LocalStorage';
+import {KEY_TOKEN} from '../utils/constants';
+
 const loginValidationSchema = yup.object().shape({
   email: yup.string().email('Please enter valid email').required('Required'),
   password: yup
@@ -31,10 +39,50 @@ const loginValidationSchema = yup.object().shape({
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState('');
+  const [loginQuery, {isLoading}] = useLoginMutation();
   const Login = data => {
-    navigation.navigate('Home');
+    clearStorage(KEY_TOKEN);
+    loginQuery({email: data.email, password: data.password})
+      .unwrap()
+      .then(payload => {
+        if (payload.success === true) {
+          saveStorage(KEY_TOKEN, payload.token);
+          // const decode = jwt_decode(payload.token);
+          // setUser(decode.id);
+          if (payload.role === 'customer') {
+            navigation.navigate('Home');
+          } else {
+            navigation.navigate('MechanicHome');
+          }
+        } else {
+          if (payload.customerId.isActive === false) {
+            Alert.alert(
+              'Your account have not been verified',
+              payload.message,
+              [
+                {
+                  text: 'OK',
+                  onPress: () =>
+                    navigation.navigate('OTPScreen', {
+                      id: payload.customerId._id,
+                    }),
+                },
+              ],
+            );
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        // if (error) {
+        //   Alert.alert('LOGIN FAILED', error.data.message, [
+        //     {
+        //       text: 'OK',
+        //     },
+        //   ]);
+        // }
+      });
   };
-
   return (
     <LinearGradient
       style={{flex: 1}}
@@ -49,8 +97,13 @@ export default function LoginScreen() {
         themeColors.primaryColor,
       ]}>
       <View style={{marginVertical: 80}}>
-        {/* {isLoading && (
-            <Modal isVisible={true} transparent={true}>
+        {isLoading && (
+          <Modal isVisible={true} transparent={true}>
+            <View
+              style={{
+                backgroundColor: '#000000aa',
+                flex: 1,
+              }}>
               <View
                 style={{
                   flex: 1,
@@ -59,10 +112,11 @@ export default function LoginScreen() {
                   marginVertical: '90%',
                   alignSelf: 'center',
                 }}>
-                <ActivityIndicator size={40} color={themeColors.white} />
+                <ActivityIndicator size={40} color={themeColors.primaryColor} />
               </View>
-            </Modal>
-          )} */}
+            </View>
+          </Modal>
+        )}
         <Text
           style={{
             marginVertical: 20,
@@ -93,6 +147,7 @@ export default function LoginScreen() {
                     style={styles.input}
                     placeholderTextColor={themeColors.white}
                     onChangeText={handleChange('email')}
+                    keyboardType="email-address"
                   />
                   {errors.email && touched.email && (
                     <Text style={styles.errorText}>{errors.email}</Text>

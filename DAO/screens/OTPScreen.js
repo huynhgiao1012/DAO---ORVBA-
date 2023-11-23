@@ -14,12 +14,13 @@ import React, {useState, useRef} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../common/theme';
 
-//   import {useOTPVerifyMutation} from '../services/Auth';
+import {useOTPVerifyMutation} from '../services/Auth';
+import Header2 from '../common/Header2';
 
 export default function OTPScreen({route}) {
   const navigation = useNavigation();
-  // const {id} = route.params;
-  // const [OTPverify, {isLoading}] = useOTPVerifyMutation();
+  const {id} = route.params;
+  const [OTPverify, {isLoading}] = useOTPVerifyMutation();
   const pin1Ref = useRef(null);
   const pin2Ref = useRef(null);
   const pin3Ref = useRef(null);
@@ -42,30 +43,30 @@ export default function OTPScreen({route}) {
       Alert.alert('Notification', 'Please input OTP code');
     }
     const body = {id: id, otp: otpString.join('')};
-    //   OTPverify(body)
-    //     .unwrap()
-    //     .then(payload => {
-    //       console.log(payload);
-    //       if (payload.success === true) {
-    //         Alert.alert(
-    //           'Notification',
-    //           'Verify successfully ! Please login again...',
-    //         );
-    //         navigation.navigate('Login');
-    //       }
-    //     })
-    //     .catch(error => {
-    //       // if (error) {
-    //       //   Alert.alert('Notification', error.data.message.duplicate, [
-    //       //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //       //   ]);
-    //       // }
-    //       Alert.alert('Notification', error.data.message, [
-    //         {
-    //           text: 'OK',
-    //         },
-    //       ]);
-    //     });
+    OTPverify(body)
+      .unwrap()
+      .then(payload => {
+        console.log(payload);
+        if (payload.success === true) {
+          Alert.alert(
+            'Notification',
+            'Verify successfully ! Please login again...',
+          );
+          navigation.navigate('Login');
+        }
+      })
+      .catch(error => {
+        // if (error) {
+        //   Alert.alert('Notification', error.data.message.duplicate, [
+        //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+        //   ]);
+        // }
+        Alert.alert('Notification', error.data.message, [
+          {
+            text: 'OK',
+          },
+        ]);
+      });
   };
   const clearInput = () => {
     pin1Ref.current.clear();
@@ -74,23 +75,23 @@ export default function OTPScreen({route}) {
     pin4Ref.current.clear();
   };
   return (
-    <View style={{backgroundColor: themeColors.primaryColor, flex: 1}}>
+    <View style={{backgroundColor: '#f8f8f8', flex: 1}}>
+      <Header2 name="OTP" />
       <View
         style={{
           backgroundColor: themeColors.white,
           marginHorizontal: 30,
-          marginVertical: 50,
-          borderRadius: 20,
+          marginVertical: 150,
+          borderRadius: 10,
+          borderColor: themeColors.gray,
+          borderWidth: 2,
+          paddingVertical: 20,
         }}>
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={{width: 200, height: 200, alignSelf: 'center'}}
-        />
         <Text
           style={{
             fontSize: 25,
             fontWeight: 'bold',
-            color: themeColors.blue,
+            color: themeColors.primaryColor,
             alignSelf: 'center',
           }}>
           OTP VERIFICATION
@@ -185,7 +186,7 @@ export default function OTPScreen({route}) {
               style={{
                 alignSelf: 'center',
                 fontSize: 14,
-                color: themeColors.gray60,
+                color: themeColors.primaryColor8,
                 fontWeight: '600',
                 fontStyle: 'italic',
               }}>
@@ -201,7 +202,7 @@ export default function OTPScreen({route}) {
             padding: 10,
             width: '80%',
             borderRadius: 10,
-            marginVertical: 40,
+            marginVertical: 20,
           }}>
           <Text
             style={{
@@ -219,12 +220,12 @@ export default function OTPScreen({route}) {
 }
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: themeColors.gray,
+    backgroundColor: themeColors.primaryColor5,
     width: 50,
     height: 50,
-    borderRadius: 20,
+    borderRadius: 10,
     textAlign: 'center',
-    color: themeColors.primaryColor,
+    color: themeColors.primaryColor7,
     fontSize: 20,
     fontWeight: 'bold',
   },
