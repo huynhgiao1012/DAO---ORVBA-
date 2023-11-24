@@ -82,7 +82,7 @@ exports.getUserDetails = catchAsync(async (req, res) => {
 exports.updatePassword = catchAsync(async (req, res) => {
   const { email } = req.user;
   const { oldPassword, newPassword } = req.body;
-  const existEmail = await Account.findOne({ email: email });
+  const existEmail = await User.findOne({ email: email });
   if (!existEmail) {
     throw new ApiError(400, "Email have no longer exists");
   }
