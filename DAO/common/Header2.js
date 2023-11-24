@@ -2,8 +2,10 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {themeColors} from './theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {useNavigation} from '@react-navigation/native';
+useNavigation;
 export default function Header2({name}) {
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -16,7 +18,7 @@ export default function Header2({name}) {
         borderBottomWidth: 3,
         borderBlockColor: '#e8e8e8',
       }}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <Icon name="angle-left" size={35} color={themeColors.primaryColor} />
       </TouchableOpacity>
       <Text

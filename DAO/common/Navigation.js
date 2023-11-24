@@ -7,6 +7,8 @@ import SignUp from '../screens/SignUp';
 import OTPScreen from '../screens/OTPScreen';
 import Welcome from '../screens/Welcome';
 import ForgotPass from '../screens/ForgotPass';
+import ChangePass from '../screens/ChangePass';
+import UpdateProfile from '../screens/UpdateProfile';
 import Home from '../screens/CUSTOMER/Home';
 import EmergencyService from '../screens/CUSTOMER/EmergencyService';
 import MaintenanceService from '../screens/CUSTOMER/MaintenanceService';
@@ -45,6 +47,16 @@ export default function Navigation() {
           name="ForgotPassword"
           options={{headerShown: false}}
           component={ForgotPass}
+        />
+        <Stack.Screen
+          name="ChangePass"
+          options={{headerShown: false}}
+          component={ChangePass}
+        />
+        <Stack.Screen
+          name="UpdateProfile"
+          options={{headerShown: false}}
+          component={UpdateProfile}
         />
         <Stack.Screen
           name="Home"

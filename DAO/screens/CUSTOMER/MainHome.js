@@ -18,13 +18,19 @@ import Carousel from '../../common/Carousel';
 import Card from '../../common/Card';
 import {useNavigation} from '@react-navigation/native';
 import {useReverseGeoMutation} from '../../services/Map';
-
+import {useGetUserDetailMutation} from '../../services/User';
 export default function MainHome() {
   const navigation = useNavigation();
   const [address, setAddress] = useState('');
+  const [name, setName] = useState('');
+  const [getUserDetail] = useGetUserDetailMutation();
   const [reverseGeo] = useReverseGeoMutation();
   useEffect(() => {
     getCurrentLocation();
+    getUserDetail()
+      .unwrap()
+      .then(payload => setName(payload.data.name))
+      .catch(error => console.log(error));
   }, []);
   const getCurrentLocation = () => {
     GetLocation.getCurrentPosition({
@@ -71,7 +77,7 @@ export default function MainHome() {
               paddingLeft: 10,
               width: 300,
             }}>
-            WELCOME HOME, JONH SMITH !
+            WELCOME HOME, {name.toUpperCase()} !
           </Text>
         </View>
         <View style={{width: '100%', height: 200, alignSelf: 'center'}}>

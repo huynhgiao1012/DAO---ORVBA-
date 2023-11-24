@@ -5,17 +5,78 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import {useNavigation} from '@react-navigation/native';
+import {
+  useGetCustomerDetailMutation,
+  useGetCustomerPointMutation,
+} from '../../services/Customer';
 
 export default function Profile() {
   const navigation = useNavigation();
+  const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
+  const [getCustomerPoint] = useGetCustomerPointMutation();
+  const [data, setData] = useState({
+    _id: '',
+    email: '',
+    isActive: false,
+    name: '',
+    phone: '',
+    role: '',
+  });
+  const [point, setPoint] = useState({
+    _id: '',
+    isVIP: false,
+    point: 0,
+  });
+  useEffect(() => {
+    getUserDetail()
+      .unwrap()
+      .then(payload =>
+        setData(data => ({
+          ...data,
+          ...payload.data,
+        })),
+      )
+      .catch(error => console.log(error));
+    getCustomerPoint()
+      .unwrap()
+      .then(payload =>
+        setPoint(data => ({
+          ...data,
+          ...payload.data,
+        })),
+      )
+      .catch(error => console.log(error));
+  }, []);
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
+      {isLoading && (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#f8f8f8aa',
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
+              }}>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -24,7 +85,9 @@ export default function Profile() {
           paddingHorizontal: 20,
           paddingVertical: 10,
         }}>
-        <Icon name="angle-left" size={30} color={themeColors.primaryColor} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="angle-left" size={32} color={themeColors.primaryColor} />
+        </TouchableOpacity>
         <Text
           style={{
             fontSize: 18,
@@ -42,8 +105,6 @@ export default function Profile() {
           width: '95%',
           borderRadius: 30,
           paddingVertical: 20,
-          borderBottomWidth: 1,
-          borderBottomColor: themeColors.primaryColor5,
         }}>
         <Image
           source={require('../../assets/baoduong.jpg')}
@@ -58,13 +119,13 @@ export default function Profile() {
         />
         <Text
           style={{
-            fontSize: 22,
+            fontSize: 26,
             fontWeight: 'bold',
             color: themeColors.primaryColor7,
             alignSelf: 'center',
             marginVertical: 10,
           }}>
-          JONH SMITH
+          {data.name.toUpperCase()}
         </Text>
         <View
           style={{
@@ -72,14 +133,14 @@ export default function Profile() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Icon name="envelope" color={themeColors.primaryColor} size={20} />
+          <Icon name="envelope" color={themeColors.primaryColor7} size={20} />
           <Text
             style={{
               fontSize: 16,
               marginLeft: 10,
-              color: themeColors.primaryColor6,
+              color: themeColors.primaryColor7,
             }}>
-            huynhgiaolethi0@gmail.com
+            {data.email}
           </Text>
         </View>
         <View
@@ -90,24 +151,28 @@ export default function Profile() {
           }}>
           <Icon
             name="phone-square"
-            color={themeColors.primaryColor}
+            color={themeColors.primaryColor7}
             size={20}
           />
           <Text
             style={{
               fontSize: 16,
               marginLeft: 10,
-              color: themeColors.primaryColor6,
+              color: themeColors.primaryColor7,
             }}>
-            0832011697
+            {data.phone}
           </Text>
         </View>
       </View>
       <View style={styles.btn_group}>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate('ChangePass')}>
           <Text style={styles.btn_text}>Change Password</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate('UpdateProfile')}>
           <Text style={styles.btn_text}>Update Profile</Text>
         </TouchableOpacity>
       </View>
@@ -130,6 +195,8 @@ export default function Profile() {
             alignItems: 'baseline',
             opacity: 0.9,
             height: '100%',
+            borderTopLeftRadius: 8,
+            borderBottomLeftRadius: 8,
           }}>
           <Icon2 name="gift" size={20} color={themeColors.white} />
           <Text
@@ -153,8 +220,10 @@ export default function Profile() {
             borderColor: themeColors.primaryColor,
             height: '100%',
             opacity: 0.9,
+            borderTopRightRadius: 8,
+            borderBottomRightRadius: 8,
           }}>
-          100
+          {point.point}
         </Text>
       </View>
       <View style={{marginHorizontal: 20, padding: 10}}>
@@ -225,8 +294,8 @@ export default function Profile() {
 const styles = StyleSheet.create({
   btn: {
     padding: 15,
-    backgroundColor: themeColors.primaryColor6,
-    borderRadius: 10,
+    backgroundColor: themeColors.primaryColor4,
+    borderRadius: 8,
     marginRight: 10,
     width: 160,
   },
