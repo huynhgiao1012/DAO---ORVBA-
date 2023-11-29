@@ -19,7 +19,7 @@ router.get(
 );
 
 router.patch(
-  "/:id",
+  "/",
   jwtAuth,
   authorize("admin", "customer", "manager", "mechanic", "accountant"),
   userController.updateUser

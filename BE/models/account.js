@@ -42,6 +42,7 @@ const AccountSchema = new Schema(
     },
     img: {
       type: String,
+      default: "",
     },
     isActive: {
       type: Boolean,

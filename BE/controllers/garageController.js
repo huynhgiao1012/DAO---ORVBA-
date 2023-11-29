@@ -205,3 +205,24 @@ exports.createManagerAccount = catchAsync(async (req, res) => {
     manager: manager,
   });
 });
+exports.getSpecificCorGarage = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const data = await Garage.findById(id);
+  if (!data) {
+    throw new ApiError(400, "This company is not available");
+  }
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
+exports.getCorGarage = catchAsync(async (req, res) => {
+  const data = await Garage.find({});
+  if (!data) {
+    throw new ApiError(400, "This company is not available");
+  }
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});

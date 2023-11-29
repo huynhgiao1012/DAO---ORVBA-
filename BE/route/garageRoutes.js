@@ -35,7 +35,12 @@ router.get(
   authorize("admin"),
   garageController.getAllGarage
 );
-
+router.get("/getCorGarage", jwtAuth, garageController.getCorGarage);
+router.get(
+  "/getSpecificCorGarage",
+  jwtAuth,
+  garageController.getSpecificCorGarage
+);
 router.post(
   "/createManagerAccount/:id",
   jwtAuth,
