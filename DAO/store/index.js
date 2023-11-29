@@ -4,13 +4,12 @@ import {authApi} from '../services/Auth';
 import {userApi} from '../services/User';
 import {mapApi} from '../services/Map';
 import authSlice from '../slices/authSlice';
-// import {companyApi} from '../services/Company';
 import {serviceApi} from '../services/Service';
 import {notiApi} from '../services/Notification';
 import {formApi} from '../services/OrderForm';
 import {fbApi} from '../services/Feedback';
 import {customerApi} from '../services/Customer';
-
+import {garageApi} from '../services/Garage';
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
@@ -21,6 +20,7 @@ export const store = configureStore({
     [formApi.reducerPath]: formApi.reducer,
     [fbApi.reducerPath]: fbApi.reducer,
     [customerApi.reducerPath]: customerApi.reducer,
+    [garageApi.reducerPath]: garageApi.reducer,
     authSlice,
   },
   middleware: getDefaultMiddleware =>
@@ -33,6 +33,7 @@ export const store = configureStore({
       formApi.middleware,
       fbApi.middleware,
       customerApi.middleware,
+      garageApi.middleware,
     ),
 });
 setupListeners(store.dispatch);

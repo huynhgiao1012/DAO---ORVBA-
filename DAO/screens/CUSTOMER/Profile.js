@@ -18,7 +18,7 @@ import {
   useGetCustomerPointMutation,
 } from '../../services/Customer';
 
-export default function Profile() {
+export default function Profile({route}) {
   const navigation = useNavigation();
   const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
   const [getCustomerPoint] = useGetCustomerPointMutation();
@@ -29,12 +29,33 @@ export default function Profile() {
     name: '',
     phone: '',
     role: '',
+    img: '',
   });
   const [point, setPoint] = useState({
     _id: '',
     isVIP: false,
     point: 0,
   });
+  useEffect(() => {
+    getUserDetail()
+      .unwrap()
+      .then(payload =>
+        setData(data => ({
+          ...data,
+          ...payload.data,
+        })),
+      )
+      .catch(error => console.log(error));
+    getCustomerPoint()
+      .unwrap()
+      .then(payload =>
+        setPoint(data => ({
+          ...data,
+          ...payload.data,
+        })),
+      )
+      .catch(error => console.log(error));
+  }, [route]);
   useEffect(() => {
     getUserDetail()
       .unwrap()
@@ -107,7 +128,12 @@ export default function Profile() {
           paddingVertical: 20,
         }}>
         <Image
-          source={require('../../assets/baoduong.jpg')}
+          source={{
+            uri:
+              data.img.length > 0
+                ? data.img
+                : 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fopenclipart.org%2Fdetail%2F311354%2Floading-spinner-static&psig=AOvVaw3xX-odZdUH2FHJXzKZFic4&ust=1701316270095000&source=images&cd=vfe&opi=89978449&ved=0CBMQjhxqFwoTCOjT0pGn6IIDFQAAAAAdAAAAABAJ',
+          }}
           style={{
             width: 130,
             height: 130,

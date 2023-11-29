@@ -89,18 +89,18 @@ const Home = () => {
       <Tab.Screen
         name="MainHome"
         component={MainHome}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
       <Tab.Screen name="Form" component={Form} options={{headerShown: false}} />
       <Tab.Screen
         name="Notification"
         component={Notification}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
     </Tab.Navigator>
   );

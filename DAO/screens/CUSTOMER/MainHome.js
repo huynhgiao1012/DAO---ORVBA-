@@ -54,26 +54,21 @@ export default function MainHome() {
       <View style={{flex: 1}}>
         <View
           style={{
-            backgroundColor: themeColors.primaryColor,
-            borderBottomLeftRadius: 50,
-            borderTopLeftRadius: 50,
+            backgroundColor: themeColors.white,
             padding: 15,
             flexDirection: 'row',
-            alignContent: 'space-between',
+            justifyContent: 'center',
             alignItems: 'center',
-            marginTop: 20,
-            marginLeft: 30,
           }}>
-          <Icon
-            name="person-circle-outline"
-            size={60}
-            color={themeColors.white}
+          <Image
+            source={require('../../assets/gif1.gif')}
+            style={{width: 60, height: 80}}
           />
           <Text
             style={{
               fontSize: 20,
               fontWeight: '700',
-              color: themeColors.white,
+              color: themeColors.primaryColor,
               paddingLeft: 10,
               width: 300,
             }}>
@@ -147,7 +142,7 @@ export default function MainHome() {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.box, {backgroundColor: themeColors.primaryColor8}]}
+            style={[styles.box, {backgroundColor: themeColors.primaryColor7}]}
             onPress={() => navigation.navigate('MaintenanceService')}>
             <Text style={styles.textBox}>Maintenance</Text>
             <Icon2

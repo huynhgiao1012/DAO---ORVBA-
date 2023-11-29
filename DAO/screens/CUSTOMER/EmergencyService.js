@@ -66,7 +66,7 @@ export default function EmergencyService() {
           </TouchableOpacity>
         )}
       </View>
-      {isMap ? <MapScreen distanceNum={distanceNum} /> : <ListScreen />}
+      {isMap ? <MapScreen /> : <ListScreen />}
     </View>
   );
 }

@@ -21,23 +21,24 @@ import {
   useDetailPlaceMutation,
 } from '../../services/Map';
 import {OUTER_CARD_WIDTH} from '../../utils/constants';
-// import {
-//   useGetCompanyDetailMutation,
-//   useGetCorCompanyQuery,
-// } from '../services/Company';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
 import CustomMarker from '../../common/CustomMarker';
 import Card2 from '../../common/Card2';
-const MapScreen = props => {
+import {
+  useGetCorGarageQuery,
+  useGetGarageDetailMutation,
+} from '../../services/Garage';
+
+const MapScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(0);
-  const [distanceNum, setDistanceNum] = useState(0);
-  const [markers, setMarkers] = React.useState([]);
+  const [distanceNum, setDistanceNum] = useState(10);
+  const [markers, setMarkers] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
-  //   const getCorCompany = useGetCorCompanyQuery();
-  //   const [getCompanyDetail] = useGetCompanyDetailMutation();
+  const getCorGarage = useGetCorGarageQuery();
+  const [getCompanyDetail] = useGetGarageDetailMutation();
   const [region, setRegion] = useState({
     latitude: 10.5369728,
     longitude: 106.6734779,
@@ -56,17 +57,21 @@ const MapScreen = props => {
   useEffect(() => {
     console.log('distanceNum', distanceNum);
     setMarkers([]);
-    // if (getCorCompany.isSuccess) {
-    //   // console.log('data', getCorCompany.data.data);
-    //   getCorCompany.data.data.map(val => {
-    //     const obj = {id: val.accountId, latitude: val.lat, longitude: val.long};
-    //     companyCoordinates.push(obj);
-    //   });
-    // } else {
-    //   <View style={{flex: 1, justifyContent: 'center'}}>
-    //     <ActivityIndicator size="large" color={themeColors.primaryColor} />
-    //   </View>;
-    // }
+    if (getCorGarage.isSuccess) {
+      // console.log('data', getCorGarage.data.data);
+      getCorGarage.data.data.map(val => {
+        const obj = {
+          id: val._id,
+          latitude: val.latitude,
+          longitude: val.longitude,
+        };
+        companyCoordinates.push(obj);
+      });
+    } else {
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color={themeColors.primaryColor} />
+      </View>;
+    }
     getCurrentLocation();
   }, [distanceNum]);
   useEffect(() => {
@@ -109,6 +114,7 @@ const MapScreen = props => {
   };
   const apiCall = async (latitude, longitude) => {
     setMarkers([]);
+    console.log(companyCoordinates);
     try {
       var string = '';
       let markerList = [];
@@ -119,7 +125,7 @@ const MapScreen = props => {
           string = string + '%7C' + val.latitude + ',' + val.longitude;
         }
       });
-
+      console.log(string);
       distanceMatrix({
         latitude: latitude,
         longitude: longitude,
@@ -127,8 +133,9 @@ const MapScreen = props => {
       })
         .unwrap()
         .then(async payload => {
-          // console.log('payload', payload.rows[0].elements);
-          const withIndex = await payload.rows[0].elements.map((val, index) => {
+          console.log('payload', payload.rows[0].elements);
+          console.log('payload', payload);
+          const withIndex = payload.rows[0].elements.map((val, index) => {
             while (index <= companyCoordinates.length) {
               const id = companyCoordinates[index].id;
               return {id: id, ...val};
@@ -137,13 +144,13 @@ const MapScreen = props => {
           const sortedList = withIndex.sort(
             (a, b) => a.distance.value - b.distance.value,
           );
-
+          console.log(sortedList);
           const showedMarker = [];
           sortedList.map(val => {
             if (val.distance.value <= distanceNum * 1000)
               showedMarker.push(val);
           });
-          // console.log('showedMarker', showedMarker);
+          console.log('showedMarker', showedMarker);
           companyCoordinates.map(val => {
             showedMarker.map(value => {
               if (val.id === value.id) {
@@ -156,42 +163,45 @@ const MapScreen = props => {
               }
             });
           });
-          // console.log('markerList', markerList);
+          console.log('markerList', markerList);
           const sortedMarker = markerList.sort(
             (a, b) => a.distance.value - b.distance.value,
           );
-          // console.log('sortedMarker', sortedMarker);
+          console.log('sortedMarker', sortedMarker);
           if (!sortedMarker.length) {
             setMarkers([]);
           } else {
             let newMarkers = await Promise.all(
               sortedMarker.map(async val => {
                 let detail = {};
+                console.log(val);
                 await getCompanyDetail({id: val.id})
                   .unwrap()
-                  .then(payload => (detail = payload))
+                  .then(payload => {
+                    detail = payload.data;
+                  })
                   .catch(error => {
                     return error;
                   });
                 return {
-                  id: detail.data._id,
+                  id: detail._id,
                   coordinate: {
-                    latitude: detail.companyDetail.lat,
-                    longitude: detail.companyDetail.long,
+                    latitude: detail.latitude,
+                    longitude: detail.longitude,
                   },
-                  title: detail.data.name,
-                  address: detail.companyDetail.address || 'Not Available',
+                  title: detail.name,
+                  address: detail.address || 'Not Available',
                   image: 'NA',
-                  phoneNo: detail.data.phone,
-                  email: detail.data.email,
+                  phoneNo: detail.phone,
+                  email: detail.email,
                   distance: val.distance.text,
-                  openTime: detail.companyDetail.openTime,
-                  closeTime: detail.companyDetail.closeTime,
+                  openTime: detail.openTime,
+                  closeTime: detail.closeTime,
                 };
               }),
             );
             setMarkers(newMarkers);
-            // console.log(markers);
+            console.log(markers);
           }
         })
         .catch(error => {
@@ -202,12 +212,12 @@ const MapScreen = props => {
     }
   };
 
-  if (loading)
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size={40} color="grey" />
-      </View>
-    );
+  // if (loading)
+  //   return (
+  //     <View style={styles.container}>
+  //       <ActivityIndicator size={40} color="grey" />
+  //     </View>
+  //   );
   const onMarkerPress = ({
     _targetInst: {
       return: {key: markerID},
@@ -272,15 +282,15 @@ const MapScreen = props => {
     );
   };
 
-  const renderMarker = (item, index) => (
-    <CustomMarker
-      key={index}
-      index={index}
-      marker={item}
-      scrollAnimation={scrollAnimation}
-      onMarkerPress={onMarkerPress}
-    />
-  );
+  const renderMarker = (item, index) =>
+    // <CustomMarker
+    //   key={index}
+    //   index={index}
+    //   marker={item}
+    //   scrollAnimation={scrollAnimation}
+    //   onMarkerPress={onMarkerPress}
+    // />
+    console.log(item);
   return (
     <View style={styles.container}>
       <MapView
@@ -304,7 +314,7 @@ const MapScreen = props => {
         ))}
         {markers.map(renderMarker)}
       </MapView>
-      {/* {console.log(markers)} */}
+      {console.log(markers)}
       {!markers.length ? (
         <View></View>
       ) : (
@@ -327,7 +337,7 @@ const MapScreen = props => {
             showsHorizontalScrollIndicator={false}
             snapToInterval={OUTER_CARD_WIDTH}
             snapToAlignment="center"
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index}
             style={styles.scrollView}
             onScroll={Animated.event(
               [

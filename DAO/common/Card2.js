@@ -11,7 +11,6 @@ import {
 // import {useGetAllFbMutation} from '../services/Feedback';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {themeColors} from './theme';
-
 const Card2 = ({item}) => {
   //   const [getAllFb] = useGetAllFbMutation();
   const [totalRatings, setTotalRating] = useState(0);

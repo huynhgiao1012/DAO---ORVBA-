@@ -4,10 +4,10 @@ import {getLocalStorageByKey} from '../common/LocalStorage';
 
 // Define a service using a base URL and expected endpoints
 
-export const companyApi = createApi({
-  reducerPath: 'companyApi',
+export const garageApi = createApi({
+  reducerPath: 'garageApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/company`,
+    baseUrl: `http://${IP}:3000/api/v1/garage`,
     prepareHeaders: async (headers, query) => {
       const Token = await getLocalStorageByKey(KEY_TOKEN);
       if (Token) {
@@ -19,19 +19,19 @@ export const companyApi = createApi({
     },
   }),
   endpoints: builder => ({
-    getCorCompany: builder.query({
+    getCorGarage: builder.query({
       query: () => ({
-        url: '/getCorCompany',
+        url: '/getCorGarage',
       }),
     }),
-    getCompanyDetail: builder.mutation({
+    getGarageDetail: builder.mutation({
       query: ({id}) => ({
-        url: `/getCompanyDetail/${id}`,
+        url: `/getGarageDetail/${id}`,
       }),
     }),
-    getSpecificCorCompany: builder.query({
+    getSpecificCorGarage: builder.mutation({
       query: () => ({
-        url: '/getSpecificCorCompany',
+        url: '/getSpecificCorGarage',
       }),
     }),
   }),
@@ -40,7 +40,7 @@ export const companyApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useGetCorCompanyQuery,
-  useGetCompanyDetailMutation,
-  useGetSpecificCorCompanyQuery,
-} = companyApi;
+  useGetCorGarageQuery,
+  useGetGarageDetailMutation,
+  useGetSpecificCorGarageMutation,
+} = garageApi;
