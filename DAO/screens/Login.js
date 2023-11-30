@@ -74,13 +74,13 @@ export default function LoginScreen() {
       })
       .catch(error => {
         console.log(error);
-        // if (error) {
-        //   Alert.alert('LOGIN FAILED', error.data.message, [
-        //     {
-        //       text: 'OK',
-        //     },
-        //   ]);
-        // }
+        if (error) {
+          Alert.alert('LOGIN FAILED', error.data.message, [
+            {
+              text: 'OK',
+            },
+          ]);
+        }
       });
   };
   return (

@@ -19,7 +19,7 @@ export const garageApi = createApi({
     },
   }),
   endpoints: builder => ({
-    getCorGarage: builder.query({
+    getCorGarage: builder.mutation({
       query: () => ({
         url: '/getCorGarage',
       }),
@@ -40,7 +40,7 @@ export const garageApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useGetCorGarageQuery,
+  useGetCorGarageMutation,
   useGetGarageDetailMutation,
   useGetSpecificCorGarageMutation,
 } = garageApi;

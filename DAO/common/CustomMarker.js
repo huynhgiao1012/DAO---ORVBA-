@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   ring: {
-    backgroundColor: themeColors.blue,
+    backgroundColor: themeColors.primaryColor7,
     position: 'absolute',
     borderWidth: 1,
     borderColor: 'white',

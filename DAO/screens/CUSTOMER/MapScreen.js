@@ -15,29 +15,28 @@ import {
 import {useEffect, useState} from 'react';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import GetLocation from 'react-native-get-location';
+import CustomMarker from '../../common/CustomMarker';
+import Card from '../../common/Card2';
 import {
   useDistanceMatrixMutation,
   useReverseGeoMutation,
   useDetailPlaceMutation,
 } from '../../services/Map';
 import {OUTER_CARD_WIDTH} from '../../utils/constants';
+import {
+  useGetGarageDetailMutation,
+  useGetCorGarageMutation,
+} from '../../services/Garage';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
-import CustomMarker from '../../common/CustomMarker';
-import Card2 from '../../common/Card2';
-import {
-  useGetCorGarageQuery,
-  useGetGarageDetailMutation,
-} from '../../services/Garage';
-
 const MapScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
-  const [active, setActive] = useState(0);
   const [distanceNum, setDistanceNum] = useState(10);
-  const [markers, setMarkers] = useState([]);
+  const [markers, setMarkers] = React.useState([]);
+  const [cor, setCor] = React.useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
-  const getCorGarage = useGetCorGarageQuery();
+  const [getCorCompany] = useGetCorGarageMutation();
   const [getCompanyDetail] = useGetGarageDetailMutation();
   const [region, setRegion] = useState({
     latitude: 10.5369728,
@@ -45,40 +44,37 @@ const MapScreen = () => {
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
-  const companyCoordinates = [];
+  let companyCoordinates = [];
   const mapRef = useRef(null);
   let flatlistRef = useRef(null);
   let mapIndex = useRef(0);
   let _map = React.useRef(null);
   let scrollAnimation = useRef(new Animated.Value(0)).current;
+  const getCor = async () => {
+    setCor([]);
+    await getCorCompany()
+      .unwrap()
+      .then(payload => {
+        setCor(prev => [...prev, ...payload.data]);
+      })
+      .catch(error => {
+        return error;
+      });
+  };
   useEffect(() => {
+    getCor();
     requestPermission();
   }, []);
   useEffect(() => {
     console.log('distanceNum', distanceNum);
     setMarkers([]);
-    if (getCorGarage.isSuccess) {
-      // console.log('data', getCorGarage.data.data);
-      getCorGarage.data.data.map(val => {
-        const obj = {
-          id: val._id,
-          latitude: val.latitude,
-          longitude: val.longitude,
-        };
-        companyCoordinates.push(obj);
-      });
-    } else {
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color={themeColors.primaryColor} />
-      </View>;
-    }
+    getCor();
     getCurrentLocation();
   }, [distanceNum]);
   useEffect(() => {
     if (loading) return;
     mapRef.current?.animateToRegion(region);
   }, [region]);
-
   const requestPermission = async () => {
     if (Platform.OS == 'android') {
       getCurrentLocation();
@@ -114,7 +110,14 @@ const MapScreen = () => {
   };
   const apiCall = async (latitude, longitude) => {
     setMarkers([]);
-    console.log(companyCoordinates);
+    cor.map(val => {
+      const obj = {
+        id: val._id,
+        latitude: val.latitude,
+        longitude: val.longitude,
+      };
+      companyCoordinates.push(obj);
+    });
     try {
       var string = '';
       let markerList = [];
@@ -125,7 +128,7 @@ const MapScreen = () => {
           string = string + '%7C' + val.latitude + ',' + val.longitude;
         }
       });
-      console.log(string);
+
       distanceMatrix({
         latitude: latitude,
         longitude: longitude,
@@ -133,9 +136,8 @@ const MapScreen = () => {
       })
         .unwrap()
         .then(async payload => {
-          console.log('payload', payload.rows[0].elements);
-          console.log('payload', payload);
-          const withIndex = payload.rows[0].elements.map((val, index) => {
+          // console.log('payload', payload.rows[0].elements);
+          const withIndex = await payload.rows[0].elements.map((val, index) => {
             while (index <= companyCoordinates.length) {
               const id = companyCoordinates[index].id;
               return {id: id, ...val};
@@ -144,13 +146,13 @@ const MapScreen = () => {
           const sortedList = withIndex.sort(
             (a, b) => a.distance.value - b.distance.value,
           );
-          console.log(sortedList);
+
           const showedMarker = [];
           sortedList.map(val => {
             if (val.distance.value <= distanceNum * 1000)
               showedMarker.push(val);
           });
-          console.log('showedMarker', showedMarker);
+          // console.log('showedMarker', showedMarker);
           companyCoordinates.map(val => {
             showedMarker.map(value => {
               if (val.id === value.id) {
@@ -163,23 +165,20 @@ const MapScreen = () => {
               }
             });
           });
-          console.log('markerList', markerList);
+          // console.log('markerList', markerList);
           const sortedMarker = markerList.sort(
             (a, b) => a.distance.value - b.distance.value,
           );
-          console.log('sortedMarker', sortedMarker);
+          // console.log('sortedMarker', sortedMarker);
           if (!sortedMarker.length) {
             setMarkers([]);
           } else {
             let newMarkers = await Promise.all(
               sortedMarker.map(async val => {
                 let detail = {};
-                console.log(val);
                 await getCompanyDetail({id: val.id})
                   .unwrap()
-                  .then(payload => {
-                    detail = payload.data;
-                  })
+                  .then(payload => (detail = payload.data))
                   .catch(error => {
                     return error;
                   });
@@ -212,12 +211,12 @@ const MapScreen = () => {
     }
   };
 
-  // if (loading)
-  //   return (
-  //     <View style={styles.container}>
-  //       <ActivityIndicator size={40} color="grey" />
-  //     </View>
-  //   );
+  if (loading)
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size={40} color="grey" />
+      </View>
+    );
   const onMarkerPress = ({
     _targetInst: {
       return: {key: markerID},
@@ -277,20 +276,20 @@ const MapScreen = () => {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('GarageDetail', {id: item.id})}>
-        <Card2 item={item} />
+        <Card item={item} />
       </TouchableOpacity>
     );
   };
 
-  const renderMarker = (item, index) =>
-    // <CustomMarker
-    //   key={index}
-    //   index={index}
-    //   marker={item}
-    //   scrollAnimation={scrollAnimation}
-    //   onMarkerPress={onMarkerPress}
-    // />
-    console.log(item);
+  const renderMarker = (item, index) => (
+    <CustomMarker
+      key={index}
+      index={index}
+      marker={item}
+      scrollAnimation={scrollAnimation}
+      onMarkerPress={onMarkerPress}
+    />
+  );
   return (
     <View style={styles.container}>
       <MapView
@@ -314,7 +313,7 @@ const MapScreen = () => {
         ))}
         {markers.map(renderMarker)}
       </MapView>
-      {console.log(markers)}
+      {/* {console.log(markers)} */}
       {!markers.length ? (
         <View></View>
       ) : (
@@ -369,43 +368,22 @@ const MapScreen = () => {
         <TouchableOpacity
           onPress={() => {
             setDistanceNum(10);
-            setActive(0);
           }}
-          style={[
-            styles.distance,
-            {
-              backgroundColor:
-                active === 0 ? themeColors.primaryColor : themeColors.gray,
-            },
-          ]}>
+          style={styles.distance}>
           <Text style={styles.text}>10 km</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setDistanceNum(30);
-            setActive(1);
           }}
-          style={[
-            styles.distance,
-            {
-              backgroundColor:
-                active === 1 ? themeColors.primaryColor : themeColors.gray,
-            },
-          ]}>
+          style={styles.distance}>
           <Text style={styles.text}>30 km</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setDistanceNum(50);
-            setActive(2);
           }}
-          style={[
-            styles.distance,
-            {
-              backgroundColor:
-                active === 2 ? themeColors.primaryColor : themeColors.gray,
-            },
-          ]}>
+          style={styles.distance}>
           <Text style={styles.text}>50 km</Text>
         </TouchableOpacity>
       </View>
@@ -459,17 +437,17 @@ const styles = StyleSheet.create({
   left: {position: 'absolute', left: 5, zIndex: 10, top: -20},
   right: {position: 'absolute', right: 5, top: -20},
   distance: {
+    backgroundColor: themeColors.primaryColor,
     borderWidth: 1,
     margin: 10,
     width: 70,
     padding: 8,
     borderRadius: 8,
-    borderColor: themeColors.primaryColor5,
+    borderColor: themeColors.primaryColor,
   },
   text: {
     color: themeColors.white,
     textAlign: 'center',
-    fontWeight: 'bold',
     fontSize: 16,
   },
 });

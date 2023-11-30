@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {themeColors} from '../../common/theme';
 import MapScreen from './MapScreen';
 import ListScreen from './ListScreen';
+import MapScreen2 from './MapScreen2';
 
 export default function EmergencyService() {
   const [isMap, setIsMap] = useState(true);

@@ -1,7 +1,15 @@
 import React, {memo, useEffect, useState} from 'react';
 import {Rating} from 'react-native-ratings';
 import FastImage from 'react-native-fast-image';
-import {StyleSheet, Text, View, Linking, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Linking,
+  TouchableOpacity,
+  Platform,
+  Image,
+} from 'react-native';
 import {
   INNER_CARD_HEIGHT,
   INNER_CARD_WIDTH,
@@ -29,6 +37,7 @@ const Card2 = ({item}) => {
     //       setRating(num / payload.data.length);
     //     }
     //   });
+    console.log(item);
   }, []);
   const openDialScreen = num => {
     if (Platform.OS === 'ios') {
@@ -41,71 +50,73 @@ const Card2 = ({item}) => {
   return (
     <View style={styles.outerCard}>
       <View style={styles.innerCard}>
-        <FastImage
-          source={require('../assets/maintain.png')}
-          style={styles.img}
-          resizeMode={FastImage.resizeMode.stretch}
-        />
-        <View style={styles.right}>
-          <View style={styles.top}>
-            <Text numberOfLines={2} style={styles.name}>
-              {item?.title}
-            </Text>
-          </View>
-          <View style={styles.bottom}>
-            <View style={styles.rating}>
-              <Rating
-                ratingCount={rating}
-                type="star"
-                readonly={true}
-                startingValue={rating || 0}
-                imageSize={14}
-              />
-              <Text style={styles.ratingTxt}>
-                {rating || 0} ({totalRatings || 0} Ratings)
-              </Text>
-            </View>
-            <Text style={styles.status} numberOfLines={2}>
-              Address: <Text style={styles.black}>{item?.address} </Text>
-            </Text>
-            <Text style={styles.status} numberOfLines={2}>
-              Open Time: <Text style={styles.black}>{item?.openTime} </Text>
-            </Text>
-            <Text style={styles.status} numberOfLines={2}>
-              Close Time: <Text style={styles.black}>{item?.closeTime} </Text>
-            </Text>
-            <Text numberOfLines={2} style={styles.status}>
-              Email: <Text style={styles.black}>{item?.email}</Text>
-            </Text>
-            <TouchableOpacity
-              onPress={() => openDialScreen(item?.phoneNo)}
+        <Text numberOfLines={2} style={styles.name}>
+          {item.title}
+        </Text>
+        <View style={styles.rating}>
+          <Rating
+            ratingCount={rating}
+            type="star"
+            readonly={true}
+            startingValue={rating || 0}
+            imageSize={14}
+          />
+          <Text style={styles.ratingTxt}>
+            {rating || 0} ({totalRatings || 0} Ratings)
+          </Text>
+        </View>
+        <View style={styles.text}>
+          <Text style={styles.status}>Distance</Text>
+          <Text style={styles.status2}>{item?.distance}</Text>
+        </View>
+        <View style={styles.text}>
+          <Text style={styles.status}>Address</Text>
+          <Text style={styles.status2}>{item.address}</Text>
+        </View>
+        <View style={styles.text}>
+          <Text style={styles.status}>Email</Text>
+          <Text style={styles.status2}>{item.email}</Text>
+        </View>
+        <View style={styles.text}>
+          <Text style={styles.status}>Phone</Text>
+          <Text style={styles.status2}>{item.phoneNo}</Text>
+        </View>
+        <View style={styles.text}>
+          <Text style={styles.status}>Time</Text>
+          <Text style={styles.status2}>
+            {item?.openTime} - {item?.closeTime}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={require('../assets/loading2.gif')}
+            style={{width: 50, height: 50}}
+          />
+          <TouchableOpacity
+            onPress={() => openDialScreen(item?.phoneNo)}
+            style={{
+              borderRadius: 10,
+              paddingHorizontal: 3,
+              marginTop: 2,
+              backgroundColor: themeColors.primaryColor,
+              alignSelf: 'flex-end',
+            }}>
+            <Text
               style={{
-                borderColor: themeColors.primaryColor,
-                borderRadius: 3,
-                paddingHorizontal: 3,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                marginTop: 2,
+                fontSize: 14,
+                padding: 3,
+                color: themeColors.white,
+                fontWeight: '700',
               }}>
-              <Text>
-                <Icon name="phone" size={11} color={themeColors.primaryColor} />
-              </Text>
-              <Text
-                style={{
-                  fontSize: 11,
-                  padding: 3,
-                  color: themeColors.primaryColor,
-                }}>
-                {item?.phoneNo}
-              </Text>
-            </TouchableOpacity>
-            <Text style={styles.status2} numberOfLines={2}>
-              Distance: <Text style={styles.status2}>{item?.distance} </Text>
+              CALL NOW
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -115,7 +126,6 @@ const Card2 = ({item}) => {
 const styles = StyleSheet.create({
   outerCard: {
     flex: 1,
-    height: 200,
     width: OUTER_CARD_WIDTH,
     paddingHorizontal: 10,
     justifyContent: 'center',
@@ -124,47 +134,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   innerCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#FFF',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    shadowOffset: {x: 2, y: -2},
-    height: 200,
+    borderRadius: 20,
     width: INNER_CARD_WIDTH,
     overflow: 'hidden',
     elevation: 6,
     padding: 10,
-  },
-  img: {height: '100%', width: '40%', borderRadius: 6},
-  noView: {
-    height: '100%',
-    width: '35%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgb(200,200,200)',
-    borderRadius: 5,
-  },
-  noTxt: {
-    fontFamily: 'Montserrat-SemiBold',
-    color: 'grey',
-    textAlign: 'center',
-  },
-  right: {flex: 1, paddingLeft: 10},
-  top: {
-    paddingBottom: 2,
-    borderBottomWidth: 1,
-    borderColor: '#E5E5E5',
+    borderLeftWidth: 10,
+    borderLeftColor: themeColors.primaryColor,
   },
   name: {
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 14.5,
-    fontWeight: 'bold',
-    color: themeColors.blue,
+    fontSize: 18,
+    color: themeColors.primaryColor4,
+    fontWeight: '700',
   },
-  bottom: {flex: 1, alignItems: 'flex-start'},
   rating: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -178,21 +162,29 @@ const styles = StyleSheet.create({
   },
   status: {
     fontFamily: 'Montserrat-Medium',
-    fontSize: 11,
-    color: themeColors.blue,
+    fontSize: 12,
+    color: themeColors.primaryColor7,
     fontWeight: 'bold',
-    marginVertical: 1,
+    width: 60,
+    marginRight: 3,
+    borderRightWidth: 1,
+    borderRightColor: themeColors.primaryColor6,
+    borderStyle: 'dashed',
   },
   status2: {
     fontFamily: 'Montserrat-Medium',
-    fontSize: 11,
-    color: themeColors.primaryColor,
-    fontWeight: 'bold',
-    marginVertical: 1,
+    fontSize: 12,
+    color: themeColors.primaryColor8,
     fontStyle: 'italic',
-    alignSelf: 'flex-end',
+    width: 240,
+    marginLeft: 5,
   },
-  black: {color: themeColors.blue, fontWeight: 400},
+  text: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginVertical: 3,
+  },
 });
 
 export default memo(Card2);
