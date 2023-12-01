@@ -87,37 +87,25 @@ const Card2 = ({item}) => {
             {item?.openTime} - {item?.closeTime}
           </Text>
         </View>
-
-        <View
+        <TouchableOpacity
+          onPress={() => openDialScreen(item?.phoneNo)}
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            borderRadius: 10,
+            paddingHorizontal: 3,
+            marginTop: 2,
+            backgroundColor: themeColors.primaryColor,
+            alignSelf: 'flex-end',
           }}>
-          <Image
-            source={require('../assets/loading2.gif')}
-            style={{width: 50, height: 50}}
-          />
-          <TouchableOpacity
-            onPress={() => openDialScreen(item?.phoneNo)}
+          <Text
             style={{
-              borderRadius: 10,
-              paddingHorizontal: 3,
-              marginTop: 2,
-              backgroundColor: themeColors.primaryColor,
-              alignSelf: 'flex-end',
+              fontSize: 14,
+              padding: 3,
+              color: themeColors.white,
+              fontWeight: '700',
             }}>
-            <Text
-              style={{
-                fontSize: 14,
-                padding: 3,
-                color: themeColors.white,
-                fontWeight: '700',
-              }}>
-              CALL NOW
-            </Text>
-          </TouchableOpacity>
-        </View>
+            CALL NOW
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

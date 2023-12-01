@@ -7,7 +7,8 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useReverseGeoMutation} from '../../services/Map';
 import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Formik} from 'formik';
@@ -15,6 +16,10 @@ import * as yup from 'yup';
 import CalendarPicker from 'react-native-calendar-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import Header2 from '../../common/Header2';
+import GetLocation from 'react-native-get-location';
+import {useGetCustomerDetailMutation} from '../../services/Customer';
+import {useGetCompanyServiceMutation} from '../../services/Service';
+
 const personalInfor = yup.object().shape({
   name: yup.string().required('Required'),
   address: yup.string().required('Required'),
@@ -28,14 +33,62 @@ const personalInfor = yup.object().shape({
   service: yup.array().required('Required'),
   note: yup.array().required('Required'),
 });
-export default function Booking() {
+export default function Booking({route}) {
   const [selectedDate, setDate] = useState('');
+  const [reverseGeo] = useReverseGeoMutation();
   const minDate = new Date();
+  const [address, setAddress] = useState('');
+  const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
   const time = ['7:00', '10:00', '13:00', '15:00'];
   const serviceType = ['service 1', 'service 2', 'service 3', 'service 4'];
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const [getCompanyService] = useGetCompanyServiceMutation();
+  const [data, setData] = useState({
+    _id: '',
+    email: '',
+    name: '',
+    phone: '',
+  });
+  const [service, setService] = useState([]);
+  const {id} = route.params;
+  const getCurrentLocation = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: false,
+      timeout: 10000,
+    })
+      .then(location => {
+        reverseGeo({latitude: location.latitude, longitude: location.longitude})
+          .then(payload => {
+            setAddress(payload.data.results[0].formatted_address);
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => {
+        return error;
+      });
+  };
+  useEffect(() => {
+    getCurrentLocation();
+    getUserDetail()
+      .unwrap()
+      .then(payload =>
+        setData(data => ({
+          ...data,
+          ...payload.data,
+        })),
+      )
+      .catch(error => console.log(error));
+    getCompanyService({id})
+      .unwrap()
+      .then(payload => {
+        setService(prev => [...prev, ...payload.data]);
+      })
+      .catch(error => {
+        return error;
+      });
+  }, []);
   const onDateChange = date => {
     setDate(new Date(date).toLocaleDateString('en-GB'));
     hideModal();
@@ -89,6 +142,7 @@ export default function Booking() {
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('name')}
+                    defaultValue={data.name}
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Address</Text>
@@ -99,6 +153,8 @@ export default function Booking() {
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('address')}
+                    defaultValue={address}
+                    multiline={true}
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Phone Number</Text>
@@ -109,6 +165,7 @@ export default function Booking() {
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('phone')}
+                    defaultValue={data.phone}
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Date</Text>
@@ -130,7 +187,7 @@ export default function Booking() {
                         borderColor: themeColors.primaryColor5,
                         marginVertical: 5,
                         paddingHorizontal: 10,
-                        color: themeColors.primaryColor7,
+                        color: themeColors.primaryColor8,
                         fontWeight: '700',
                         fontSize: 16,
                         borderTopLeftRadius: 10,
@@ -250,7 +307,9 @@ export default function Booking() {
                       fontWeight: '700',
                       color: themeColors.primaryColor,
                     }}
-                    data={serviceType}
+                    data={service.map(val => {
+                      return val.name;
+                    })}
                     onSelect={(selectedItem, index) => {
                       console.log(selectedItem, index);
                     }}

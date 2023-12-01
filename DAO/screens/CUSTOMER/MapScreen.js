@@ -29,12 +29,14 @@ import {
 } from '../../services/Garage';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
+import Icon from 'react-native-vector-icons/Entypo';
 const MapScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState(0);
   const [distanceNum, setDistanceNum] = useState(10);
-  const [markers, setMarkers] = React.useState([]);
-  const [cor, setCor] = React.useState([]);
+  const [markers, setMarkers] = useState([]);
+  const [cor, setCor] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
   const [getCorCompany] = useGetCorGarageMutation();
   const [getCompanyDetail] = useGetGarageDetailMutation();
@@ -62,7 +64,6 @@ const MapScreen = () => {
       });
   };
   useEffect(() => {
-    getCor();
     requestPermission();
   }, []);
   useEffect(() => {
@@ -200,7 +201,7 @@ const MapScreen = () => {
               }),
             );
             setMarkers(newMarkers);
-            console.log(markers);
+            // console.log(markers);
           }
         })
         .catch(error => {
@@ -322,9 +323,10 @@ const MapScreen = () => {
             hitSlop={styles.hitslop}
             onPress={onPressLeft}
             style={styles.left}>
-            <Image
-              source={require('../../assets/caret-left.png')}
-              style={{width: 30, height: 30}}
+            <Icon
+              name="triangle-left"
+              size={40}
+              color={themeColors.primaryColor7}
             />
           </TouchableOpacity>
           <Animated.FlatList
@@ -357,9 +359,10 @@ const MapScreen = () => {
             hitSlop={styles.hitslop}
             onPress={onPressRight}
             style={styles.right}>
-            <Image
-              source={require('../../assets/caret-right.png')}
-              style={{width: 30, height: 30}}
+            <Icon
+              name="triangle-right"
+              size={40}
+              color={themeColors.primaryColor7}
             />
           </TouchableOpacity>
         </View>
@@ -368,22 +371,49 @@ const MapScreen = () => {
         <TouchableOpacity
           onPress={() => {
             setDistanceNum(10);
+            setActive(0);
           }}
-          style={styles.distance}>
+          style={[
+            styles.distance,
+            {
+              backgroundColor:
+                active === 0
+                  ? themeColors.primaryColor
+                  : themeColors.primaryColor5,
+            },
+          ]}>
           <Text style={styles.text}>10 km</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setDistanceNum(30);
+            setActive(1);
           }}
-          style={styles.distance}>
+          style={[
+            styles.distance,
+            {
+              backgroundColor:
+                active === 1
+                  ? themeColors.primaryColor
+                  : themeColors.primaryColor5,
+            },
+          ]}>
           <Text style={styles.text}>30 km</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setDistanceNum(50);
+            setActive(2);
           }}
-          style={styles.distance}>
+          style={[
+            styles.distance,
+            {
+              backgroundColor:
+                active === 2
+                  ? themeColors.primaryColor
+                  : themeColors.primaryColor5,
+            },
+          ]}>
           <Text style={styles.text}>50 km</Text>
         </TouchableOpacity>
       </View>
@@ -408,7 +438,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'transparent',
     position: 'absolute',
-    top: 450,
+    position: 'absolute',
+    bottom: 80,
   },
   boxHeader: {
     height: 100,
@@ -434,21 +465,22 @@ const styles = StyleSheet.create({
     bottom: 30,
   },
   icon: {fontSize: 22, color: 'grey'},
-  left: {position: 'absolute', left: 5, zIndex: 10, top: -20},
-  right: {position: 'absolute', right: 5, top: -20},
+  left: {position: 'absolute', left: 5, zIndex: 10, top: -50},
+  right: {position: 'absolute', right: 5, top: -50},
   distance: {
-    backgroundColor: themeColors.primaryColor,
+    backgroundColor: themeColors.primaryColor4,
     borderWidth: 1,
     margin: 10,
     width: 70,
     padding: 8,
     borderRadius: 8,
-    borderColor: themeColors.primaryColor,
+    borderColor: themeColors.primaryColor5,
   },
   text: {
     color: themeColors.white,
     textAlign: 'center',
     fontSize: 16,
+    fontWeight: '700',
   },
 });
 

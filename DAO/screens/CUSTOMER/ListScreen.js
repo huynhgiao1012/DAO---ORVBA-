@@ -13,15 +13,16 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import {Rating} from 'react-native-ratings';
 import React from 'react';
 import {useEffect, useState} from 'react';
 import GetLocation from 'react-native-get-location';
 import {useDistanceMatrixMutation} from '../../services/Map';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import {
-//   useGetCompanyDetailMutation,
-//   useGetCorCompanyQuery,
-// } from '../services/Company';
+import {
+  useGetGarageDetailMutation,
+  useGetCorGarageMutation,
+} from '../../services/Garage';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
 
@@ -31,35 +32,38 @@ export default function ListScreen() {
   const [active, setActive] = useState(0);
   const [loading, setLoading] = useState(true);
   const [distanceNum, setDistanceNum] = useState(10);
-  const [markers, setMarkers] = React.useState([]);
+  const [markers, setMarkers] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
-  //   const getCorCompany = useGetCorCompanyQuery();
-  //   const [getCompanyDetail] = useGetCompanyDetailMutation();
+  const [cor, setCor] = useState([]);
+  const [getCorCompany] = useGetCorGarageMutation();
+  const [getCompanyDetail] = useGetGarageDetailMutation();
+  const [totalRatings, setTotalRating] = useState(0);
+  const [rating, setRating] = useState(0);
   const [region, setRegion] = useState({
     latitude: 10.5369728,
     longitude: 106.6734779,
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   });
-  const [places, setPlaces] = useState([]);
   const companyCoordinates = [];
   useEffect(() => {
+    setMarkers([]);
     requestPermission();
   }, []);
+  const getCor = async () => {
+    setCor([]);
+    await getCorCompany()
+      .unwrap()
+      .then(payload => {
+        setCor(prev => [...prev, ...payload.data]);
+      })
+      .catch(error => {
+        return error;
+      });
+  };
   useEffect(() => {
-    console.log('distanceNum', distanceNum);
     setMarkers([]);
-    // if (getCorCompany.isSuccess) {
-    //   // console.log('data', getCorCompany.data.data);
-    //   getCorCompany.data.data.map(val => {
-    //     const obj = {id: val.accountId, latitude: val.lat, longitude: val.long};
-    //     companyCoordinates.push(obj);
-    //   });
-    // } else {
-    //   <View style={{flex: 1, justifyContent: 'center'}}>
-    //     <ActivityIndicator size="large" color={themeColors.primaryColor} />
-    //   </View>;
-    // }
+    getCor();
     getCurrentLocation();
   }, [distanceNum]);
   const requestPermission = async () => {
@@ -95,7 +99,15 @@ export default function ListScreen() {
     setLoading(false);
   };
   const apiCall = async (latitude, longitude) => {
-    setPlaces([]);
+    setMarkers([]);
+    cor.map(val => {
+      const obj = {
+        id: val._id,
+        latitude: val.latitude,
+        longitude: val.longitude,
+      };
+      companyCoordinates.push(obj);
+    });
     try {
       var string = '';
       let markerList = [];
@@ -130,7 +142,7 @@ export default function ListScreen() {
             if (val.distance.value <= distanceNum * 1000)
               showedMarker.push(val);
           });
-          console.log('showedMarker', showedMarker);
+          // console.log('showedMarker', showedMarker);
           companyCoordinates.map(val => {
             showedMarker.map(value => {
               if (val.id === value.id) {
@@ -149,40 +161,40 @@ export default function ListScreen() {
           );
           // console.log('sortedMarker', sortedMarker);
           if (!sortedMarker.length) {
-            setPlaces([]);
+            setMarkers([]);
           } else {
             let newMarkers = await Promise.all(
               sortedMarker.map(async val => {
                 let detail = {};
                 await getCompanyDetail({id: val.id})
                   .unwrap()
-                  .then(payload => (detail = payload))
+                  .then(payload => (detail = payload.data))
                   .catch(error => {
                     return error;
                   });
                 return {
-                  id: detail.data._id,
+                  id: detail._id,
                   coordinate: {
-                    latitude: detail.companyDetail.lat,
-                    longitude: detail.companyDetail.long,
+                    latitude: detail.latitude,
+                    longitude: detail.longitude,
                   },
-                  title: detail.data.name,
-                  address: detail.companyDetail.address || 'Not Available',
+                  title: detail.name,
+                  address: detail.address || 'Not Available',
                   image: 'NA',
-                  phoneNo: detail.data.phone,
-                  email: detail.data.email,
+                  phoneNo: detail.phone,
+                  email: detail.email,
                   distance: val.distance.text,
-                  openTime: detail.companyDetail.openTime,
-                  closeTime: detail.companyDetail.closeTime,
+                  openTime: detail.openTime,
+                  closeTime: detail.closeTime,
                 };
               }),
             );
-            setPlaces(newMarkers);
-            console.log(places);
+            setMarkers(newMarkers);
+            // console.log(markers);
           }
         })
         .catch(error => {
-          console.log(error);
+          return error;
         });
     } catch (error) {
       setLoading(false);
@@ -261,85 +273,8 @@ export default function ListScreen() {
         }}>
         Nearby places in {distanceNum}km
       </Text>
-      <TouchableOpacity onPress={() => navigation.navigate('GarageDetail')}>
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingBottom: 10,
-            borderBottomWidth: 1,
-            borderBottomColor: themeColors.gray,
-            marginVertical: 10,
-            // flexDirection: 'row',
-            // justifyContent: 'space-between',
-          }}>
-          <View>
-            <Text
-              style={{
-                fontWeight: '900',
-                fontSize: 20,
-                color: themeColors.primaryColor7,
-              }}>
-              Garage Ô Tô Đức Thuận
-            </Text>
-            <Text
-              style={{
-                fontSize: 18,
-                color: themeColors.primaryColor4,
-                fontWeight: 'bold',
-              }}>
-              ( 9 KM )
-            </Text>
-            <View style={styles.content}>
-              <Icon name="map-marker" size={24} color="red" />
-              <Text style={[styles.content_text, {fontStyle: 'italic'}]}>
-                230-232, Trần Hưng Đạo, Phường Nguyễn Cư Trinh, Quận 1
-              </Text>
-            </View>
-            <View style={styles.content}>
-              <Icon
-                name="clock-o"
-                size={18}
-                color={themeColors.primaryColor7}
-              />
-              <Text style={styles.content_text}>6:00 - 22:00</Text>
-            </View>
-            <View style={styles.content}>
-              <Icon
-                name="envelope"
-                size={16}
-                color={themeColors.primaryColor7}
-              />
-              <Text style={styles.content_text}>huynhgiaolethi0@gmail.com</Text>
-            </View>
-          </View>
-          <View style={{alignSelf: 'flex-end'}}>
-            <TouchableOpacity
-              onPress={() => openDialScreen(item?.phoneNo)}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: themeColors.white,
-                paddingHorizontal: 20,
-                paddingVertical: 5,
-                borderRadius: 18,
-                marginVertical: 5,
-                borderColor: themeColors.primaryColor,
-                borderWidth: 2,
-              }}>
-              <Icon name="phone" size={20} color={themeColors.primaryColor4} />
-              <Text
-                style={[
-                  styles.content_text,
-                  {color: themeColors.primaryColor4},
-                ]}>
-                0832011697
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </TouchableOpacity>
-      {/* <FlatList
+
+      <FlatList
         style={{marginBottom: 150}}
         ItemSeparatorComponent={
           Platform.OS !== 'android' &&
@@ -347,92 +282,110 @@ export default function ListScreen() {
             <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
           ))
         }
-        data={places.length === 0 ? [] : places}
-        renderItem={({item, index, separators}) => (
+        data={markers.length === 0 ? [] : markers}
+        renderItem={({item, index}) => (
           <TouchableOpacity
-            key={item.id}
-            onPress={() => navigation.navigate('GarageDetail', {id: item.id})}>
+            onPress={() => navigation.navigate('GarageDetail')}
+            key={item.id}>
             <View
               style={{
                 paddingHorizontal: 20,
-                paddingVertical: 10,
-                borderWidth: 1,
-                marginHorizontal: 20,
-                borderColor: themeColors.gray,
+                paddingBottom: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: themeColors.gray,
                 marginVertical: 10,
-                borderRadius: 20,
               }}>
-              <Text
-                style={{
-                  fontSize: 13,
-                  color: themeColors.white,
-                  fontWeight: '600',
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  backgroundColor: themeColors.blue,
-                  padding: 3,
-                  borderTopRightRadius: 20,
-                  borderBottomLeftRadius: 20,
-                  width: 100,
-                  textAlign: 'center',
-                }}>
-                {item.distance}
-              </Text>
-              <Text
-                style={{
-                  fontWeight: '900',
-                  fontSize: 18,
-                  color: themeColors.blue,
-                  width: '70%',
-                  marginTop: 10,
-                }}>
-                {item.title}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: themeColors.gray60,
-                  fontStyle: 'italic',
-                }}>
-                {item.address}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: themeColors.blue,
-                  fontStyle: 'italic',
-                }}>
-                Hour Working: {item.openTime} - {item.closeTime}
-              </Text>
-              <View style={{alignSelf: 'flex-end'}}>
+              <View>
                 <Text
                   style={{
-                    fontSize: 14,
-                    color: themeColors.primaryColor,
-                    fontWeight: '700',
+                    fontWeight: '900',
+                    fontSize: 20,
+                    color: themeColors.primaryColor7,
                   }}>
-                  Email: {item.email}
+                  {item.title}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => openDialScreen(item?.phoneNo)}
+                <View
                   style={{
-                    marginTop: 2,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                   }}>
+                  <View style={styles.rating}>
+                    <Rating
+                      ratingCount={rating}
+                      type="star"
+                      readonly={true}
+                      startingValue={rating || 0}
+                      imageSize={14}
+                    />
+                    <Text style={styles.ratingTxt}>
+                      {rating || 0} ({totalRatings || 0} Ratings)
+                    </Text>
+                  </View>
                   <Text
                     style={{
-                      fontSize: 14,
-                      color: themeColors.primaryColor,
-                      fontWeight: '700',
+                      fontSize: 18,
+                      color: themeColors.primaryColor4,
+                      fontWeight: 'bold',
                     }}>
-                    Phone: {item.phoneNo}
+                    {item.distance}
+                  </Text>
+                </View>
+                <View style={styles.content}>
+                  <Icon name="map-marker" size={24} color="red" />
+                  <Text style={[styles.content_text, {fontStyle: 'italic'}]}>
+                    {item.address}
+                  </Text>
+                </View>
+                <View style={styles.content}>
+                  <Icon
+                    name="clock-o"
+                    size={18}
+                    color={themeColors.primaryColor7}
+                  />
+                  <Text style={styles.content_text}>
+                    {item.openTime} - {item.closeTime}
+                  </Text>
+                </View>
+                <View style={styles.content}>
+                  <Icon
+                    name="envelope"
+                    size={16}
+                    color={themeColors.primaryColor7}
+                  />
+                  <Text style={styles.content_text}>{item.email}</Text>
+                </View>
+                <View style={styles.content}>
+                  <Icon
+                    name="phone"
+                    size={20}
+                    color={themeColors.primaryColor7}
+                  />
+                  <Text style={styles.content_text}>{item.phoneNo}</Text>
+                </View>
+              </View>
+              <View style={{alignSelf: 'flex-end'}}>
+                <TouchableOpacity
+                  onPress={() => openDialScreen(item.phoneNo)}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: themeColors.primaryColor4,
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 10,
+                    marginVertical: 5,
+                  }}>
+                  <Text
+                    style={[styles.content_text, {color: themeColors.white}]}>
+                    CALL
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </TouchableOpacity>
         )}
-      /> */}
+      />
     </View>
   );
 }
@@ -458,6 +411,17 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 10,
     borderColor: themeColors.primaryColor5,
+  },
+  rating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  ratingTxt: {
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 13,
+    marginLeft: 5,
+    color: themeColors.primaryColor8,
   },
   text: {
     color: themeColors.white,
