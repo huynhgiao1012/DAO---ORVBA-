@@ -6,19 +6,19 @@ const router = express.Router();
 router.get(
   "/getAllService/:id",
   jwtAuth,
-  authorize("company", "customer", "admin"),
+  authorize("manager", "customer", "admin"),
   serviceController.getAllService
 );
 router.get(
   "/getServiceDetail/:id",
   jwtAuth,
-  authorize("company", "customer", "admin"),
+  authorize("manager", "customer", "admin"),
   serviceController.getService
 );
 router.post(
   "/create",
   jwtAuth,
-  authorize("company"),
+  authorize("manager"),
   serviceController.createService
 );
 router.post(
@@ -36,13 +36,13 @@ router.post(
 router.delete(
   "/:id",
   jwtAuth,
-  authorize("company", "admin"),
+  authorize("manager", "admin"),
   serviceController.deleteService
 );
 router.patch(
   "/:id",
   jwtAuth,
-  authorize("company", "admin"),
+  authorize("manager", "admin"),
   serviceController.updateService
 );
 module.exports = router;
