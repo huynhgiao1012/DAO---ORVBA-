@@ -71,6 +71,7 @@ export default function Booking({route}) {
   };
   useEffect(() => {
     getCurrentLocation();
+    setService([]);
     getUserDetail()
       .unwrap()
       .then(payload =>
@@ -83,7 +84,11 @@ export default function Booking({route}) {
     getCompanyService({id})
       .unwrap()
       .then(payload => {
-        setService(prev => [...prev, ...payload.data]);
+        const arr = [];
+        payload.data.map(val => {
+          arr.push(val.serviceName);
+        });
+        setService(prev => [...prev, ...arr]);
       })
       .catch(error => {
         return error;
@@ -307,11 +312,9 @@ export default function Booking({route}) {
                       fontWeight: '700',
                       color: themeColors.primaryColor,
                     }}
-                    data={service.map(val => {
-                      return val.name;
-                    })}
+                    data={service}
                     onSelect={(selectedItem, index) => {
-                      console.log(selectedItem, index);
+                      handleChange('service');
                     }}
                     buttonTextAfterSelection={(selectedItem, index) => {
                       return selectedItem;
