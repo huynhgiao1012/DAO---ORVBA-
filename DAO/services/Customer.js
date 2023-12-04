@@ -29,6 +29,16 @@ export const customerApi = createApi({
         url: '/customerPoint',
       }),
     }),
+    bookingMaintenance: builder.mutation({
+      query: payload => ({
+        url: '/bookingMaintenance',
+        method: 'POST',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
     // updateUserPoint: builder.mutation({
     //   query: payload => ({
     //     url: `/updateUserPoint`,
@@ -54,5 +64,8 @@ export const customerApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useGetCustomerDetailMutation, useGetCustomerPointMutation} =
-  customerApi;
+export const {
+  useGetCustomerDetailMutation,
+  useGetCustomerPointMutation,
+  useBookingMaintenanceMutation,
+} = customerApi;

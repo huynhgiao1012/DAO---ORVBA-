@@ -6,6 +6,8 @@ import {
   TextInput,
   ScrollView,
   Modal,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useReverseGeoMutation} from '../../services/Map';
@@ -17,41 +19,49 @@ import CalendarPicker from 'react-native-calendar-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import Header2 from '../../common/Header2';
 import GetLocation from 'react-native-get-location';
-import {useGetCustomerDetailMutation} from '../../services/Customer';
+import {
+  useGetCustomerDetailMutation,
+  useBookingMaintenanceMutation,
+} from '../../services/Customer';
 import {useGetCompanyServiceMutation} from '../../services/Service';
+import {useNavigation} from '@react-navigation/native';
 
 const personalInfor = yup.object().shape({
   name: yup.string().required('Required'),
   address: yup.string().required('Required'),
-  date: yup.string(),
-  time: yup.string(),
+  date: yup.string().required('Required'),
+  time: yup.string().required('Required'),
   phone: yup
     .string()
     .required('Required')
     .matches(/^(84|0[3|5|7|8|9])+([0-9]{8})\b/, 'Must be a valid phone'),
   automaker: yup.string().required('Required'),
-  service: yup.array().required('Required'),
-  note: yup.array().required('Required'),
+  service: yup.string().required('Required'),
+  note: yup.string().required('Required'),
 });
 export default function Booking({route}) {
+  const navigation = useNavigation();
   const [selectedDate, setDate] = useState('');
   const [reverseGeo] = useReverseGeoMutation();
   const minDate = new Date();
   const [address, setAddress] = useState('');
-  const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
+  const [getUserDetail] = useGetCustomerDetailMutation();
   const time = ['7:00', '10:00', '13:00', '15:00'];
-  const serviceType = ['service 1', 'service 2', 'service 3', 'service 4'];
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const [getCompanyService] = useGetCompanyServiceMutation();
+  const [bookingMaintenance, {isLoading}] = useBookingMaintenanceMutation();
   const [data, setData] = useState({
     _id: '',
     email: '',
     name: '',
     phone: '',
   });
+  const [active, setActive] = useState(10);
   const [service, setService] = useState([]);
+  const [allService, setAll] = useState([]);
+  const [price, setPrice] = useState(0);
   const {id} = route.params;
   const getCurrentLocation = () => {
     GetLocation.getCurrentPosition({
@@ -80,7 +90,11 @@ export default function Booking({route}) {
           ...payload.data,
         })),
       )
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.data.message === 'Token is exprired') {
+          navigation.navigate('Login');
+        }
+      });
     getCompanyService({id})
       .unwrap()
       .then(payload => {
@@ -89,29 +103,72 @@ export default function Booking({route}) {
           arr.push(val.serviceName);
         });
         setService(prev => [...prev, ...arr]);
+        setAll(prev => [...prev, ...payload.data]);
       })
       .catch(error => {
         return error;
       });
   }, []);
-  const onDateChange = date => {
-    setDate(new Date(date).toLocaleDateString('en-GB'));
-    hideModal();
-  };
   const AppointmentFill = values => {
-    console.log(values);
+    const obj = {
+      customerName: values.name,
+      phone: values.phone,
+      service: values.service,
+      address: values.address,
+      date: selectedDate.split('/').reverse().join('-'),
+      time: values.time,
+      price: price,
+      note: values.note,
+      garageId: id,
+    };
+    bookingMaintenance({...obj})
+      .unwrap()
+      .then(payload => {
+        if (payload.success) {
+          Alert.alert('BOOKING SERVICE', payload.message, [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('MainHome'),
+            },
+          ]);
+        }
+      })
+      .catch(error => {
+        return error;
+      });
   };
   return (
     <ScrollView style={{backgroundColor: themeColors.white, flex: 1}}>
       <Header2 name="Booking Service" />
+      {isLoading && (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#f8f8f8aa',
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
+              }}>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      )}
       <View style={{marginTop: 15}}>
         <Formik
           validationSchema={personalInfor}
           onSubmit={values => AppointmentFill(values)}
           validateOnMount={true}
+          enableReinitialize={true}
           initialValues={{
             name: '',
-            address: '',
+            address: address,
             phone: '',
             date: '',
             time: '',
@@ -119,7 +176,7 @@ export default function Booking({route}) {
             service: '',
             note: '',
           }}>
-          {({errors, handleChange, handleSubmit, touched, isValid}) => {
+          {({errors, handleChange, handleSubmit, touched, setFieldValue}) => {
             return (
               <View style={styles.form}>
                 <View style={{marginVertical: 10, paddingHorizontal: 20}}>
@@ -147,7 +204,6 @@ export default function Booking({route}) {
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('name')}
-                    defaultValue={data.name}
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Address</Text>
@@ -170,7 +226,7 @@ export default function Booking({route}) {
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('phone')}
-                    defaultValue={data.phone}
+                    keyboardType="numeric"
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Date</Text>
@@ -198,7 +254,7 @@ export default function Booking({route}) {
                         borderTopLeftRadius: 10,
                         borderBottomLeftRadius: 10,
                       }}
-                      onChangeText={handleChange('date')}
+                      onChange={() => setFieldValue('date', selectedDate)}
                       value={selectedDate}
                       readOnly={true}
                     />
@@ -232,25 +288,25 @@ export default function Booking({route}) {
                       justifyContent: 'space-evenly',
                       flexWrap: 'wrap',
                     }}>
-                    {time.map(val => {
+                    {time.map((val, index) => {
                       return (
                         <TouchableOpacity
-                          key={val}
-                          style={{
-                            borderWidth: 1,
-                            borderColor: themeColors.primaryColor7,
-                            borderRadius: 10,
-                            padding: 10,
-                            marginVertical: 15,
-                            width: 70,
-                          }}>
+                          key={index}
+                          onPress={() => {
+                            setFieldValue('time', val);
+                            setActive(index);
+                          }}
+                          style={[
+                            index === active
+                              ? styles.buttonActive
+                              : styles.button,
+                          ]}>
                           <Text
-                            style={{
-                              color: themeColors.primaryColor7,
-                              fontWeight: '700',
-                              fontSize: 15,
-                              textAlign: 'center',
-                            }}>
+                            style={[
+                              index === active
+                                ? styles.textActive
+                                : styles.text,
+                            ]}>
                             {val}
                           </Text>
                         </TouchableOpacity>
@@ -289,8 +345,8 @@ export default function Booking({route}) {
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title2}>Service</Text>
-                    {errors.automaker && touched.automaker && (
-                      <Text style={styles.errorText}> {errors.automaker} </Text>
+                    {errors.service && touched.service && (
+                      <Text style={styles.errorText}> {errors.service} </Text>
                     )}
                   </View>
                   <SelectDropdown
@@ -314,7 +370,12 @@ export default function Booking({route}) {
                     }}
                     data={service}
                     onSelect={(selectedItem, index) => {
-                      handleChange('service');
+                      setFieldValue('service', selectedItem);
+                      allService.map(val => {
+                        if (val.serviceName === selectedItem) {
+                          setPrice(val.estimatedPrice);
+                        }
+                      });
                     }}
                     buttonTextAfterSelection={(selectedItem, index) => {
                       return selectedItem;
@@ -332,19 +393,30 @@ export default function Booking({route}) {
                   <TextInput
                     style={styles.input2}
                     onChangeText={handleChange('note')}
-                    numberOfLines={4}
-                    maxLength={50}
+                    maxLength={500}
+                    multiline={true}
                   />
                 </View>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: themeColors.black,
+                    paddingHorizontal: 20,
+                    paddingTop: 10,
+                    alignSelf: 'flex-end',
+                  }}>
+                  Estimated Price: {price}
+                </Text>
                 <TouchableOpacity
                   onPress={handleSubmit}
                   style={{
                     alignSelf: 'center',
-                    backgroundColor: themeColors.primaryColor,
+                    backgroundColor: themeColors.black,
                     padding: 10,
                     width: '90%',
                     borderRadius: 10,
-                    marginVertical: 30,
+                    marginVertical: 20,
                   }}>
                   <Text
                     style={{
@@ -356,37 +428,41 @@ export default function Booking({route}) {
                     Book Appointment
                   </Text>
                 </TouchableOpacity>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  presentationStyle="overFullScreen"
+                  visible={visible}>
+                  <View
+                    style={{
+                      backgroundColor: '#000000aa',
+                      flex: 1,
+                    }}>
+                    <View style={styles.modalView}>
+                      <CalendarPicker
+                        startFromMonday={true}
+                        onDateChange={date => {
+                          setDate(new Date(date).toLocaleDateString('en-GB'));
+                          setFieldValue('date', date);
+                          hideModal();
+                        }}
+                        minDate={minDate}
+                        todayBackgroundColor={themeColors.primaryColor}
+                        selectedDayTextColor={themeColors.white}
+                        textStyle={{
+                          color: themeColors.primaryColor7,
+                          fontWeight: '600',
+                        }}
+                        width={380}
+                      />
+                    </View>
+                  </View>
+                </Modal>
               </View>
             );
           }}
         </Formik>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        presentationStyle="overFullScreen"
-        visible={visible}>
-        <View
-          style={{
-            backgroundColor: '#000000aa',
-            flex: 1,
-          }}>
-          <View style={styles.modalView}>
-            <CalendarPicker
-              startFromMonday={true}
-              onDateChange={onDateChange}
-              minDate={minDate}
-              todayBackgroundColor={themeColors.primaryColor}
-              selectedDayTextColor={themeColors.white}
-              textStyle={{
-                color: themeColors.primaryColor7,
-                fontWeight: '600',
-              }}
-              width={380}
-            />
-          </View>
-        </View>
-      </Modal>
     </ScrollView>
   );
 }
@@ -394,7 +470,7 @@ const styles = StyleSheet.create({
   form: {},
   title: {
     fontSize: 16,
-    color: themeColors.black,
+    color: themeColors.primaryColor7,
     fontWeight: '700',
     fontStyle: 'italic',
   },
@@ -454,5 +530,34 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 200,
     left: 0,
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: themeColors.primaryColor7,
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 15,
+    width: 70,
+    backgroundColor: themeColors.white,
+  },
+  buttonActive: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 15,
+    width: 70,
+    backgroundColor: themeColors.primaryColor7,
+  },
+  text: {
+    color: themeColors.primaryColor7,
+    fontWeight: '700',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  textActive: {
+    color: themeColors.white,
+    fontWeight: '700',
+    fontSize: 15,
+    textAlign: 'center',
   },
 });
