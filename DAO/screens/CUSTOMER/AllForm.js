@@ -5,15 +5,55 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {themeColors} from '../../common/theme';
 import FormItem from '../../common/FormItem';
+import {useGetAllFormMutation} from '../../services/Customer';
 
 export default function AllForm() {
   const [active, setActive] = useState(0);
+  const [getAllForm] = useGetAllFormMutation();
+  const [form, setForm] = useState([]);
+  const [filter, setArr] = useState([]);
   const handleFilter = num => {
     setActive(num);
+    console.log(num);
+    if (num === 0) {
+      setArr(prev => [...prev, ...form]);
+    } else if (num === 1) {
+      setArr([]);
+      const arr = form.map(val => {
+        if (val.status === 'await') {
+          return val;
+        }
+      });
+      setArr(prev => [...prev, ...arr]);
+    } else if (num === 2) {
+      setArr([]);
+      const arr = form.map(val => {
+        if (val.status === 'process') {
+          return val;
+        }
+      });
+      setArr(prev => [...prev, ...arr]);
+    } else {
+      setArr([]);
+      const arr = form.map(val => {
+        if (val.status === 'done') {
+          return val;
+        }
+      });
+      setArr(prev => [...prev, ...arr]);
+    }
   };
+  useEffect(() => {
+    setForm([]);
+    setArr([]);
+    getAllForm()
+      .unwrap()
+      .then(payload => setForm(prev => [...prev, ...payload.orderForm]))
+      .catch(error => error);
+  }, []);
   return (
     <ScrollView style={{backgroundColor: themeColors.white}}>
       <View
@@ -76,7 +116,22 @@ export default function AllForm() {
           <Text style={styles.btn_text}>Paid</Text>
         </TouchableOpacity>
       </View>
-      <FormItem />
+      {filter.length > 0 ? (
+        filter.map((val, index) => {
+          return <FormItem data={val} key={index} />;
+        })
+      ) : (
+        <Text
+          style={{
+            fontWeight: '700',
+            color: themeColors.primaryColor6,
+            fontSize: 16,
+            alignSelf: 'center',
+            fontStyle: 'italic',
+          }}>
+          No results
+        </Text>
+      )}
     </ScrollView>
   );
 }

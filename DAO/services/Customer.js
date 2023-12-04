@@ -29,6 +29,21 @@ export const customerApi = createApi({
         url: '/customerPoint',
       }),
     }),
+    getAllForm: builder.mutation({
+      query: () => ({
+        url: '/getAllForm',
+      }),
+    }),
+    getEmergencyForm: builder.mutation({
+      query: () => ({
+        url: '/getEmergencyForm',
+      }),
+    }),
+    getMaintainForm: builder.mutation({
+      query: () => ({
+        url: '/getMaintainForm',
+      }),
+    }),
     bookingMaintenance: builder.mutation({
       query: payload => ({
         url: '/bookingMaintenance',
@@ -68,4 +83,7 @@ export const {
   useGetCustomerDetailMutation,
   useGetCustomerPointMutation,
   useBookingMaintenanceMutation,
+  useGetAllFormMutation,
+  useGetEmergencyFormMutation,
+  useGetMaintainFormMutation,
 } = customerApi;

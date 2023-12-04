@@ -1,8 +1,27 @@
 import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {themeColors} from './theme';
 
-export default function FormItem() {
+export default function FormItem({data}) {
+  const [dataForm, setData] = useState({
+    _id: '',
+    date: '',
+    garageId: {_id: '', name: ''},
+    phone: '',
+    price: 0,
+    type: '',
+  });
+  const VND = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+  useEffect(() => {
+    console.log(data);
+    setData(dataForm => ({
+      ...dataForm,
+      ...data,
+    }));
+  }, []);
   return (
     <TouchableOpacity
       style={{padding: 15, borderBottomWidth: 2, borderBottomColor: '#e8e8e8'}}>
@@ -23,7 +42,7 @@ export default function FormItem() {
             borderRadius: 10,
             fontStyle: 'italic',
           }}>
-          Emergency
+          {dataForm.type}
         </Text>
         <Text
           style={{
@@ -32,7 +51,7 @@ export default function FormItem() {
             color: themeColors.primaryColor,
             fontStyle: 'italic',
           }}>
-          Date: 29/10/2023
+          Date: {dataForm.date.slice(0, 10).split('-').reverse().join('-')}
         </Text>
       </View>
       <View
@@ -47,7 +66,7 @@ export default function FormItem() {
             fontWeight: 'bold',
             color: themeColors.primaryColor4,
           }}>
-          Garage ABCDEF
+          {dataForm.garageId.name}
         </Text>
       </View>
       <View
@@ -62,7 +81,7 @@ export default function FormItem() {
             fontWeight: 'bold',
             color: themeColors.primaryColor7,
           }}>
-          PRICE: 100000 VND
+          PRICE: {VND.format(dataForm.price)}
         </Text>
       </View>
     </TouchableOpacity>

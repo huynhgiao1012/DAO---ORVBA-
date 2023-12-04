@@ -91,7 +91,11 @@ const Home = () => {
         component={MainHome}
         options={{headerShown: false, unmountOnBlur: true}}
       />
-      <Tab.Screen name="Form" component={Form} options={{headerShown: false}} />
+      <Tab.Screen
+        name="Form"
+        component={Form}
+        options={{headerShown: false, unmountOnBlur: true}}
+      />
       <Tab.Screen
         name="Notification"
         component={Notification}
