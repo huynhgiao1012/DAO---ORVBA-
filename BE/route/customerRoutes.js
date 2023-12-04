@@ -11,6 +11,24 @@ router.get(
   customerController.getUserDetails
 );
 router.get(
+  "/getAllForm",
+  jwtAuth,
+  authorize("customer"),
+  customerController.getAllForm
+);
+router.get(
+  "/getEmergencyForm",
+  jwtAuth,
+  authorize("customer"),
+  customerController.getEmergencyForm
+);
+router.get(
+  "/getMaintainForm",
+  jwtAuth,
+  authorize("customer"),
+  customerController.getMaintainForm
+);
+router.get(
   "/customerPoint",
   jwtAuth,
   authorize("customer"),

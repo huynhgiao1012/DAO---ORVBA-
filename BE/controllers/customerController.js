@@ -1,4 +1,4 @@
-const { FORM_STATUS } = require("../constant");
+const { FORM_STATUS, GROUP } = require("../constant");
 const catchAsync = require("../middleware/async");
 const Account = require("../models/account");
 const Customer = require("../models/customer");
@@ -99,6 +99,51 @@ exports.getUnFeedForm = catchAsync(async (req, res) => {
     isFeedback: false,
     customerId: customer._id,
     status: FORM_STATUS.DONE,
+  });
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    orderForm,
+  });
+});
+
+exports.getAllForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const customer = await Customer.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.find({
+    customerId: customer._id,
+  }).populate("garageId", "name");
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    orderForm,
+  });
+});
+exports.getEmergencyForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const customer = await Customer.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.find({
+    customerId: customer._id,
+    type: GROUP.EMERGENCY,
+  });
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    orderForm,
+  });
+});
+exports.getMaintainForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const customer = await Customer.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.find({
+    customerId: customer._id,
+    type: GROUP.MAINTENANCE,
   });
   if (!orderForm) {
     throw new ApiError(400, "Not available");
