@@ -33,6 +33,7 @@ exports.createGarage = catchAsync(async (req, res) => {
     openTime,
     closeTime,
     transferInfo,
+    img: "None",
   });
   res.status(200).json({
     success: true,

@@ -54,6 +54,9 @@ const GarageSchema = new Schema(
       default: [],
       required: [true, "Transfer information is required"],
     },
+    img: {
+      type: String,
+    },
     createAt: {
       type: Date,
       default: Date.now,
