@@ -51,8 +51,19 @@ export default function LoginScreen() {
           // setUser(decode.id);
           if (payload.role === 'customer') {
             navigation.navigate('Home');
+          } else if (payload.role === 'mechanic') {
+            navigation.navigate('MeHome');
           } else {
-            navigation.navigate('MechanicHome');
+            Alert.alert(
+              'SIGN UP',
+              'Please sign up to access our application...',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('SignUp'),
+                },
+              ],
+            );
           }
         } else {
           if (payload.customerId.isActive === false) {

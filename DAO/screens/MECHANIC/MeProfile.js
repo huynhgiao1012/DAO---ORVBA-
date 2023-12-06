@@ -13,15 +13,12 @@ import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import {useNavigation} from '@react-navigation/native';
-import {
-  useGetCustomerDetailMutation,
-  useGetCustomerPointMutation,
-} from '../../services/Customer';
+import {useGetUserDetailMutation} from '../../services/User';
 
-export default function Profile({route}) {
+export default function MeProfile({route}) {
   const navigation = useNavigation();
-  const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
-  const [getCustomerPoint] = useGetCustomerPointMutation();
+  const [getUserDetail, {isLoading}] = useGetUserDetailMutation();
+  // const [getCustomerPoint] = useGetCustomerPointMutation();
   const [data, setData] = useState({
     _id: '',
     email: '',
@@ -31,25 +28,16 @@ export default function Profile({route}) {
     role: '',
     img: '',
   });
-  const [point, setPoint] = useState({
-    _id: '',
-    isVIP: false,
-    point: 0,
-  });
+  // const [point, setPoint] = useState({
+  //   _id: '',
+  //   isVIP: false,
+  //   point: 0,
+  // });
   useEffect(() => {
     getUserDetail()
       .unwrap()
       .then(payload =>
         setData(data => ({
-          ...data,
-          ...payload.data,
-        })),
-      )
-      .catch(error => console.log(error));
-    getCustomerPoint()
-      .unwrap()
-      .then(payload =>
-        setPoint(data => ({
           ...data,
           ...payload.data,
         })),
@@ -59,22 +47,23 @@ export default function Profile({route}) {
   useEffect(() => {
     getUserDetail()
       .unwrap()
-      .then(payload =>
+      .then(payload => {
+        console.log(payload);
         setData(data => ({
           ...data,
           ...payload.data,
-        })),
-      )
+        }));
+      })
       .catch(error => console.log(error));
-    getCustomerPoint()
-      .unwrap()
-      .then(payload =>
-        setPoint(data => ({
-          ...data,
-          ...payload.data,
-        })),
-      )
-      .catch(error => console.log(error));
+    // getCustomerPoint()
+    //   .unwrap()
+    //   .then(payload =>
+    //     setPoint(data => ({
+    //       ...data,
+    //       ...payload.data,
+    //     })),
+    //   )
+    //   .catch(error => console.log(error));
   }, []);
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
@@ -119,7 +108,7 @@ export default function Profile({route}) {
         </Text>
         <Icon name="ellipsis-v" size={25} color={themeColors.primaryColor} />
       </View>
-
+      {/* img + name + contact */}
       <View
         style={{
           marginHorizontal: 10,
@@ -190,19 +179,52 @@ export default function Profile({route}) {
           </Text>
         </View>
       </View>
-      <View style={styles.btn_group}>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate('ChangePass')}>
-          <Text style={styles.btn_text}>Change Password</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate('UpdateProfile')}>
-          <Text style={styles.btn_text}>Update Profile</Text>
-        </TouchableOpacity>
-      </View>
+      {/* garage and group of mechanic */}
       <View
+        style={{
+          marginHorizontal: 30,
+          padding: 10,
+          borderLeftWidth: 5,
+          borderLeftColor: themeColors.primaryColor,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            marginBottom: 10,
+          }}>
+          <Icon2 name="briefcase" color={themeColors.black} size={21} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '700',
+              color: themeColors.black,
+              marginLeft: 10,
+            }}>
+            Working at Garage Thuan Phat
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}>
+          <Icon2 name="people-group" color={themeColors.black} size={18} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '700',
+              color: themeColors.black,
+              marginLeft: 10,
+            }}>
+            Group - Emergency
+          </Text>
+        </View>
+      </View>
+      {/* point */}
+      {/* <View
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-start',
@@ -249,17 +271,18 @@ export default function Profile({route}) {
             borderTopRightRadius: 8,
             borderBottomRightRadius: 8,
           }}>
-          {point.point}
+          10
         </Text>
-      </View>
+      </View> */}
+      {/* button function */}
       <View style={{marginHorizontal: 20, padding: 10}}>
         <TouchableOpacity
           style={styles.line}
-          onPress={() => navigation.navigate('LoyalCustomer')}>
+          onPress={() => navigation.navigate('ChangePass')}>
           <View style={{width: 30}}>
-            <Icon2 name="award" size={20} color={themeColors.primaryColor7} />
+            <Icon2 name="key" size={20} color={themeColors.primaryColor7} />
           </View>
-          <Text style={styles.line_text}>Loyal Customer</Text>
+          <Text style={styles.line_text}>Change Password</Text>
           <View style={{width: 30}}>
             <Icon
               name="chevron-right"
@@ -270,11 +293,11 @@ export default function Profile({route}) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.line}
-          onPress={() => navigation.navigate('MyFeedback')}>
+          onPress={() => navigation.navigate('UpdateProfile')}>
           <View style={{width: 30}}>
-            <Icon name="star-o" size={20} color={themeColors.primaryColor7} />
+            <Icon name="edit" size={20} color={themeColors.primaryColor7} />
           </View>
-          <Text style={styles.line_text}>My Feedbacks</Text>
+          <Text style={styles.line_text}>Update Profile</Text>
           <View style={{width: 30}}>
             <Icon
               name="chevron-right"

@@ -19,6 +19,7 @@ import Booking from '../screens/CUSTOMER/Booking';
 import MyFeedback from '../screens/CUSTOMER/MyFeedback';
 import HelpCenter from '../screens/CUSTOMER/HelpCenter';
 import LoyalCustomer from '../screens/CUSTOMER/LoyalCustomer';
+import MeHome from '../screens/MECHANIC/MeHome';
 
 const Stack = createStackNavigator();
 export default function Navigation() {
@@ -109,6 +110,11 @@ export default function Navigation() {
           name="LoyalCustomer"
           options={{headerShown: false}}
           component={LoyalCustomer}
+        />
+        <Stack.Screen
+          name="MeHome"
+          options={{headerShown: false}}
+          component={MeHome}
         />
       </Stack.Navigator>
     </NavigationContainer>

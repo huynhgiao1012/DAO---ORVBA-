@@ -16,8 +16,10 @@ import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import {useGetCustomerDetailMutation} from '../services/Customer';
-import {useUpdateInfoMutation} from '../services/User';
+import {
+  useUpdateInfoMutation,
+  useGetUserDetailMutation,
+} from '../services/User';
 import {useNavigation} from '@react-navigation/native';
 
 const profileValidationSchema = yup.object().shape({
@@ -39,7 +41,7 @@ export default function UpdateProfile() {
     role: '',
     img: '',
   });
-  const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
+  const [getUserDetail, {isLoading}] = useGetUserDetailMutation();
   const [updateInfo] = useUpdateInfoMutation();
   useEffect(() => {
     getUserDetail()
@@ -102,7 +104,7 @@ export default function UpdateProfile() {
       .unwrap()
       .then(payload => {
         if (payload.success === true) {
-          navigation.navigate('Profile', {loading: true});
+          navigation.goBack();
         }
       })
       .catch(error => console.log(error));

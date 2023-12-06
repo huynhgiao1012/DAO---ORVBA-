@@ -15,8 +15,6 @@ import {useGetGarageDetailMutation} from '../../services/Garage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import {List} from 'react-native-paper';
-import Image from 'react-native-image-progress';
-import Rating from '../../common/Rating';
 
 export default function GarageDetail({route}) {
   const {id, distance} = route.params;
