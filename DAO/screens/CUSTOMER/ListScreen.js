@@ -285,7 +285,12 @@ export default function ListScreen() {
         data={markers.length === 0 ? [] : markers}
         renderItem={({item, index}) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('GarageDetail')}
+            onPress={() =>
+              navigation.navigate('GarageDetail', {
+                id: item.id,
+                distance: item.distance,
+              })
+            }
             key={item.id}>
             <View
               style={{

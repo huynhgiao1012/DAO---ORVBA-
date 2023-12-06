@@ -17,43 +17,57 @@ export default function AllForm() {
   const [filter, setArr] = useState([]);
   const handleFilter = num => {
     setActive(num);
-    console.log(num);
-    if (num === 0) {
-      setArr(prev => [...prev, ...form]);
-    } else if (num === 1) {
-      setArr([]);
-      const arr = form.map(val => {
-        if (val.status === 'await') {
-          return val;
-        }
-      });
-      setArr(prev => [...prev, ...arr]);
-    } else if (num === 2) {
-      setArr([]);
-      const arr = form.map(val => {
-        if (val.status === 'process') {
-          return val;
-        }
-      });
-      setArr(prev => [...prev, ...arr]);
-    } else {
-      setArr([]);
-      const arr = form.map(val => {
-        if (val.status === 'done') {
-          return val;
-        }
-      });
-      setArr(prev => [...prev, ...arr]);
-    }
   };
   useEffect(() => {
     setForm([]);
     setArr([]);
     getAllForm()
       .unwrap()
-      .then(payload => setForm(prev => [...prev, ...payload.orderForm]))
+      .then(payload => {
+        setForm(prev => [...prev, ...payload.orderForm]);
+      })
       .catch(error => error);
   }, []);
+  useEffect(() => {
+    setArr([]);
+    setForm([]);
+    getAllForm()
+      .unwrap()
+      .then(payload => {
+        if (active === 0) {
+          setArr(prev => [...prev, ...payload.orderForm]);
+        }
+        if (active === 1) {
+          const arr = payload.orderForm.map(val => {
+            if (val.status === 'await') {
+              return val;
+            }
+          });
+          setArr(prev => [...prev, ...arr]);
+        }
+        if (active === 2) {
+          const arr = payload.orderForm.map(val => {
+            if (val.status === 'process') {
+              return val;
+            } else {
+              return '';
+            }
+          });
+          setArr(prev => [...prev, ...arr]);
+        }
+        if (active === 3) {
+          const arr = payload.orderForm.map(val => {
+            if (val.status === 'done') {
+              return val;
+            } else {
+              return '';
+            }
+          });
+          setArr(prev => [...prev, ...arr]);
+        }
+      })
+      .catch(error => error);
+  }, [active]);
   return (
     <ScrollView style={{backgroundColor: themeColors.white}}>
       <View
@@ -116,7 +130,7 @@ export default function AllForm() {
           <Text style={styles.btn_text}>Paid</Text>
         </TouchableOpacity>
       </View>
-      {filter.length > 0 ? (
+      {filter.length > 0 && typeof filter[0] === 'object' ? (
         filter.map((val, index) => {
           return <FormItem data={val} key={index} />;
         })

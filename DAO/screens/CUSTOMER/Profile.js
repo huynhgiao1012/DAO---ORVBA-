@@ -253,20 +253,9 @@ export default function Profile({route}) {
         </Text>
       </View>
       <View style={{marginHorizontal: 20, padding: 10}}>
-        <TouchableOpacity style={styles.line}>
-          <View style={{width: 30}}>
-            <Icon name="gears" size={20} color={themeColors.primaryColor7} />
-          </View>
-          <Text style={styles.line_text}>Total Orders</Text>
-          <View style={{width: 30}}>
-            <Icon
-              name="chevron-right"
-              size={15}
-              color={themeColors.primaryColor5}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.line}>
+        <TouchableOpacity
+          style={styles.line}
+          onPress={() => navigation.navigate('LoyalCustomer')}>
           <View style={{width: 30}}>
             <Icon2 name="award" size={20} color={themeColors.primaryColor7} />
           </View>

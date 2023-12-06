@@ -18,6 +18,8 @@ import GarageDetail from '../screens/CUSTOMER/GarageDetail';
 import Booking from '../screens/CUSTOMER/Booking';
 import MyFeedback from '../screens/CUSTOMER/MyFeedback';
 import HelpCenter from '../screens/CUSTOMER/HelpCenter';
+import LoyalCustomer from '../screens/CUSTOMER/LoyalCustomer';
+
 const Stack = createStackNavigator();
 export default function Navigation() {
   return (
@@ -102,6 +104,11 @@ export default function Navigation() {
           name="HelpCenter"
           options={{headerShown: false}}
           component={HelpCenter}
+        />
+        <Stack.Screen
+          name="LoyalCustomer"
+          options={{headerShown: false}}
+          component={LoyalCustomer}
         />
       </Stack.Navigator>
     </NavigationContainer>

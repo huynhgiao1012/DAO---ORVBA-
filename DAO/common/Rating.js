@@ -15,31 +15,31 @@ export default function Rating() {
       <Icon
         name="star"
         size={14}
-        color={themeColors.primaryColor2}
+        color={themeColors.yellow}
         style={{paddingHorizontal: 3}}
       />
       <Icon
         name="star"
         size={14}
-        color={themeColors.primaryColor2}
+        color={themeColors.yellow}
         style={{paddingHorizontal: 3}}
       />
       <Icon
         name="star"
         size={14}
-        color={themeColors.primaryColor2}
+        color={themeColors.yellow}
         style={{paddingHorizontal: 3}}
       />
       <Icon
         name="star"
         size={14}
-        color={themeColors.primaryColor2}
+        color={themeColors.yellow}
         style={{paddingHorizontal: 3}}
       />
       <Icon
         name="star-half-empty"
         size={14}
-        color={themeColors.primaryColor2}
+        color={themeColors.yellow}
         style={{paddingHorizontal: 3}}
       />
     </View>

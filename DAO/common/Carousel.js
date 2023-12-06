@@ -42,20 +42,20 @@ const Carousel = () => {
     index: index,
   });
   // Data for carousel
-  // const carouselData = [
-  //   {
-  //     id: '01',
-  //     image: require('../assets/img1.png'),
-  //   },
-  //   {
-  //     id: '02',
-  //     image: require('../assets/img2.png'),
-  //   },
-  //   {
-  //     id: '03',
-  //     image: require('../assets/img4.png'),
-  //   },
-  // ];
+  const carouselData = [
+    {
+      id: '01',
+      image: require('../assets/img1.png'),
+    },
+    {
+      id: '02',
+      image: require('../assets/maintain.png'),
+    },
+    {
+      id: '03',
+      image: require('../assets/tow.png'),
+    },
+  ];
 
   //  Display Images // UI
   const renderItem = ({item, index}) => {
