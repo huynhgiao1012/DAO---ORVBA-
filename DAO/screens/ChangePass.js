@@ -25,7 +25,6 @@ export default function ChangePass() {
     changePassword({...val})
       .unwrap()
       .then(payload => {
-        console.log(payload);
         if (payload) {
           Alert.alert('Your Password has been changed', payload.message, [
             {
@@ -33,7 +32,7 @@ export default function ChangePass() {
             },
           ]);
         }
-        navigation.navigate('GarageHomeScreen');
+        navigation.goBack();
       })
       .catch(error => {
         if (error) {

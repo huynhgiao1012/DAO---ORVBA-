@@ -104,7 +104,11 @@ export default function UpdateProfile() {
       .unwrap()
       .then(payload => {
         if (payload.success === true) {
-          navigation.goBack();
+          if (data.role === 'mechanic') {
+            navigation.navigate('MeProfile', {loading: true});
+          } else {
+            navigation.navigate('Profile', {loading: true});
+          }
         }
       })
       .catch(error => console.log(error));

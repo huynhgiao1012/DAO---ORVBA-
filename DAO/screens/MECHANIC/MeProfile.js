@@ -14,11 +14,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import {useNavigation} from '@react-navigation/native';
 import {useGetUserDetailMutation} from '../../services/User';
+import {useGetMePointMutation} from '../../services/Mechanic';
 
 export default function MeProfile({route}) {
   const navigation = useNavigation();
   const [getUserDetail, {isLoading}] = useGetUserDetailMutation();
-  // const [getCustomerPoint] = useGetCustomerPointMutation();
+  const [getMePoint] = useGetMePointMutation();
   const [data, setData] = useState({
     _id: '',
     email: '',
@@ -28,11 +29,14 @@ export default function MeProfile({route}) {
     role: '',
     img: '',
   });
-  // const [point, setPoint] = useState({
-  //   _id: '',
-  //   isVIP: false,
-  //   point: 0,
-  // });
+  const [point, setPoint] = useState({
+    _id: '',
+    accountId: '',
+    garageId: {_id: '', name: ''},
+    group: '',
+    isAvailable: true,
+    mePoint: 0,
+  });
   useEffect(() => {
     getUserDetail()
       .unwrap()
@@ -48,22 +52,21 @@ export default function MeProfile({route}) {
     getUserDetail()
       .unwrap()
       .then(payload => {
-        console.log(payload);
         setData(data => ({
           ...data,
           ...payload.data,
         }));
       })
       .catch(error => console.log(error));
-    // getCustomerPoint()
-    //   .unwrap()
-    //   .then(payload =>
-    //     setPoint(data => ({
-    //       ...data,
-    //       ...payload.data,
-    //     })),
-    //   )
-    //   .catch(error => console.log(error));
+    getMePoint()
+      .unwrap()
+      .then(payload =>
+        setPoint(data => ({
+          ...data,
+          ...payload.data,
+        })),
+      )
+      .catch(error => console.log(error));
   }, []);
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
@@ -180,29 +183,26 @@ export default function MeProfile({route}) {
         </View>
       </View>
       {/* garage and group of mechanic */}
-      <View
-        style={{
-          marginHorizontal: 30,
-          padding: 10,
-          borderLeftWidth: 5,
-          borderLeftColor: themeColors.primaryColor,
-        }}>
+      <View style={[styles.card, styles.elevation]}>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            marginBottom: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: themeColors.primaryColor5,
+            paddingBottom: 10,
+            borderStyle: 'dashed',
           }}>
-          <Icon2 name="briefcase" color={themeColors.black} size={21} />
+          <Icon2 name="award" color={themeColors.primaryColor4} size={27} />
           <Text
             style={{
               fontSize: 16,
               fontWeight: '700',
-              color: themeColors.black,
+              color: themeColors.primaryColor4,
               marginLeft: 10,
             }}>
-            Working at Garage Thuan Phat
+            Current point - {point.mePoint}
           </Text>
         </View>
         <View
@@ -210,70 +210,45 @@ export default function MeProfile({route}) {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
+            borderBottomWidth: 1,
+            borderBottomColor: themeColors.primaryColor5,
+            paddingVertical: 10,
+            borderStyle: 'dashed',
           }}>
-          <Icon2 name="people-group" color={themeColors.black} size={18} />
+          <Icon2 name="briefcase" color={themeColors.primaryColor4} size={21} />
           <Text
             style={{
               fontSize: 16,
               fontWeight: '700',
-              color: themeColors.black,
+              color: themeColors.primaryColor4,
+              marginLeft: 10,
+            }}>
+            {point.garageId.name}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingTop: 10,
+          }}>
+          <Icon2
+            name="people-group"
+            color={themeColors.primaryColor4}
+            size={18}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '700',
+              color: themeColors.primaryColor4,
               marginLeft: 10,
             }}>
             Group - Emergency
           </Text>
         </View>
       </View>
-      {/* point */}
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          marginHorizontal: 35,
-          height: 50,
-        }}>
-        <View
-          style={{
-            backgroundColor: themeColors.white,
-            padding: 15,
-            alignSelf: 'center',
-            backgroundColor: themeColors.primaryColor,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'baseline',
-            opacity: 0.9,
-            height: '100%',
-            borderTopLeftRadius: 8,
-            borderBottomLeftRadius: 8,
-          }}>
-          <Icon2 name="gift" size={20} color={themeColors.white} />
-          <Text
-            style={{
-              fontSize: 16,
-              paddingLeft: 10,
-              color: themeColors.white,
-              fontWeight: '700',
-            }}>
-            POINT
-          </Text>
-        </View>
-        <Text
-          style={{
-            width: '64%',
-            textAlign: 'center',
-            fontSize: 30,
-            fontWeight: '800',
-            color: themeColors.primaryColor,
-            borderWidth: 2,
-            borderColor: themeColors.primaryColor,
-            height: '100%',
-            opacity: 0.9,
-            borderTopRightRadius: 8,
-            borderBottomRightRadius: 8,
-          }}>
-          10
-        </Text>
-      </View> */}
       {/* button function */}
       <View style={{marginHorizontal: 20, padding: 10}}>
         <TouchableOpacity
@@ -363,5 +338,19 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: themeColors.primaryColor7,
     width: 300,
+  },
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: '90%',
+    marginHorizontal: 20,
+    borderColor: themeColors.primaryColor5,
+    borderWidth: 1,
+  },
+  elevation: {
+    elevation: 10,
+    shadowColor: themeColors.primaryColor4,
   },
 });
