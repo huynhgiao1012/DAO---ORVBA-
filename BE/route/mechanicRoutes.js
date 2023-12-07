@@ -28,4 +28,10 @@ router.get(
   authorize("mechanic"),
   mechanicController.getForms
 );
+router.get(
+  "/getMePoint",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getMePoint
+);
 module.exports = router;

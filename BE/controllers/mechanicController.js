@@ -118,3 +118,17 @@ exports.getForms = catchAsync(async (req, res) => {
     }
   }
 });
+exports.getMePoint = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const mechanic = await Mechanic.findOne({ accountId: accountId.id }).populate(
+    "garageId",
+    "name _id"
+  );
+  if (mechanic) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      data: mechanic,
+    });
+  }
+});
