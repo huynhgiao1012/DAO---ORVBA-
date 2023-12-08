@@ -24,9 +24,35 @@ export const mechanicApi = createApi({
         url: '/getMePoint',
       }),
     }),
+    getForms: builder.mutation({
+      query: () => ({
+        url: '/getForms',
+      }),
+    }),
+    getForms: builder.mutation({
+      query: () => ({
+        url: '/getForms',
+      }),
+    }),
+    getPickedForms: builder.mutation({
+      query: () => ({
+        url: '/getPickedForms',
+      }),
+    }),
+    pickForm: builder.mutation({
+      query: ({id}) => ({
+        url: `/pickForm/${id}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {useGetMePointMutation} = mechanicApi;
+export const {
+  useGetMePointMutation,
+  useGetFormsMutation,
+  usePickFormMutation,
+  useGetPickedFormsMutation,
+} = mechanicApi;
