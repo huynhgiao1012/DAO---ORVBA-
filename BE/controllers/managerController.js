@@ -12,6 +12,8 @@ const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
 const SubService = require("../models/subService");
 const Garage = require("../models/garage");
+const { io } = require("socket.io-client");
+
 // const { Manager } = require("socket.io-client");
 exports.createMechanicAccount = catchAsync(async (req, res) => {
   const { name, email, phone, group } = req.body;
@@ -136,19 +138,24 @@ exports.getAllEmployee = catchAsync(async (req, res) => {
   });
 });
 exports.createEmergencyForm = catchAsync(async (req, res) => {
-  const { customerName, phone, service, address, date, time, price, note } =
-    req.body;
+  const { customerName, phone, service, address, price, note } = req.body;
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
   const accountInfo = await Account.findOne({ phone: phone });
   const customer = await Customer.findOne({ accountId: accountInfo._id });
+  const currentDay = new Date();
   const orderForm = await OrderForm.create({
     customerName,
     phone,
     service,
     address,
-    date,
-    time,
+    date: currentDay.toISOString().slice(0, 10),
+    time:
+      currentDay.getHours() +
+      ":" +
+      currentDay.getMinutes() +
+      ":" +
+      (currentDay.getSeconds() + 1),
     managerId: manager._id,
     customerId: customer._id,
     garageId: manager.garageId,
@@ -158,6 +165,10 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
     type: "emergency",
     price,
     note,
+  });
+  const socketIo = io("http://localhost:3000");
+  socketIo.emit("sendEmergencyForm", {
+    data: orderForm,
   });
   if (orderForm) {
     res.status(200).json({

@@ -29,6 +29,12 @@ router.get(
   mechanicController.getForms
 );
 router.get(
+  "/getPickedForms",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getPickedForms
+);
+router.get(
   "/getMePoint",
   jwtAuth,
   authorize("mechanic"),

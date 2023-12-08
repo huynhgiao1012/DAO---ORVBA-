@@ -10,6 +10,7 @@ const Times = require("../models/timeAccess");
 const Account = require("../models/account");
 const Otp = require("../models/OTP");
 const otpGenerator = require("otp-generator");
+const { io } = require("socket.io-client");
 
 exports.register = catchAsync(async (req, res) => {
   const { name, email, phone, password } = req.body;
@@ -117,6 +118,8 @@ exports.login = catchAsync(async (req, res) => {
             expiresIn: "1h",
           }
         );
+        const socketIo = io("http://localhost:3000");
+        socketIo.emit("newUser", existEmail._id);
         res.json({
           success: true,
           token,

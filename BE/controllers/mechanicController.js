@@ -89,7 +89,10 @@ exports.getForms = catchAsync(async (req, res) => {
   const accountId = req.user;
   const mechanic = await Mechanic.findOne({ accountId: accountId.id });
   if (mechanic.group === "emergency") {
-    const orderForm = await OrderForm.find({ type: mechanic.group });
+    const orderForm = await OrderForm.find({
+      type: mechanic.group,
+      status: FORM_STATUS.AWAIT,
+    });
     if (orderForm) {
       res.status(200).json({
         success: true,
@@ -103,7 +106,10 @@ exports.getForms = catchAsync(async (req, res) => {
       });
     }
   } else if (mechanic.group === "maintenance") {
-    const orderForm = await OrderForm.find({ type: mechanic.group });
+    const orderForm = await OrderForm.find({
+      type: mechanic.group,
+      status: FORM_STATUS.AWAIT,
+    });
     if (orderForm) {
       res.status(200).json({
         success: true,
@@ -116,6 +122,25 @@ exports.getForms = catchAsync(async (req, res) => {
         message: "Failed",
       });
     }
+  }
+});
+exports.getPickedForms = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const orderForm = await OrderForm.find({
+    mechanicId: accountId.id,
+    status: FORM_STATUS.PROCESS,
+  });
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
   }
 });
 exports.getMePoint = catchAsync(async (req, res) => {

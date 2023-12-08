@@ -75,26 +75,12 @@ io.on("connection", (socket) => {
         clearInterval(intervalId);
       }
     }, 1000);
-
-    // } else if (receiver) {
-    //   console.log("Receiver", receiver);
-    //   setTimeout(() => {
-    //     io.to(receiver.socketId).emit("getNotification", {
-    //       senderName,
-    //       text,
-    //     });
-    //   }, 1000);
-    // }
   });
-
-  // socket.on("sendText", ({ senderName, receiverName, text }) => {
-  //   const receiver = getUser(receiverName);
-  //   io.to(receiver.socketId).emit("getText", {
-  //     senderName,
-  //     text,
-  //   });
-  // });
-
+  socket.on("sendEmergencyForm", ({ data }) => {
+    io.emit("getEmergencyForm", {
+      data: data,
+    });
+  });
   socket.on("disconnectUser", () => {
     removeUser(socket.id);
   });
