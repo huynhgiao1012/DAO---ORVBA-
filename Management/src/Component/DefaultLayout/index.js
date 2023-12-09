@@ -4,6 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useTranslation, withTranslation } from "react-i18next";
 import logo from "../../Image/logo.png";
 import Home from "../../Pages/home/Home";
+import Mechanic from "../../Pages/Mechanic/Mechanic";
+import Accountant from "../../Pages/Accountant/Accountant";
+import GarageService from "../../Pages/GarageService/GarageService";
+import GarageDetails from "../../Pages/GarageDetails/GarageDetails";
+import GarageCustomer from "../../Pages/GarageCustomer/GarageCustomer";
+import GarageForms from "../../Pages/GarageForms/GarageForms";
+import ManagerHome from "../../Pages/mHome/index";
 import Login from "../../Pages/Login/index";
 import List from "../../Pages/list/List";
 import ListService from "../../Pages/ListService/List";
@@ -41,56 +48,32 @@ const DefaultLayoutComponent = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/home" element={<Home />} />
+        <Route exact path="/mHome" element={<ManagerHome />} />
         <Route path="users">
           <Route index element={<List />} />
+        </Route>
+        <Route path="mechanic">
+          <Route index element={<Mechanic />} />
+        </Route>
+        <Route path="accountant">
+          <Route index element={<Accountant />} />
+        </Route>
+        <Route path="garaServices">
+          <Route index element={<GarageService />} />
+        </Route>
+        <Route path="garaDetails">
+          <Route index element={<GarageDetails />} />
+        </Route>
+        <Route path="garaCustomer">
+          <Route index element={<GarageCustomer />} />
+        </Route>
+        <Route path="garaForms">
+          <Route index element={<GarageForms />} />
         </Route>
         <Route path="services">
           <Route index element={<ListService />} />
         </Route>
-        {/* <Route
-              exact
-              path="/userManagement/create"
-              element={<RegisterForm />}
-            />
-            <Route
-              exact
-              path="/userManagement/edit"
-              element={<EditUserPage />}
-            />
-
-            <Route
-              exact
-              path="/ServiceManagement/systemServices"
-              element={<SystemService />}
-            />
-            <Route
-              exact
-              path="/ServiceManagement/listBookingServices"
-              element={<BookingService />}
-            />
-            <Route exact path="/configuration" element={<Configuration />} /> */}
       </Routes>
-      {/* <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
-            <Route path="users">
-              <Route index element={<List />} />
-              <Route path=":userId" element={<Single />} />
-              <Route
-                path="new"
-                element={<New inputs={userInputs} title="Add New User" />}
-              />
-            </Route>
-            <Route path="products">
-              <Route index element={<List />} />
-              <Route path=":productId" element={<Single />} />
-              <Route
-                path="new"
-                element={<New inputs={productInputs} title="Add New Product" />}
-              />
-            </Route>
-          </Route>
-        </Routes> */}
     </div>
   );
 };

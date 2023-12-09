@@ -85,6 +85,14 @@ export default function LoginComponent() {
             });
             navigate("/home");
             localStorage.setItem("token", payload.token);
+          } else if (payload.role === "manager") {
+            notification.open({
+              message: "Login",
+              description: "Successfully",
+              icon: <DownOutlined style={{ color: "green" }} />,
+            });
+            navigate("/mHome");
+            localStorage.setItem("token", payload.token);
           } else {
             notification.open({
               message: "Login",

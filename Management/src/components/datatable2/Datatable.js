@@ -26,7 +26,7 @@ import {
   useDeleteServiceMutation,
   useAddServiceMutation,
 } from "../../services/Service";
-import { useGetAllFormMutation } from "../../services/OrderForm";
+// import { useGetAllFormMutation } from "../../services/OrderForm";
 const { TextArea } = Input;
 const style = {
   position: "absolute",
@@ -47,7 +47,7 @@ const Datatable = () => {
   const [getAllUser] = useGetAllUserMutation();
   const [getService] = useGetCompanyServiceMutation();
   const [deleteService] = useDeleteServiceMutation();
-  const [getAllForm] = useGetAllFormMutation();
+  // const [getAllForm] = useGetAllFormMutation();
   const [updateService] = useUpdateServiceMutation();
   const [addService] = useAddServiceMutation();
   const [serviceId, setServiceId] = useState("");
@@ -195,27 +195,27 @@ const Datatable = () => {
   };
   const handleViewForm = (id) => {
     setIsModalOpen(true);
-    getAllForm({ id: id })
-      .unwrap()
-      .then((payload) => {
-        console.log(payload);
-        setForm([]);
-        let newArr = [];
-        payload.data.map((val, index) => {
-          newArr.push({
-            id: val._id,
-            cusName: val.customerId.name,
-            cusPhone: val.customerId.phone,
-            cusAdd: val.address,
-            serName: val.serviceId.type,
-            date: val.date.slice(0, 9).split("-").reverse().join("/"),
-            price: val.price,
-            isPaid: val.isPaid === true ? "Paid" : "Unpaid",
-          });
-        });
-        setForm((prev) => [...prev, ...newArr]);
-      })
-      .catch((error) => console.log(error));
+    // getAllForm({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     console.log(payload);
+    //     setForm([]);
+    //     let newArr = [];
+    //     payload.data.map((val, index) => {
+    //       newArr.push({
+    //         id: val._id,
+    //         cusName: val.customerId.name,
+    //         cusPhone: val.customerId.phone,
+    //         cusAdd: val.address,
+    //         serName: val.serviceId.type,
+    //         date: val.date.slice(0, 9).split("-").reverse().join("/"),
+    //         price: val.price,
+    //         isPaid: val.isPaid === true ? "Paid" : "Unpaid",
+    //       });
+    //     });
+    //     setForm((prev) => [...prev, ...newArr]);
+    //   })
+    //   .catch((error) => console.log(error));
   };
 
   const createService = () => {

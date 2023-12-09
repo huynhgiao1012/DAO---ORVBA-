@@ -28,15 +28,6 @@ export const formApi = createApi({
         url: `/getAllForm/${id}`,
       }),
     }),
-    getAllFormAdmin: builder.mutation({
-      query: () => ({
-        url: `/getAllFormAdmin`,
-      }),
-    }),
   }),
 });
-export const {
-  useGetFormDetailMutation,
-  useGetAllFormMutation,
-  useGetAllFormAdminMutation,
-} = formApi;
+export const { useGetFormDetailMutation, useGetAllFormMutation } = formApi;
