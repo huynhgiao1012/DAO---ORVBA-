@@ -1,0 +1,163 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { IP, KEY_TOKEN } from "../Utils/constants";
+
+// Define a service using a base URL and expected endpoints
+
+export const managerApi = createApi({
+  reducerPath: "managerApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: `http://${IP}:3000/api/v1/manager`,
+    prepareHeaders: async (headers, query) => {
+      const Token = localStorage.getItem("token");
+      if (Token) {
+        headers.set("authorization", `Bearer ${Token}`);
+        headers.set("Content-Type", "application/json");
+        headers.set("Accept", "application/json");
+      }
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getAllMechanic: builder.mutation({
+      query: () => ({
+        url: "/getAllMechanic",
+      }),
+    }),
+    getAllAccountant: builder.mutation({
+      query: () => ({
+        url: "/getAllAccountant",
+      }),
+    }),
+    getAllEmployee: builder.mutation({
+      query: () => ({
+        url: "/getAllEmployee",
+      }),
+    }),
+    getAllServiceMa: builder.mutation({
+      query: () => ({
+        url: "/getAllServiceMa",
+      }),
+    }),
+    getEmergencyForm: builder.mutation({
+      query: () => ({
+        url: "/getEmergencyForm",
+      }),
+    }),
+    getMaintenanceForm: builder.mutation({
+      query: () => ({
+        url: "/getMaintenanceForm",
+      }),
+    }),
+    getSubService: builder.mutation({
+      query: ({ id }) => ({
+        url: `/getSubService/${id}`,
+      }),
+    }),
+    formConfirm: builder.mutation({
+      query: ({ id }) => ({
+        url: `/formConfirm/${id}`,
+        method: "POST",
+      }),
+    }),
+    updateForm: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/updateForm/${id}`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    updateGarage: builder.mutation({
+      query: (payload) => ({
+        url: `/updateGarage`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    updateIsVip: builder.mutation({
+      query: ({ id }) => ({
+        url: `/updateIsVip/${id}`,
+        method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    createMechanicAccount: builder.mutation({
+      query: (payload) => ({
+        url: `/createMechanicAccount`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    createAccountantAccount: builder.mutation({
+      query: (payload) => ({
+        url: `/createAccountantAccount`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    createEmergencyForm: builder.mutation({
+      query: (payload) => ({
+        url: `/createEmergencyForm`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    createService: builder.mutation({
+      query: (payload) => ({
+        url: `/createService`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    createSubService: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/createSubService/${id}`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+  }),
+});
+
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const {
+  useGetAllAccountantMutation,
+  useGetAllEmployeeMutation,
+  useGetAllMechanicMutation,
+  useGetAllServiceMaMutation,
+  useGetEmergencyFormMutation,
+  useGetMaintenanceFormMutation,
+  useGetSubServiceMutation,
+  useCreateAccountantAccountMutation,
+  useCreateEmergencyFormMutation,
+  useCreateMechanicAccountMutation,
+  useCreateServiceMutation,
+  useCreateSubServiceMutation,
+  useFormConfirmMutation,
+  useUpdateFormMutation,
+  useUpdateGarageMutation,
+  useUpdateIsVipMutation,
+} = managerApi;

@@ -37,7 +37,7 @@ const Navbar = () => {
     <div className="navbar">
       <div className="wrapper">
         <div className="name">
-          <h3>Welcome back ! {data.name}</h3>
+          <h3>Welcome back !</h3>
         </div>
         <div className="items">
           {/* <div className="mode" style={{ color: "#cccccc" }}>

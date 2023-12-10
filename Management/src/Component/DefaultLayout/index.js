@@ -49,7 +49,7 @@ const DefaultLayoutComponent = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/home" element={<Home />} />
-        <Route exact path="/mHome" element={<GarageDetails />} />
+        <Route exact path="/mHome" element={<MyProfile />} />
         <Route path="users">
           <Route index element={<List />} />
         </Route>

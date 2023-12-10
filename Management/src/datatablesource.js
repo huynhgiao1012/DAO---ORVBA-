@@ -3,7 +3,7 @@ export const userColumns = [
   {
     field: "user",
     headerName: "User",
-    width: 230,
+    width: 200,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
@@ -35,6 +35,58 @@ export const userColumns = [
         </div>
       );
     },
+  },
+];
+export const mechanicColumns = [
+  {
+    dataIndex: "id",
+    title: "ID",
+    width: 100,
+  },
+  {
+    dataIndex: "name",
+    title: "Name",
+  },
+  {
+    dataIndex: "img",
+    title: "Avatar",
+    renderCell: (params) => {
+      return (
+        <img
+          className="cellImg"
+          src="https://img.freepik.com/premium-vector/cute-boy-thinking-cartoon-avatar_138676-2439.jpg"
+          alt="avatar"
+        />
+      );
+    },
+  },
+  {
+    dataIndex: "status",
+    title: "Status",
+    renderCell: (params) => {
+      return (
+        <div className={`cellWithStatus ${params.row.status}`}>
+          {params.row.status}
+        </div>
+      );
+    },
+  },
+  {
+    dataIndex: "email",
+    title: "Email",
+  },
+
+  {
+    dataIndex: "phone",
+    title: "Phone",
+  },
+  {
+    dataIndex: "point",
+    title: "Point",
+  },
+  {
+    dataIndex: "group",
+    title: "Group",
   },
 ];
 export const serviceColumns = [

@@ -6,6 +6,8 @@ import authSlice from "../slices/authSlice";
 import { garageApi } from "../services/Garage";
 import { serviceApi } from "../services/Service";
 import { formApi } from "../services/OrderForm";
+import { managerApi } from "../services/Manager";
+
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
@@ -13,6 +15,7 @@ export const store = configureStore({
     [garageApi.reducerPath]: garageApi.reducer,
     [serviceApi.reducerPath]: serviceApi.reducer,
     [formApi.reducerPath]: formApi.reducer,
+    [managerApi.reducerPath]: managerApi.reducer,
     authSlice,
   },
   middleware: (getDefaultMiddleware) =>
@@ -21,7 +24,8 @@ export const store = configureStore({
       userApi.middleware,
       garageApi.middleware,
       serviceApi.middleware,
-      formApi.middleware
+      formApi.middleware,
+      managerApi.middleware
     ),
 });
 setupListeners(store.dispatch);
