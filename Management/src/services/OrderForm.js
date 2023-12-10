@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IP } from "../Utils/constants";
+import { IP, KEY_TOKEN } from "../Utils/constants";
 
 // Define a service using a base URL and expected endpoints
 
@@ -9,6 +9,7 @@ export const formApi = createApi({
     baseUrl: `http://${IP}:3000/api/v1/form`,
     prepareHeaders: async (headers, query) => {
       const Token = localStorage.getItem("token");
+
       if (Token) {
         headers.set("authorization", `Bearer ${Token}`);
         headers.set("Content-Type", "application/json");
@@ -18,16 +19,61 @@ export const formApi = createApi({
     },
   }),
   endpoints: (builder) => ({
+    getAllFormCustomer: builder.mutation({
+      query: () => ({
+        url: `/getAllFormCustomer`,
+      }),
+    }),
+    getAllFormGarage: builder.mutation({
+      query: () => ({
+        url: `/getAllFormGarage`,
+      }),
+    }),
+    updateProcess: builder.mutation({
+      query: ({ id }) => ({
+        url: `/updateProcess/${id}`,
+        method: "PATCH",
+      }),
+    }),
+    updateDone: builder.mutation({
+      query: ({ id }) => ({
+        url: `/updateDone/${id}`,
+        method: "PATCH",
+      }),
+    }),
     getFormDetail: builder.mutation({
       query: ({ id }) => ({
         url: `/getFormDetail/${id}`,
       }),
     }),
-    getAllForm: builder.mutation({
+    deleteForm: builder.mutation({
       query: ({ id }) => ({
-        url: `/getAllForm/${id}`,
+        url: `/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    createPaymentIntent: builder.mutation({
+      query: (data) => ({
+        url: "/intent",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    payment: builder.mutation({
+      query: ({ id }) => ({
+        url: `/payment/${id}`,
+        method: "PATCH",
       }),
     }),
   }),
 });
-export const { useGetFormDetailMutation, useGetAllFormMutation } = formApi;
+export const {
+  useGetAllFormCustomerMutation,
+  useGetAllFormGarageMutation,
+  useUpdateDoneMutation,
+  useUpdateProcessMutation,
+  useGetFormDetailMutation,
+  useDeleteFormMutation,
+  useCreatePaymentIntentMutation,
+  usePaymentMutation,
+} = formApi;

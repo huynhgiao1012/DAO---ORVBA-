@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IP } from ".././Utils/constants";
+import { IP, KEY_TOKEN } from "../Utils/constants";
 
 // Define a service using a base URL and expected endpoints
 
-export const companyApi = createApi({
-  reducerPath: "companyApi",
+export const mechanicApi = createApi({
+  reducerPath: "mechanicApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/company`,
+    baseUrl: `http://${IP}:3000/api/v1/mechanic`,
     prepareHeaders: async (headers, query) => {
       const Token = localStorage.getItem("token");
       if (Token) {
@@ -18,29 +18,30 @@ export const companyApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getCorCompany: builder.query({
+    getMePoint: builder.mutation({
       query: () => ({
-        url: "/getCorCompany",
+        url: "/getMePoint",
       }),
     }),
-    getCompanyDetail: builder.mutation({
+    getForms: builder.mutation({
+      query: () => ({
+        url: "/getForms",
+      }),
+    }),
+    getForms: builder.mutation({
+      query: () => ({
+        url: "/getForms",
+      }),
+    }),
+    getPickedForms: builder.mutation({
+      query: () => ({
+        url: "/getPickedForms",
+      }),
+    }),
+    pickForm: builder.mutation({
       query: ({ id }) => ({
-        url: `/getCompanyDetail/${id}`,
-      }),
-    }),
-    getSpecificCorCompany: builder.query({
-      query: () => ({
-        url: "/getSpecificCorCompany",
-      }),
-    }),
-    createCompany: builder.mutation({
-      query: (payload) => ({
-        url: "/create",
+        url: `/pickForm/${id}`,
         method: "POST",
-        body: payload,
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
       }),
     }),
   }),
@@ -49,8 +50,8 @@ export const companyApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useGetCorCompanyQuery,
-  useGetCompanyDetailMutation,
-  useGetSpecificCorCompanyQuery,
-  useCreateCompanyMutation,
-} = companyApi;
+  useGetMePointMutation,
+  useGetFormsMutation,
+  usePickFormMutation,
+  useGetPickedFormsMutation,
+} = mechanicApi;

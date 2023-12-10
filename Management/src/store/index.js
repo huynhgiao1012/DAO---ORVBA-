@@ -3,14 +3,14 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { authApi } from "../services/Auth";
 import { userApi } from "../services/User";
 import authSlice from "../slices/authSlice";
-import { companyApi } from "../services/Company";
+import { garageApi } from "../services/Garage";
 import { serviceApi } from "../services/Service";
 import { formApi } from "../services/OrderForm";
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
-    [companyApi.reducerPath]: companyApi.reducer,
+    [garageApi.reducerPath]: garageApi.reducer,
     [serviceApi.reducerPath]: serviceApi.reducer,
     [formApi.reducerPath]: formApi.reducer,
     authSlice,
@@ -19,7 +19,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       authApi.middleware,
       userApi.middleware,
-      companyApi.middleware,
+      garageApi.middleware,
       serviceApi.middleware,
       formApi.middleware
     ),

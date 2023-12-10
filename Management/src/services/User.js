@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IP } from "../Utils/constants";
+import { IP, KEY_TOKEN } from "../Utils/constants";
 
 // Define a service using a base URL and expected endpoints
 
@@ -18,7 +18,7 @@ export const userApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getUserDetail: builder.query({
+    getUserDetail: builder.mutation({
       query: () => ({
         url: "/userDetail",
       }),
@@ -28,24 +28,24 @@ export const userApi = createApi({
         url: "/userPoint",
       }),
     }),
-    getCompanyAccountDetail: builder.query({
+    getCompanyAccountDetail: builder.mutation({
       query: () => ({
         url: "/userDetail",
       }),
     }),
-    getAllUser: builder.mutation({
-      query: () => ({
-        url: "/getAllUser",
+    changePassword: builder.mutation({
+      query: (payload) => ({
+        url: "/updatePassword",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
       }),
     }),
-    getUser: builder.mutation({
-      query: ({ id }) => ({
-        url: `/detail/${id}`,
-      }),
-    }),
-    updateUser: builder.mutation({
-      query: ({ id, ...payload }) => ({
-        url: `/${id}`,
+    updateUserPoint: builder.mutation({
+      query: (payload) => ({
+        url: `/updateUserPoint`,
         method: "PATCH",
         body: payload,
         headers: {
@@ -53,10 +53,14 @@ export const userApi = createApi({
         },
       }),
     }),
-    deleteUser: builder.mutation({
-      query: ({ id }) => ({
-        url: `/${id}`,
-        method: "DELETE",
+    updateInfo: builder.mutation({
+      query: (payload) => ({
+        url: `/`,
+        method: "PATCH",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
       }),
     }),
   }),
@@ -65,11 +69,10 @@ export const userApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  useGetUserDetailQuery,
+  useGetUserDetailMutation,
   useGetUserPointQuery,
-  useGetCompanyAccountDetailQuery,
-  useGetUserMutation,
-  useGetAllUserMutation,
-  useUpdateUserMutation,
-  useDeleteUserMutation,
+  useGetCompanyAccountDetailMutation,
+  useChangePasswordMutation,
+  useUpdateUserPointMutation,
+  useUpdateInfoMutation,
 } = userApi;

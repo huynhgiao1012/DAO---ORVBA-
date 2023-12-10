@@ -3,12 +3,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import { userColumns, userRows } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  useDeleteUserMutation,
-  useUpdateUserMutation,
-  useGetAllUserMutation,
-  useGetUserMutation,
-} from "../../services/User";
+// import {
+//   useDeleteUserMutation,
+//   useUpdateUserMutation,
+//   useGetAllUserMutation,
+//   useGetUserMutation,
+// } from "../../services/User";
 import {
   Select,
   InputLabel,
@@ -21,7 +21,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { useCreateCompanyMutation } from "../../services/Company";
+// import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
   top: "50%",
@@ -37,11 +37,11 @@ const Datatable = () => {
   const [data, setData] = useState([]);
   const [tab, settab] = useState(10);
   const [detail, setDetailUser] = useState({});
-  const [getAllUser] = useGetAllUserMutation();
-  const [deleteUser] = useDeleteUserMutation();
-  const [updateUser] = useUpdateUserMutation();
-  const [createUser] = useCreateCompanyMutation();
-  const [getUser] = useGetUserMutation();
+  // const [getAllUser] = useGetAllUserMutation();
+  // const [deleteUser] = useDeleteUserMutation();
+  // const [updateUser] = useUpdateUserMutation();
+  // const [createUser] = useCreateCompanyMutation();
+  // const [getUser] = useGetUserMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,91 +49,91 @@ const Datatable = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = (id) => {
     setOpen(true);
-    getUser({ id: id })
-      .unwrap()
-      .then((payload) => {
-        console.log(payload);
-        form.setFieldsValue({
-          Id: payload.data._id,
-          Name: payload.data.name,
-          Email: payload.data.email,
-          Phone: payload.data.phone,
-          Status: payload.data.isActive === true ? "Active" : "Inactive",
-          Role: payload.data.role,
-        });
-      });
+    // getUser({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     console.log(payload);
+    //     form.setFieldsValue({
+    //       Id: payload.data._id,
+    //       Name: payload.data.name,
+    //       Email: payload.data.email,
+    //       Phone: payload.data.phone,
+    //       Status: payload.data.isActive === true ? "Active" : "Inactive",
+    //       Role: payload.data.role,
+    //     });
+    //   });
   };
   const handleClose = () => setOpen(false);
 
   const loadData = () => {
     setData([]);
-    getAllUser()
-      .unwrap()
-      .then((payload) => {
-        if (payload.success === true) {
-          let newArr = [];
-          payload.data.map((val, index) => {
-            newArr.push({
-              id: val._id,
-              username: val.name,
-              img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-              status: val.isActive ? "active" : "inactive",
-              email: val.email,
-              phone: val.phone,
-              role: val.role,
-              dbId: val._id,
-            });
-          });
-          setData((prev) => [...prev, ...newArr]);
-        }
-      });
+    // getAllUser()
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success === true) {
+    //       let newArr = [];
+    //       payload.data.map((val, index) => {
+    //         newArr.push({
+    //           id: val._id,
+    //           username: val.name,
+    //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+    //           status: val.isActive ? "active" : "inactive",
+    //           email: val.email,
+    //           phone: val.phone,
+    //           role: val.role,
+    //           dbId: val._id,
+    //         });
+    //       });
+    //       setData((prev) => [...prev, ...newArr]);
+    //     }
+    //   });
   };
   useEffect(() => {
     setData([]);
-    getAllUser()
-      .unwrap()
-      .then((payload) => {
-        if (payload.success === true) {
-          let newArr = [];
-          payload.data.map((val, index) => {
-            newArr.push({
-              id: val._id,
-              username: val.name,
-              img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-              status: val.isActive ? "active" : "inactive",
-              email: val.email,
-              phone: val.phone,
-              role: val.role,
-              dbId: val._id,
-            });
-          });
-          setData((prev) => [...prev, ...newArr]);
-        }
-      })
-      .catch((error) => {
-        if (error.status === 401) {
-          localStorage.clear();
-          navigate("/login");
-        }
-      });
-    if (getAllUser.error) {
-      <Alert severity="error">
-        {getAllUser.error.data.message}...Please login again !
-      </Alert>;
-      localStorage.clear();
-      navigate("/login");
-    }
+    // getAllUser()
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success === true) {
+    //       let newArr = [];
+    //       payload.data.map((val, index) => {
+    //         newArr.push({
+    //           id: val._id,
+    //           username: val.name,
+    //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+    //           status: val.isActive ? "active" : "inactive",
+    //           email: val.email,
+    //           phone: val.phone,
+    //           role: val.role,
+    //           dbId: val._id,
+    //         });
+    //       });
+    //       setData((prev) => [...prev, ...newArr]);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     if (error.status === 401) {
+    //       localStorage.clear();
+    //       navigate("/login");
+    //     }
+    //   });
+    // if (getAllUser.error) {
+    //   <Alert severity="error">
+    //     {getAllUser.error.data.message}...Please login again !
+    //   </Alert>;
+    //   localStorage.clear();
+    //   navigate("/login");
+    // }
   }, []);
   const handleDelete = async (id) => {
-    await deleteUser({ id: id })
-      .unwrap()
-      .then((payload) => {
-        if (payload.success) {
-          <Alert severity="success">{payload.message}</Alert>;
-        }
-      });
-    setData(data.filter((item) => item.id !== id));
-    loadData();
+    // await deleteUser({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success) {
+    //       <Alert severity="success">{payload.message}</Alert>;
+    //     }
+    //   });
+    // setData(data.filter((item) => item.id !== id));
+    // loadData();
   };
   const handleEdit = (id) => {
     handleOpen(id);
@@ -148,100 +148,100 @@ const Datatable = () => {
     setIsEdit(false);
   };
   const onSubmit = async (values) => {
-    console.log(values);
-    if (isEdit) {
-      await updateUser({
-        id: values.Id,
-        name: values.Name,
-        phone: values.Phone,
-      })
-        .unwrap()
-        .then((payload) => {
-          if (payload.success === true) {
-            setOpen(false);
-            notification.open({
-              message: "Update profile",
-              description: "Success",
-            });
-            loadData();
-          } else {
-            notification.open({
-              message: "Update profile",
-              description: "False",
-            });
-          }
-        });
-    } else {
-      await createUser({
-        name: values.Name,
-        email: values.Email,
-        phone: values.Phone,
-        openTime: values.Opentime,
-        closeTime: values.Closetime,
-        long: Number(values.Longitude),
-        lat: Number(values.Latitude),
-        address: values.Address,
-      })
-        .unwrap()
-        .then((payload) => {
-          alert(payload.message);
-          setIsModalOpen(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.data.message.duplicate);
-        });
-    }
+    // console.log(values);
+    // if (isEdit) {
+    //   await updateUser({
+    //     id: values.Id,
+    //     name: values.Name,
+    //     phone: values.Phone,
+    //   })
+    //     .unwrap()
+    //     .then((payload) => {
+    //       if (payload.success === true) {
+    //         setOpen(false);
+    //         notification.open({
+    //           message: "Update profile",
+    //           description: "Success",
+    //         });
+    //         loadData();
+    //       } else {
+    //         notification.open({
+    //           message: "Update profile",
+    //           description: "False",
+    //         });
+    //       }
+    //     });
+    // } else {
+    //   await createUser({
+    //     name: values.Name,
+    //     email: values.Email,
+    //     phone: values.Phone,
+    //     openTime: values.Opentime,
+    //     closeTime: values.Closetime,
+    //     long: Number(values.Longitude),
+    //     lat: Number(values.Latitude),
+    //     address: values.Address,
+    //   })
+    //     .unwrap()
+    //     .then((payload) => {
+    //       alert(payload.message);
+    //       setIsModalOpen(false);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //       alert(error.data.message.duplicate);
+    //     });
+    // }
   };
   const handleChange = (SelectChangeEvent) => {
-    settab(SelectChangeEvent.target.value);
-    var newArr = [];
-    getAllUser()
-      .unwrap()
-      .then((payload) => {
-        if (payload.success === true) {
-          payload.data.map((val) => {
-            newArr.push({
-              id: val._id,
-              username: val.name,
-              img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-              status: val.isActive ? "active" : "inactive",
-              email: val.email,
-              phone: val.phone,
-              role: val.role,
-              dbId: val._id,
-            });
-          });
-        }
-        if (SelectChangeEvent.target.value === 20) {
-          const arr = newArr.filter((val) => {
-            if (val.role === "customer") {
-              return val;
-            }
-          });
-          setData([]);
-          setData((prev) => [...prev, ...arr]);
-        } else if (SelectChangeEvent.target.value === 30) {
-          const arr = newArr.filter((val) => {
-            if (val.role === "company") {
-              return val;
-            }
-          });
-          setData([]);
-          setData((prev) => [...prev, ...arr]);
-        } else if (SelectChangeEvent.target.value === 40) {
-          const arr = newArr.filter((val) => {
-            if (val.role === "admin") {
-              return val;
-            }
-          });
-          setData([]);
-          setData((prev) => [...prev, ...arr]);
-        } else {
-          setData([]);
-          setData((prev) => [...prev, ...newArr]);
-        }
-      });
+    // settab(SelectChangeEvent.target.value);
+    // var newArr = [];
+    // getAllUser()
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success === true) {
+    //       payload.data.map((val) => {
+    //         newArr.push({
+    //           id: val._id,
+    //           username: val.name,
+    //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+    //           status: val.isActive ? "active" : "inactive",
+    //           email: val.email,
+    //           phone: val.phone,
+    //           role: val.role,
+    //           dbId: val._id,
+    //         });
+    //       });
+    //     }
+    //     if (SelectChangeEvent.target.value === 20) {
+    //       const arr = newArr.filter((val) => {
+    //         if (val.role === "customer") {
+    //           return val;
+    //         }
+    //       });
+    //       setData([]);
+    //       setData((prev) => [...prev, ...arr]);
+    //     } else if (SelectChangeEvent.target.value === 30) {
+    //       const arr = newArr.filter((val) => {
+    //         if (val.role === "company") {
+    //           return val;
+    //         }
+    //       });
+    //       setData([]);
+    //       setData((prev) => [...prev, ...arr]);
+    //     } else if (SelectChangeEvent.target.value === 40) {
+    //       const arr = newArr.filter((val) => {
+    //         if (val.role === "admin") {
+    //           return val;
+    //         }
+    //       });
+    //       setData([]);
+    //       setData((prev) => [...prev, ...arr]);
+    //     } else {
+    //       setData([]);
+    //       setData((prev) => [...prev, ...newArr]);
+    //     }
+    //   });
   };
   const actionColumn = [
     {

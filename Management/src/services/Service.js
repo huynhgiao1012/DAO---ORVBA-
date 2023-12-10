@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IP } from "../Utils/constants";
+import { IP, KEY_TOKEN } from "../Utils/constants";
 
 // Define a service using a base URL and expected endpoints
 
@@ -9,6 +9,7 @@ export const serviceApi = createApi({
     baseUrl: `http://${IP}:3000/api/v1/service`,
     prepareHeaders: async (headers, query) => {
       const Token = localStorage.getItem("token");
+
       if (Token) {
         headers.set("authorization", `Bearer ${Token}`);
         headers.set("Content-Type", "application/json");
@@ -23,9 +24,19 @@ export const serviceApi = createApi({
         url: `/getAllService/${id}`,
       }),
     }),
+    bookingService: builder.mutation({
+      query: (payload) => ({
+        url: "/bookingService",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
     addService: builder.mutation({
-      query: ({ id, ...payload }) => ({
-        url: `/add/${id}`,
+      query: (payload) => ({
+        url: "/create",
         method: "POST",
         body: payload,
         headers: {
@@ -56,6 +67,7 @@ export const serviceApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useGetCompanyServiceMutation,
+  useBookingServiceMutation,
   useAddServiceMutation,
   useDeleteServiceMutation,
   useUpdateServiceMutation,

@@ -10,6 +10,7 @@ import GarageService from "../../Pages/GarageService/GarageService";
 import GarageDetails from "../../Pages/GarageDetails/GarageDetails";
 import GarageCustomer from "../../Pages/GarageCustomer/GarageCustomer";
 import GarageForms from "../../Pages/GarageForms/GarageForms";
+import MyProfile from "../../Pages/MyProfile/MyProfile";
 import ManagerHome from "../../Pages/mHome/index";
 import Login from "../../Pages/Login/index";
 import List from "../../Pages/list/List";
@@ -48,7 +49,7 @@ const DefaultLayoutComponent = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/home" element={<Home />} />
-        <Route exact path="/mHome" element={<ManagerHome />} />
+        <Route exact path="/mHome" element={<GarageDetails />} />
         <Route path="users">
           <Route index element={<List />} />
         </Route>
@@ -72,6 +73,9 @@ const DefaultLayoutComponent = () => {
         </Route>
         <Route path="services">
           <Route index element={<ListService />} />
+        </Route>
+        <Route path="myProfile">
+          <Route index element={<MyProfile />} />
         </Route>
       </Routes>
     </div>

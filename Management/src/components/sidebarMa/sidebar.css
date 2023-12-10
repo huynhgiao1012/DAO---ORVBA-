@@ -5,28 +5,19 @@
   background-color: white;
 }
 .sidebar .top {
-  height: 120px;
   display: flex;
-  flex-direction: column;
-  padding: 10px 0px;
-}
-.sidebar .top .avt {
-  border-radius: 50px;
-  border: 3px solid #3c3434;
+  align-items: center;
+  justify-content: center;
+  background-color: #3cbcc4;
 }
 .sidebar .top .name {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  color: #3c3434;
+  color: white;
   text-align: center;
-  margin-top: 10px;
-}
-.sidebar hr {
-  height: 0;
-  border: 0.5px solid rgb(230, 227, 227);
 }
 .sidebar .center {
-  padding-left: 10px;
+  padding: 0px 10px;
 }
 .sidebar .center ul {
   list-style: none;
@@ -34,26 +25,51 @@
   padding: 0;
 }
 .sidebar .center ul .title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
-  color: #3cbcc4;
+  color: #3c3434;
   margin-top: 15px;
   margin-bottom: 5px;
+  font-style: oblique;
 }
-.sidebar .center ul li {
+.sidebar .center ul .active li {
   display: flex;
   align-items: center;
   padding: 5px;
+  background-color: #3cbcc4;
+  border-radius: 8px;
   cursor: pointer;
 }
-.sidebar .center ul li:hover {
-  background-color: rgba(232, 232, 232, 0.6666666667);
+.sidebar .center ul .active li:hover {
+  background-color: #d8e5e5;
 }
-.sidebar .center ul li .icon {
+.sidebar .center ul .active li .icon {
+  font-size: 20px;
+  color: white;
+}
+.sidebar .center ul .active li span {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin-left: 10px;
+}
+.sidebar .center ul .none li {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 8px;
+  background-color: white;
+  margin: 8px 0px;
+  cursor: pointer;
+}
+.sidebar .center ul .none li:hover {
+  background-color: #f8f8f8;
+}
+.sidebar .center ul .none li .icon {
   font-size: 20px;
   color: #3cbcc4;
 }
-.sidebar .center ul li span {
+.sidebar .center ul .none li span {
   font-size: 16px;
   font-weight: 600;
   color: #3c3434;

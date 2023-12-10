@@ -7,7 +7,7 @@ import {
 } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useGetAllUserMutation, useGetUserMutation } from "../../services/User";
+// import { useGetAllUserMutation, useGetUserMutation } from "../../services/User";
 import {
   Select,
   InputLabel,
@@ -20,12 +20,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import {
-  useGetCompanyServiceMutation,
-  useUpdateServiceMutation,
-  useDeleteServiceMutation,
-  useAddServiceMutation,
-} from "../../services/Service";
+// import {
+//   useGetCompanyServiceMutation,
+//   useUpdateServiceMutation,
+//   useDeleteServiceMutation,
+//   useAddServiceMutation,
+// } from "../../services/Service";
 // import { useGetAllFormMutation } from "../../services/OrderForm";
 const { TextArea } = Input;
 const style = {
@@ -44,12 +44,12 @@ const Datatable = () => {
   const [data, setData] = useState([]);
   const [service, setService] = useState([]);
   const [orderForm, setForm] = useState([]);
-  const [getAllUser] = useGetAllUserMutation();
-  const [getService] = useGetCompanyServiceMutation();
-  const [deleteService] = useDeleteServiceMutation();
+  // const [getAllUser] = useGetAllUserMutation();
+  // const [getService] = useGetCompanyServiceMutation();
+  // const [deleteService] = useDeleteServiceMutation();
   // const [getAllForm] = useGetAllFormMutation();
-  const [updateService] = useUpdateServiceMutation();
-  const [addService] = useAddServiceMutation();
+  // const [updateService] = useUpdateServiceMutation();
+  // const [addService] = useAddServiceMutation();
   const [serviceId, setServiceId] = useState("");
   const [isCreate, setIsCreate] = useState(false);
   const [form] = Form.useForm();
@@ -109,89 +109,89 @@ const Datatable = () => {
 
   const loadData = () => {
     setData([]);
-    getAllUser()
-      .unwrap()
-      .then((payload) => {
-        if (payload.success === true) {
-          let newArr = [];
-          payload.data.map((val, index) => {
-            if (val.role === "company") {
-              console.log(val);
-              newArr.push({
-                id: index,
-                garage: val.name,
-                garageId: val._id,
-              });
-            }
-          });
-          setData((prev) => [...prev, ...newArr]);
-        }
-      });
+    // getAllUser()
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success === true) {
+    //       let newArr = [];
+    //       payload.data.map((val, index) => {
+    //         if (val.role === "company") {
+    //           console.log(val);
+    //           newArr.push({
+    //             id: index,
+    //             garage: val.name,
+    //             garageId: val._id,
+    //           });
+    //         }
+    //       });
+    //       setData((prev) => [...prev, ...newArr]);
+    //     }
+    //   });
   };
   useEffect(() => {
     setData([]);
-    getAllUser()
-      .unwrap()
-      .then((payload) => {
-        if (payload.success === true) {
-          let newArr = [];
-          payload.data.map((val, index) => {
-            if (val.role === "company") {
-              newArr.push({
-                id: index,
-                garage: val.name,
-                garageId: val._id,
-              });
-            }
-          });
-          setData((prev) => [...prev, ...newArr]);
-        }
-      });
-    if (getAllUser.error) {
-      <Alert severity="error">
-        {getAllUser.error.data.message}...Please login again !
-      </Alert>;
-      localStorage.clear();
-      navigate("/login");
-    }
+    // getAllUser()
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success === true) {
+    //       let newArr = [];
+    //       payload.data.map((val, index) => {
+    //         if (val.role === "company") {
+    //           newArr.push({
+    //             id: index,
+    //             garage: val.name,
+    //             garageId: val._id,
+    //           });
+    //         }
+    //       });
+    //       setData((prev) => [...prev, ...newArr]);
+    //     }
+    //   });
+    // if (getAllUser.error) {
+    //   <Alert severity="error">
+    //     {getAllUser.error.data.message}...Please login again !
+    //   </Alert>;
+    //   localStorage.clear();
+    //   navigate("/login");
+    // }
   }, []);
 
   const handleDelete = (id) => {
-    deleteService({ id: id })
-      .unwrap()
-      .then((payload) => {
-        if (payload.success === true) {
-          notification.open({
-            message: "Delete service",
-            description: payload.message,
-          });
-          handleClose();
-        }
-      })
-      .catch((error) => console.log(error));
+    // deleteService({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success === true) {
+    //       notification.open({
+    //         message: "Delete service",
+    //         description: payload.message,
+    //       });
+    //       handleClose();
+    //     }
+    //   })
+    //   .catch((error) => console.log(error));
   };
   const handleViewService = (id) => {
-    setOpen(true);
-    getService({ id: id })
-      .unwrap()
-      .then((payload) => {
-        setService([]);
-        let newArr = [];
-        payload.data.map((val, index) => {
-          newArr.push({
-            id: val._id,
-            garageId: val.accountId,
-            service: val.type,
-            description: val.description,
-            price: val.price,
-          });
-        });
-        form.setFieldsValue({
-          GarageId: id,
-        });
-        setService((prev) => [...prev, ...newArr]);
-      })
-      .catch((error) => console.log(error));
+    // setOpen(true);
+    // getService({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     setService([]);
+    //     let newArr = [];
+    //     payload.data.map((val, index) => {
+    //       newArr.push({
+    //         id: val._id,
+    //         garageId: val.accountId,
+    //         service: val.type,
+    //         description: val.description,
+    //         price: val.price,
+    //       });
+    //     });
+    //     form.setFieldsValue({
+    //       GarageId: id,
+    //     });
+    //     setService((prev) => [...prev, ...newArr]);
+    //   })
+    //   .catch((error) => console.log(error));
   };
   const handleViewForm = (id) => {
     setIsModalOpen(true);
@@ -241,60 +241,60 @@ const Datatable = () => {
     });
   };
   const onSubmit = async (values) => {
-    if (isCreate === false) {
-      await updateService({
-        id: values.Id,
-        type: values.Service,
-        price: values.Price,
-        description: values.Description,
-      })
-        .unwrap()
-        .then(async (payload) => {
-          if (payload.success === true) {
-            notification.open({
-              message: "Update service",
-              description: "Success",
-            });
-            handleClose();
-          } else {
-            notification.open({
-              message: "Update service",
-              description: "False",
-            });
-          }
-        })
-        .catch((error) => {
-          if (error) {
-            notification.open({
-              message: "Update service",
-              description: "False",
-            });
-          }
-        });
-    } else {
-      await addService({
-        id: values.GarageId,
-        type: values.Service,
-        price: values.Price,
-        description: values.Description,
-      })
-        .unwrap()
-        .then((payload) => {
-          if (payload.success === true) {
-            notification.open({
-              message: "Create service",
-              description: "Success",
-            });
-            handleClose();
-          } else {
-            notification.open({
-              message: "Update service",
-              description: "False",
-            });
-          }
-        })
-        .catch((error) => console.log(error));
-    }
+    // if (isCreate === false) {
+    //   await updateService({
+    //     id: values.Id,
+    //     type: values.Service,
+    //     price: values.Price,
+    //     description: values.Description,
+    //   })
+    //     .unwrap()
+    //     .then(async (payload) => {
+    //       if (payload.success === true) {
+    //         notification.open({
+    //           message: "Update service",
+    //           description: "Success",
+    //         });
+    //         handleClose();
+    //       } else {
+    //         notification.open({
+    //           message: "Update service",
+    //           description: "False",
+    //         });
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       if (error) {
+    //         notification.open({
+    //           message: "Update service",
+    //           description: "False",
+    //         });
+    //       }
+    //     });
+    // } else {
+    //   await addService({
+    //     id: values.GarageId,
+    //     type: values.Service,
+    //     price: values.Price,
+    //     description: values.Description,
+    //   })
+    //     .unwrap()
+    //     .then((payload) => {
+    //       if (payload.success === true) {
+    //         notification.open({
+    //           message: "Create service",
+    //           description: "Success",
+    //         });
+    //         handleClose();
+    //       } else {
+    //         notification.open({
+    //           message: "Update service",
+    //           description: "False",
+    //         });
+    //       }
+    //     })
+    //     .catch((error) => console.log(error));
+    // }
   };
   const actionColumn = [
     {
