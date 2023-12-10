@@ -77,7 +77,7 @@ router.post(
   managerController.updateGarage
 );
 router.post(
-  "/updateIsVip",
+  "/updateIsVip/:id",
   jwtAuth,
   authorize("manager"),
   managerController.updateIsVip
