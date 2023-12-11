@@ -1,12 +1,15 @@
-import "./style.scss";
+import "./style4.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { mechanicColumns, userRows } from "../../datatablesource";
+import { formColumn } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
-  useGetAllMechanicMutation,
-  useCreateMechanicAccountMutation,
-  useDeleteMechanicMutation,
+  useGetEmergencyFormMutation,
+  useGetMaintenanceFormMutation,
+  useCreateEmergencyFormMutation,
+  useFormConfirmMutation,
+  useUpdateFormMutation,
+  useGetAllFormMutation,
 } from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm, Radio } from "antd";
 import Box from "@mui/material/Box";
@@ -14,6 +17,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Alert from "@mui/material/Alert";
+import DoneIcon from "@mui/icons-material/Done";
+import ClearIcon from "@mui/icons-material/Clear";
 // import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
@@ -30,9 +35,7 @@ const Datatable = () => {
   const [data, setData] = useState([]);
   const [tab, settab] = useState(10);
   const [detail, setDetailUser] = useState({});
-  const [getAllMechanic] = useGetAllMechanicMutation();
-  const [createMechanicAccount] = useCreateMechanicAccountMutation();
-  const [deleteMechanic] = useDeleteMechanicMutation();
+  const [getAllForm] = useGetAllFormMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,37 +47,36 @@ const Datatable = () => {
   };
   const handleOpen = (data) => {
     setOpen(true);
-    form.setFieldsValue({
-      Id: data.id,
-      Name: data.name,
-      Email: data.email,
-      Phone: data.phone,
-      Status: data.status,
-      Group: data.group,
-      Point: data.point,
-    });
+    // form.setFieldsValue({
+    //   Id: data.id,
+    //   Name: data.name,
+    //   Email: data.email,
+    //   Phone: data.phone,
+    //   Status: data.status,
+    //   Group: data.group,
+    //   Point: data.point,
+    // });
   };
   const handleClose = () => setOpen(false);
 
   const loadData = () => {
     setData([]);
-    getAllMechanic()
+    getAllForm()
       .unwrap()
       .then((payload) => {
         var newArr = [];
-        payload.mechanic.map((val, index) => {
+        payload.orderForm.map((val, index) => {
           newArr.push({
             id: val._id,
-            name: val.accountId.name,
-            img: val.accountId.img,
-            status: val.isAvailable ? "available" : "unavailable",
-            email: val.accountId.email,
-            phone: val.accountId.phone,
-            point: val.mePoint,
-            group: val.group,
+            service: val.service,
+            type: val.type,
+            status: val.status,
+            date: val.date,
+            time: val.time,
+            isPaid: val.isPaid,
+            isFeedback: val.isFeedback,
           });
         });
-        console.log(newArr);
         setData((prev) => [...prev, ...newArr]);
       })
       .catch((error) => {
@@ -91,14 +93,14 @@ const Datatable = () => {
     console.log(e);
   };
   const handleDelete = async (id) => {
-    await deleteMechanic({ id: id })
-      .unwrap()
-      .then((payload) => {
-        if (payload.success) {
-          <Alert severity="success">{payload.message}</Alert>;
-          loadData();
-        }
-      });
+    // await deleteMechanic({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success) {
+    //       <Alert severity="success">{payload.message}</Alert>;
+    //       loadData();
+    //     }
+    //   });
   };
   // const handleEdit = (id) => {
   //   handleOpen(id);
@@ -137,21 +139,21 @@ const Datatable = () => {
       //     }
       //   });
     } else {
-      await createMechanicAccount({
-        name: values.Name,
-        email: values.Email,
-        phone: values.Phone,
-        group: values.Group,
-      })
-        .unwrap()
-        .then((payload) => {
-          alert(payload.message);
-          setIsModalOpen(false);
-          loadData();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // await createMechanicAccount({
+      //   name: values.Name,
+      //   email: values.Email,
+      //   phone: values.Phone,
+      //   group: values.Group,
+      // })
+      //   .unwrap()
+      //   .then((payload) => {
+      //     alert(payload.message);
+      //     setIsModalOpen(false);
+      //     loadData();
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     }
   };
   // const handleChange = (SelectChangeEvent) => {
@@ -206,6 +208,84 @@ const Datatable = () => {
   // };
   const actionColumn = [
     {
+      field: "isPaid",
+      headerName: "Payment Status",
+      flex: 1,
+      headerAlign: "center",
+      renderCell: (params) => {
+        if (params.row.isPaid) {
+          return (
+            <div
+              style={{
+                backgroundColor: "#34acaf",
+                color: "white",
+                borderRadius: 10,
+                paddingTop: 5,
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+            >
+              <DoneIcon />
+            </div>
+          );
+        } else {
+          return (
+            <div
+              style={{
+                backgroundColor: "#196462",
+                color: "white",
+                borderRadius: 10,
+                paddingTop: 5,
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+            >
+              <ClearIcon />
+            </div>
+          );
+        }
+      },
+    },
+    {
+      field: "isFeedback",
+      headerName: "Feedback Status",
+      flex: 1,
+      headerAlign: "center",
+      renderCell: (params) => {
+        if (params.row.isFeedback) {
+          return (
+            <div
+              style={{
+                backgroundColor: "#34acaf",
+                color: "white",
+                borderRadius: 10,
+                paddingTop: 5,
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+            >
+              <DoneIcon />
+            </div>
+          );
+        } else {
+          return (
+            <div
+              style={{
+                backgroundColor: "#196462",
+                color: "white",
+                borderRadius: 10,
+                paddingTop: 5,
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+            >
+              <ClearIcon />
+            </div>
+          );
+        }
+      },
+    },
+    {
       field: "action",
       headerName: "Action",
       width: 300,
@@ -245,13 +325,12 @@ const Datatable = () => {
             style={{
               fontSize: 16,
               color: "white",
-              width: 160,
               height: 15,
               textAlign: "center",
               fontWeight: "bold",
             }}
           >
-            Add new mechanic
+            Create Emergency Form
           </p>
         </div>
       </div>
@@ -263,7 +342,7 @@ const Datatable = () => {
       <DataGrid
         className="datagrid"
         rows={data}
-        columns={mechanicColumns.concat(actionColumn)}
+        columns={formColumn.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
         disableVirtualization

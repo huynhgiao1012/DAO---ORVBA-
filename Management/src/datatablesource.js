@@ -39,17 +39,20 @@ export const userColumns = [
 ];
 export const mechanicColumns = [
   {
-    dataIndex: "id",
-    title: "ID",
-    width: 100,
+    field: "id",
+    headerName: "ID",
+    headerAlign: "center",
+    flex: 1,
   },
   {
-    dataIndex: "name",
-    title: "Name",
+    field: "name",
+    headerName: "Name",
+    headerAlign: "center",
+    flex: 1,
   },
   {
-    dataIndex: "img",
-    title: "Avatar",
+    field: "img",
+    headerName: "Avatar",
     renderCell: (params) => {
       return (
         <img
@@ -59,10 +62,12 @@ export const mechanicColumns = [
         />
       );
     },
+    headerAlign: "center",
+    flex: 1,
   },
   {
-    dataIndex: "status",
-    title: "Status",
+    field: "status",
+    headerName: "Status",
     renderCell: (params) => {
       return (
         <div className={`cellWithStatus ${params.row.status}`}>
@@ -70,92 +75,138 @@ export const mechanicColumns = [
         </div>
       );
     },
+    headerAlign: "center",
+    flex: 1,
   },
   {
-    dataIndex: "email",
-    title: "Email",
+    field: "email",
+    headerName: "Email",
+    headerAlign: "center",
+    flex: 1,
   },
 
   {
-    dataIndex: "phone",
-    title: "Phone",
+    field: "phone",
+    headerName: "Phone",
+    headerAlign: "center",
+    flex: 1,
   },
   {
-    dataIndex: "point",
-    title: "Point",
+    field: "point",
+    headerName: "Point",
+    headerAlign: "center",
+    flex: 1,
   },
   {
-    dataIndex: "group",
-    title: "Group",
+    field: "group",
+    headerName: "Group",
+    headerAlign: "center",
+    flex: 1,
+  },
+];
+export const accountantColumns = [
+  {
+    field: "id",
+    headerName: "ID",
+    headerAlign: "center",
+    flex: 1,
+  },
+  {
+    field: "name",
+    headerName: "Name",
+    headerAlign: "center",
+    flex: 1,
+  },
+  {
+    field: "img",
+    headerName: "Avatar",
+    renderCell: (params) => {
+      return (
+        <img
+          className="cellImg"
+          src="https://img.freepik.com/premium-vector/cute-boy-thinking-cartoon-avatar_138676-2439.jpg"
+          alt="avatar"
+        />
+      );
+    },
+    headerAlign: "center",
+    flex: 1,
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    headerAlign: "center",
+    flex: 1,
+  },
+
+  {
+    field: "phone",
+    headerName: "Phone",
+    headerAlign: "center",
+    flex: 1,
   },
 ];
 export const serviceColumns = [
-  { field: "id", headerName: "ID", width: 100 },
+  { field: "id", headerName: "ID", headerAlign: "center", flex: 0.5 },
   {
-    field: "garageId",
-    headerName: "GarageId",
-    width: 100,
-  },
-  {
-    field: "garage",
-    headerName: "Garage",
-    width: 300,
-  },
-];
-export const serviceColumns2 = [
-  { field: "id", headerName: "ID", width: 100 },
-  {
-    field: "service",
-    headerName: "Service",
-    width: 100,
-  },
-  {
-    field: "description",
-    headerName: "Description",
-    width: 150,
+    field: "name",
+    headerName: "Name",
+    headerAlign: "center",
+    flex: 1,
   },
   {
     field: "price",
     headerName: "Price",
-    width: 100,
+    headerAlign: "center",
+    flex: 0.5,
+  },
+];
+export const serviceColumns2 = [
+  { field: "id", headerName: "ID", headerAlign: "center", flex: 0.2 },
+  {
+    field: "name",
+    headerName: "Name",
+    headerAlign: "center",
+    flex: 0.3,
+  },
+  {
+    field: "price",
+    headerName: "Price",
+    headerAlign: "center",
+    flex: 0.2,
   },
 ];
 export const formColumn = [
-  { field: "id", headerName: "ID", width: 50 },
+  { field: "id", headerName: "ID", flex: 1, headerAlign: "center" },
   {
-    field: "cusName",
-    headerName: "Customer Name",
-    width: 100,
-  },
-  {
-    field: "cusPhone",
-    headerName: "Customer Phone",
-    width: 100,
-  },
-  {
-    field: "cusAdd",
-    headerName: "Customer Address",
-    width: 400,
-  },
-  {
-    field: "serName",
+    field: "service",
     headerName: "Service Name",
-    width: 100,
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    field: "type",
+    headerName: "Type",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    field: "status",
+    headerName: "Status",
+    flex: 1,
+    headerAlign: "center",
   },
   {
     field: "date",
     headerName: "Date",
-    width: 100,
+    flex: 1,
+    headerAlign: "center",
   },
   {
-    field: "price",
-    headerName: "Price",
-    width: 100,
-  },
-  {
-    field: "isPaid",
-    headerName: "Payment Status",
-    width: 100,
+    field: "time",
+    headerName: "Time",
+    flex: 1,
+    headerAlign: "center",
   },
 ];
 //temporary data

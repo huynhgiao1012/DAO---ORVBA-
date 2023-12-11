@@ -1,11 +1,25 @@
-import "./style.scss";
+import "./style2.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { mechanicColumns, userRows } from "../../datatablesource";
-import { Link, useNavigate } from "react-router-dom";
+import { accountantColumns } from "../../datatablesource";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
+  useGetAllAccountantMutation,
+  useGetAllEmployeeMutation,
   useGetAllMechanicMutation,
+  useGetAllServiceMaMutation,
+  useGetEmergencyFormMutation,
+  useGetMaintenanceFormMutation,
+  useGetSubServiceMutation,
+  useCreateAccountantAccountMutation,
+  useCreateEmergencyFormMutation,
   useCreateMechanicAccountMutation,
+  useCreateServiceMutation,
+  useCreateSubServiceMutation,
+  useFormConfirmMutation,
+  useUpdateFormMutation,
+  useUpdateGarageMutation,
+  useUpdateIsVipMutation,
   useDeleteMechanicMutation,
 } from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm, Radio } from "antd";
@@ -14,7 +28,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Alert from "@mui/material/Alert";
-// import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
   top: "50%",
@@ -30,9 +43,8 @@ const Datatable = () => {
   const [data, setData] = useState([]);
   const [tab, settab] = useState(10);
   const [detail, setDetailUser] = useState({});
-  const [getAllMechanic] = useGetAllMechanicMutation();
-  const [createMechanicAccount] = useCreateMechanicAccountMutation();
-  const [deleteMechanic] = useDeleteMechanicMutation();
+  const [getAllAccountant] = useGetAllAccountantMutation();
+  const [createAccountant] = useCreateAccountantAccountMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,29 +61,24 @@ const Datatable = () => {
       Name: data.name,
       Email: data.email,
       Phone: data.phone,
-      Status: data.status,
-      Group: data.group,
-      Point: data.point,
     });
   };
   const handleClose = () => setOpen(false);
 
   const loadData = () => {
     setData([]);
-    getAllMechanic()
+    getAllAccountant()
       .unwrap()
       .then((payload) => {
+        console.log(payload.accountant);
         var newArr = [];
-        payload.mechanic.map((val, index) => {
+        payload.accountant.map((val, index) => {
           newArr.push({
             id: val._id,
             name: val.accountId.name,
             img: val.accountId.img,
-            status: val.isAvailable ? "available" : "unavailable",
             email: val.accountId.email,
             phone: val.accountId.phone,
-            point: val.mePoint,
-            group: val.group,
           });
         });
         console.log(newArr);
@@ -91,14 +98,14 @@ const Datatable = () => {
     console.log(e);
   };
   const handleDelete = async (id) => {
-    await deleteMechanic({ id: id })
-      .unwrap()
-      .then((payload) => {
-        if (payload.success) {
-          <Alert severity="success">{payload.message}</Alert>;
-          loadData();
-        }
-      });
+    // await deleteMechanic({ id: id })
+    //   .unwrap()
+    //   .then((payload) => {
+    //     if (payload.success) {
+    //       <Alert severity="success">{payload.message}</Alert>;
+    //       loadData();
+    //     }
+    //   });
   };
   // const handleEdit = (id) => {
   //   handleOpen(id);
@@ -115,33 +122,11 @@ const Datatable = () => {
   const onSubmit = async (values) => {
     console.log(values);
     if (isEdit) {
-      // await updateUser({
-      //   id: values.Id,
-      //   name: values.Name,
-      //   phone: values.Phone,
-      // })
-      //   .unwrap()
-      //   .then((payload) => {
-      //     if (payload.success === true) {
-      //       setOpen(false);
-      //       notification.open({
-      //         message: "Update profile",
-      //         description: "Success",
-      //       });
-      //       loadData();
-      //     } else {
-      //       notification.open({
-      //         message: "Update profile",
-      //         description: "False",
-      //       });
-      //     }
-      //   });
     } else {
-      await createMechanicAccount({
+      await createAccountant({
         name: values.Name,
         email: values.Email,
         phone: values.Phone,
-        group: values.Group,
       })
         .unwrap()
         .then((payload) => {
@@ -154,56 +139,6 @@ const Datatable = () => {
         });
     }
   };
-  // const handleChange = (SelectChangeEvent) => {
-  //   // settab(SelectChangeEvent.target.value);
-  //   // var newArr = [];
-  //   // getAllUser()
-  //   //   .unwrap()
-  //   //   .then((payload) => {
-  //   //     if (payload.success === true) {
-  //   //       payload.data.map((val) => {
-  //   //         newArr.push({
-  //   //           id: val._id,
-  //   //           username: val.name,
-  //   //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-  //   //           status: val.isActive ? "active" : "inactive",
-  //   //           email: val.email,
-  //   //           phone: val.phone,
-  //   //           role: val.role,
-  //   //           dbId: val._id,
-  //   //         });
-  //   //       });
-  //   //     }
-  //   //     if (SelectChangeEvent.target.value === 20) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "customer") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 30) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "company") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 40) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "admin") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else {
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...newArr]);
-  //   //     }
-  //   //   });
-  // };
   const actionColumn = [
     {
       field: "action",
@@ -251,7 +186,7 @@ const Datatable = () => {
               fontWeight: "bold",
             }}
           >
-            Add new mechanic
+            Add new accountant
           </p>
         </div>
       </div>
@@ -263,7 +198,7 @@ const Datatable = () => {
       <DataGrid
         className="datagrid"
         rows={data}
-        columns={mechanicColumns.concat(actionColumn)}
+        columns={accountantColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
         disableVirtualization
@@ -370,27 +305,6 @@ const Datatable = () => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={12}>
-                  <Form.Item
-                    name="Group"
-                    label="Group"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please choose group",
-                        type: "string",
-                      },
-                      { whitespace: true },
-                      { min: 3 },
-                    ]}
-                    hasFeedback
-                  >
-                    <Radio.Group style={{ display: "flex" }}>
-                      <Radio value="emergency">Emergency</Radio>
-                      <Radio value="maintenance">Maintanence</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </Col>
               </Row>
               <Row gutter={16}>
                 <Col span={12}>
@@ -459,8 +373,8 @@ const Datatable = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="Group"
-                label={<h3 style={{ color: "#34acaf" }}>Group</h3>}
+                name="Phone"
+                label={<h3 style={{ color: "#34acaf" }}>Phone</h3>}
               >
                 <Input
                   style={{
@@ -469,7 +383,6 @@ const Datatable = () => {
                     color: "#3C3434",
                     fontWeight: "600",
                   }}
-                  readOnly={true}
                 />
               </Form.Item>
             </Col>
@@ -503,56 +416,6 @@ const Datatable = () => {
                     fontWeight: "600",
                   }}
                   readOnly={true}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="Phone"
-                label={<h3 style={{ color: "#34acaf" }}>Phone</h3>}
-              >
-                <Input
-                  style={{
-                    border: "1px solid #D8E5E5",
-                    width: 220,
-                    color: "#3C3434",
-                    fontWeight: "600",
-                  }}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="Status"
-                label={<h3 style={{ color: "#34acaf" }}>Status</h3>}
-              >
-                <Input
-                  style={{
-                    border: "1px solid #D8E5E5",
-                    width: 220,
-                    color: "#3C3434",
-                    fontWeight: "600",
-                  }}
-                  readOnly={true}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="Point"
-                label={<h3 style={{ color: "#34acaf" }}>Point</h3>}
-              >
-                <Input
-                  style={{
-                    border: "1px solid #D8E5E5",
-                    width: 220,
-                    color: "#3C3434",
-                    fontWeight: "600",
-                  }}
                 />
               </Form.Item>
             </Col>

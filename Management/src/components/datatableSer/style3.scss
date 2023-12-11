@@ -1,11 +1,11 @@
 .datatable {
-  height: 600px;
   padding: 20px;
   .addButton {
     padding: 2px 5px;
     border-radius: 5px;
-    background-color: #3cbcc4;
+    background-color: #34acaf;
     cursor: pointer;
+    border: none;
   }
   .datatableTitle {
     width: 100%;
@@ -27,24 +27,40 @@
       cursor: pointer;
     }
   }
+  .datagrid {
+    .MuiDataGrid-columnHeader {
+      background-color: #999999;
+      border: 1px solid white;
+    }
+    .MuiDataGrid-columnHeaderTitle {
+      font-weight: bold;
+      color: white;
+      text-align: center;
+    }
+    .MuiDataGrid-cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid #d6d6d6;
+      border-right: 1px solid #d6d6d6;
+    }
+  }
   .cellImg {
     width: 50px;
     height: 50px;
     border-radius: 50%;
   }
-  .tableheader {
-    text-align: center;
-  }
+
   .cellWithStatus {
     padding: 5px;
     border-radius: 5px;
 
-    &.active {
+    &.available {
       background-color: rgba(0, 128, 0, 0.05);
       color: green;
     }
 
-    &.inactive {
+    &.unavailable {
       background-color: rgba(255, 0, 0, 0.05);
       color: crimson;
     }
@@ -52,29 +68,36 @@
 
   .cellAction {
     display: flex;
+    justify-content: space-around;
     align-items: center;
-    gap: 15px;
-
     .viewButton {
-      padding: 2px 5px;
       border-radius: 5px;
-      color: darkblue;
-      border: 1px dotted rgba(0, 0, 139, 0.596);
+      border: none;
+      color: white;
+      background-color: #7c9797;
       cursor: pointer;
+      margin: 0px 8px;
     }
-
-    .deleteButton {
-      padding: 2px 5px;
+    .viewSubButton {
+      padding: 3px 8px;
       border-radius: 5px;
-      color: crimson;
-      border: 1px dotted rgba(220, 20, 60, 0.6);
+      border: none;
+      color: white;
+      background-color: #196462;
+      cursor: pointer;
+      margin: 0px 8px;
+    }
+    .deleteButton {
+      border-radius: 5px;
+      color: white;
+      background-color: #3c3434;
       cursor: pointer;
     }
     .editButton {
-      padding: 2px 5px;
+      padding: 2px 8px;
       border-radius: 5px;
-      color: lightseagreen;
-      border: 1px dotted rgba(20, 180, 220, 0.508);
+      color: white;
+      background-color: #98c4c4;
       cursor: pointer;
     }
   }

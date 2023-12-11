@@ -14,8 +14,9 @@
   justify-content: space-between;
   margin-top: 5px;
 }
-.navbar .wrapper .name h3 {
+.navbar .wrapper .name h2 {
   color: #34acaf;
+  font-style: oblique;
 }
 .navbar .wrapper .items {
   display: flex;

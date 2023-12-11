@@ -43,6 +43,11 @@ export const managerApi = createApi({
         url: "/getEmergencyForm",
       }),
     }),
+    getAllForm: builder.mutation({
+      query: () => ({
+        url: "/getAllForm",
+      }),
+    }),
     getMaintenanceForm: builder.mutation({
       query: () => ({
         url: "/getMaintenanceForm",
@@ -138,6 +143,32 @@ export const managerApi = createApi({
         },
       }),
     }),
+    updateService: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/updateService/${id}`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    updateSubService: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/updateSubService/${id}`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    deleteMechanic: builder.mutation({
+      query: ({ id }) => ({
+        url: `/deleteMechanic/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -160,4 +191,8 @@ export const {
   useUpdateFormMutation,
   useUpdateGarageMutation,
   useUpdateIsVipMutation,
+  useDeleteMechanicMutation,
+  useUpdateServiceMutation,
+  useUpdateSubServiceMutation,
+  useGetAllFormMutation,
 } = managerApi;
