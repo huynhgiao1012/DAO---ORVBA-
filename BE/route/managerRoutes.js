@@ -65,6 +65,12 @@ router.get(
   managerController.getEmergencyForm
 );
 router.get(
+  "/getAllForm",
+  jwtAuth,
+  authorize("manager"),
+  managerController.getAllForm
+);
+router.get(
   "/getMaintenanceForm",
   jwtAuth,
   authorize("manager"),
@@ -94,5 +100,29 @@ router.post(
   authorize("manager"),
   managerController.updateForm
 );
+router.post(
+  "/updateService/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.updateService
+);
+router.post(
+  "/updateSubService/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.updateSubService
+);
 router.get("/getSubService/:id", jwtAuth, managerController.getSubService);
+router.delete(
+  "/deleteAccountant/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.deleteAccountant
+);
+router.delete(
+  "/deleteMechanic/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.deleteMechanic
+);
 module.exports = router;

@@ -285,6 +285,20 @@ exports.getMaintenanceForm = catchAsync(async (req, res) => {
     orderForm,
   });
 });
+exports.getAllForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const orderForm = await OrderForm.find({
+    garageId: manager.garageId,
+  });
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    orderForm,
+  });
+});
 exports.updateIsVip = catchAsync(async (req, res) => {
   const { id } = req.params;
   const customer = await Customer.findOneAndUpdate(id, {
@@ -390,5 +404,77 @@ exports.updateGarage = catchAsync(async (req, res) => {
     success: true,
     message: "Update successfully",
     garage: gara,
+  });
+});
+exports.updateService = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+  const service = await Service.findByIdAndUpdate(
+    id,
+    {
+      serviceName: name,
+      estimatedPrice: price,
+    },
+    { new: true }
+  );
+  if (!service) {
+    throw new ApiError(400, "Service is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Update successfully",
+    service,
+  });
+});
+exports.updateSubService = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+  const subService = await SubService.findByIdAndUpdate(
+    id,
+    {
+      subName: name,
+      subPrice: price,
+    },
+    { new: true }
+  );
+  console.log(subService);
+  if (!subService) {
+    throw new ApiError(400, "Service is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Update successfully",
+    subService,
+  });
+});
+// delete mechanic
+exports.deleteMechanic = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const mechanic = await Mechanic.findById(id);
+  const account = await Account.findById(mechanic.accountId);
+  if (!mechanic) {
+    throw new ApiError(400, "Mechanic is not available");
+  }
+  await account.remove();
+  await mechanic.remove();
+  res.status(200).json({
+    success: true,
+    message: "Delete successfully!",
+  });
+});
+
+// delete accountant
+exports.deleteAccountant = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const accountant = await Accountant.findById(id);
+  const account = await Account.findById(accountant.accountId);
+  if (!accountant) {
+    throw new ApiError(400, "Mechanic is not available");
+  }
+  await account.remove();
+  await accountant.remove();
+  res.status(200).json({
+    success: true,
+    message: "Delete successfully!",
   });
 });
