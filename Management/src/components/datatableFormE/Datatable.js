@@ -1,18 +1,43 @@
-import "./style4.scss";
+import "./style5.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { formColumn } from "../../datatablesource";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useGetAllFormMutation } from "../../services/Manager";
-import { Col, Form, Input, Row, Drawer, Popconfirm } from "antd";
+import {
+  useGetEmergencyFormMutation,
+  useCreateEmergencyFormMutation,
+  useGetAllServiceMaMutation,
+} from "../../services/Manager";
+import { Col, Form, Input, Row, Drawer, Popconfirm, Select } from "antd";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import Alert from "@mui/material/Alert";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
-
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 600,
+  bgcolor: "white",
+  border: "2px solid #98C4C4",
+  boxShadow: 24,
+  p: 4,
+};
 const Datatable = () => {
   const [data, setData] = useState([]);
-  const [getAllForm] = useGetAllFormMutation();
+  const [services, setSer] = useState([]);
+  const [listSer, setList] = useState([]);
+  const [getAllForm] = useGetEmergencyFormMutation();
+  const [getService] = useGetAllServiceMaMutation();
+  const [createForm] = useCreateEmergencyFormMutation();
   const [isEdit, setIsEdit] = useState(false);
+  const [price, setPrice] = useState(0);
   const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const logOut = () => {
@@ -22,17 +47,15 @@ const Datatable = () => {
   const handleOpen = (data) => {
     setOpen(true);
     form.setFieldsValue({
-      id: data.id,
-      service: data.service,
-      type: data.type,
-      status: data.status,
-      date: data.date,
-      time: data.time,
-      isPaid: data.isPaid,
-      isFeedback: data.isFeedback,
+      ...data,
     });
   };
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setIsModalOpen(false);
+    setPrice(0);
+    form.resetFields();
+  };
 
   const loadData = () => {
     setData([]);
@@ -41,16 +64,7 @@ const Datatable = () => {
       .then((payload) => {
         var newArr = [];
         payload.orderForm.map((val, index) => {
-          newArr.push({
-            id: val._id,
-            service: val.service,
-            type: val.type,
-            status: val.status,
-            date: val.date,
-            time: val.time,
-            isPaid: val.isPaid,
-            isFeedback: val.isFeedback,
-          });
+          newArr.push({ id: val._id, ...val });
         });
         setData((prev) => [...prev, ...newArr]);
       })
@@ -62,7 +76,25 @@ const Datatable = () => {
   };
   useEffect(() => {
     setData([]);
+    setSer([]);
+    setList([]);
     loadData();
+    getService()
+      .unwrap()
+      .then((payload) => {
+        const newArr = payload.services.map((val) => {
+          const obj = {
+            value: val._id,
+            label: val.serviceName,
+          };
+          return obj;
+        });
+        setSer((prev) => [...prev, ...newArr]);
+        setList((prev) => [...prev, ...payload.services]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
   const cancelConfirm = (e) => {
     console.log(e);
@@ -85,8 +117,11 @@ const Datatable = () => {
     handleOpen(data);
     setIsEdit(false);
   };
+  const handleCreate = () => {
+    setIsModalOpen(true);
+    setIsEdit(false);
+  };
   const onSubmit = async (values) => {
-    console.log(values);
     if (isEdit) {
       // await updateUser({
       //   id: values.Id,
@@ -110,21 +145,40 @@ const Datatable = () => {
       //     }
       //   });
     } else {
-      // await createMechanicAccount({
-      //   name: values.Name,
-      //   email: values.Email,
-      //   phone: values.Phone,
-      //   group: values.Group,
-      // })
-      //   .unwrap()
-      //   .then((payload) => {
-      //     alert(payload.message);
-      //     setIsModalOpen(false);
-      //     loadData();
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
+      let serPrice = 0;
+      let service = "";
+      listSer.map((val) => {
+        if (val._id === values.service) {
+          serPrice = val.estimatedPrice;
+          service = val.serviceName;
+        }
+      });
+      const obj = {
+        customerName: values.customerName,
+        phone: values.phone,
+        service: service,
+        address: values.address,
+        price: serPrice,
+        note: values.note === undefined ? "None" : values.note,
+      };
+
+      await createForm({
+        customerName: values.customerName,
+        phone: values.phone,
+        service: service,
+        address: values.address,
+        price: serPrice,
+        note: values.note === undefined ? "None" : values.note,
+      })
+        .unwrap()
+        .then((payload) => {
+          alert(payload.message);
+          setIsModalOpen(false);
+          loadData();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
   // const handleChange = (SelectChangeEvent) => {
@@ -262,7 +316,6 @@ const Datatable = () => {
       width: 300,
       headerAlign: "center",
       renderCell: (params) => {
-        console.log(params);
         return (
           <div className="cellAction">
             <div className="viewButton" onClick={() => handleView(params.row)}>
@@ -291,6 +344,21 @@ const Datatable = () => {
   ];
   return (
     <div className="datatable">
+      <div className="datatableTitle">
+        <div className="addButton" onClick={handleCreate}>
+          <p
+            style={{
+              fontSize: 16,
+              color: "white",
+              height: 15,
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
+            Create Emergency Form
+          </p>
+        </div>
+      </div>
       <DataGrid
         className="datagrid"
         rows={data}
@@ -305,14 +373,197 @@ const Datatable = () => {
           borderColor: "white",
         }}
       />
+      <div>
+        <Modal open={isModalOpen} onClose={handleClose} style={{ zIndex: 10 }}>
+          <Box sx={style}>
+            <Typography
+              style={{
+                textAlign: "center",
+                color: "#3C3434",
+                fontWeight: "bold",
+                marginBottom: 20,
+                fontSize: 22,
+              }}
+            >
+              CREATE EMERGENCY FORM
+            </Typography>
+            <Form
+              form={form}
+              name="form"
+              labelCol={{ span: 18 }}
+              wrapperCol={{ span: 18 }}
+              initialValues={{ remember: true }}
+              onFinish={onSubmit}
+              autoComplete="off"
+              layout="vertical"
+              style={{ marginLeft: 30, color: "#3C3434" }}
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="customerName"
+                    label="Customer Name"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter name",
+                        type: "string",
+                      },
+                      { whitespace: true },
+                      { min: 3 },
+                    ]}
+                    hasFeedback
+                  >
+                    <Input
+                      style={{ border: "1px solid #98C4C4", width: 220 }}
+                      type="string"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="phone"
+                    label="Phone"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter phone",
+                        type: "string",
+                      },
+                      { whitespace: false, min: 10, max: 12 },
+                    ]}
+                    hasFeedback
+                  >
+                    <Input
+                      style={{ border: "1px solid #98C4C4", width: 220 }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Service"
+                    name="service"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please choose service",
+                        type: "string",
+                      },
+                    ]}
+                    hasFeedback
+                  >
+                    <Select
+                      defaultValue="None"
+                      style={{
+                        width: 220,
+                      }}
+                      onChange={(value) => {
+                        listSer.map((val) => {
+                          if (val._id === value) {
+                            setPrice(val.estimatedPrice);
+                          }
+                        });
+                      }}
+                      options={services}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="address"
+                    label="Address"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter service",
+                        type: "string",
+                      },
+                      { min: 10 },
+                    ]}
+                    hasFeedback
+                  >
+                    <Input
+                      style={{ border: "1px solid #98C4C4", width: 220 }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item label="Price" hasFeedback>
+                    <Input
+                      style={{ border: "1px solid #98C4C4", width: 220 }}
+                      value={price}
+                    />
+                    {console.log(price)}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="note"
+                    label="Note"
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                      { min: 10, max: 400 },
+                    ]}
+                    hasFeedback
+                  >
+                    <Input
+                      style={{ border: "1px solid #98C4C4", width: 220 }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    form="form"
+                    style={{
+                      width: "90%",
+                      textAlign: "center",
+                      backgroundColor: "#34acaf",
+                      color: "white",
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Col>
+                <Col span={12}>
+                  <Button
+                    onClick={handleClose}
+                    style={{
+                      width: "90%",
+                      textAlign: "center",
+                      backgroundColor: "#98C4C4",
+                      color: "white",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Box>
+        </Modal>
+      </div>
       <Drawer width={500} onClose={handleClose} open={open}>
-        <p style={{ fontSize: "30px", color: "#34acaf", fontWeight: "bold" }}>
+        <p style={{ fontSize: "25px", color: "#34acaf", fontWeight: "bold" }}>
           Form's Detail
         </p>
         <Form
           form={form}
           name="form"
-          labelCol={{ span: 6 }}
+          labelCol={{ span: 18 }}
           wrapperCol={{ span: 18 }}
           initialValues={{ remember: true }}
           onFinish={onSubmit}
@@ -338,8 +589,8 @@ const Datatable = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="service"
-                label={<h3 style={{ color: "#34acaf" }}>Service</h3>}
+                name="mechanicId"
+                label={<h3 style={{ color: "#34acaf" }}>Mechanic's ID</h3>}
               >
                 <Input
                   style={{
@@ -356,8 +607,8 @@ const Datatable = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="type"
-                label={<h3 style={{ color: "#34acaf" }}>Type</h3>}
+                name="customerName"
+                label={<h3 style={{ color: "#34acaf" }}>Customer's Name</h3>}
               >
                 <Input
                   style={{
@@ -371,8 +622,41 @@ const Datatable = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="status"
-                label={<h3 style={{ color: "#34acaf" }}>Status</h3>}
+                name="phone"
+                label={<h3 style={{ color: "#34acaf" }}>Phone</h3>}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: 220,
+                    color: "#3C3434",
+                    fontWeight: "600",
+                  }}
+                  readOnly={true}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="service"
+                label={<h3 style={{ color: "#34acaf" }}>Service</h3>}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: 220,
+                    color: "#3C3434",
+                    fontWeight: "600",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="price"
+                label={<h3 style={{ color: "#34acaf" }}>Price</h3>}
               >
                 <Input
                   style={{
@@ -414,7 +698,6 @@ const Datatable = () => {
                     color: "#3C3434",
                     fontWeight: "600",
                   }}
-                  readOnly={true}
                 />
               </Form.Item>
             </Col>
@@ -451,6 +734,22 @@ const Datatable = () => {
               </Form.Item>
             </Col>
           </Row>
+          {/* {isEdit && (
+            <Row gutter={16}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                form="form"
+                style={{
+                  width: "100%",
+                  backgroundColor: "#98C4C4",
+                  color: "white",
+                }}
+              >
+                Submit
+              </Button>
+            </Row>
+          )} */}
         </Form>
       </Drawer>
     </div>

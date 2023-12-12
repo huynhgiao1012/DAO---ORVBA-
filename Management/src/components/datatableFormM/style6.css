@@ -84,7 +84,8 @@
 .datatable .cellAction .editButton {
   padding: 2px 8px;
   border-radius: 5px;
-  color: #34acaf;
+  color: white;
   border: 1px dotted rgba(20, 180, 220, 0.508);
   cursor: pointer;
-}/*# sourceMappingURL=style4.css.map */
+  margin: 0px 10px;
+}/*# sourceMappingURL=style6.css.map */
