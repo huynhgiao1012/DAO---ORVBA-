@@ -118,9 +118,9 @@ exports.login = catchAsync(async (req, res) => {
             expiresIn: "1h",
           }
         );
-        const socketIo = io("http://localhost:3000");
-        socketIo.emit("newUser", existEmail._id);
-        res.json({
+        // const socketIo = io("http://localhost:3000");
+        // socketIo.emit("newUser", existEmail._id);
+        res.status(200).json({
           success: true,
           token,
           role: existEmail.role,
