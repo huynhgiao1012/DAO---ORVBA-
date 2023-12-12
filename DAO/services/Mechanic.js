@@ -29,11 +29,6 @@ export const mechanicApi = createApi({
         url: '/getForms',
       }),
     }),
-    getForms: builder.mutation({
-      query: () => ({
-        url: '/getForms',
-      }),
-    }),
     getPickedForms: builder.mutation({
       query: () => ({
         url: '/getPickedForms',

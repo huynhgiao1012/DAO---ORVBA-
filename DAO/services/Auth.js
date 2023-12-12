@@ -19,7 +19,7 @@ export const authApi = createApi({
       invalidatesTags: ['Post'],
     }),
     login: builder.mutation({
-      query: payload => ({
+      query: ({...payload}) => ({
         url: '/login',
         method: 'POST',
         body: payload,
