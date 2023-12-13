@@ -285,6 +285,18 @@ exports.getMaintenanceForm = catchAsync(async (req, res) => {
     orderForm,
   });
 });
+exports.getGarageDetail = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const garage = await Garage.findById(manager.garageId);
+  if (!garage) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    garage,
+  });
+});
 exports.getAllForm = catchAsync(async (req, res) => {
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });

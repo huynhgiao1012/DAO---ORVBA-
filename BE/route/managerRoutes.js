@@ -113,6 +113,7 @@ router.post(
   managerController.updateSubService
 );
 router.get("/getSubService/:id", jwtAuth, managerController.getSubService);
+router.get("/getGarageDetail", jwtAuth, managerController.getGarageDetail);
 router.delete(
   "/deleteAccountant/:id",
   jwtAuth,
