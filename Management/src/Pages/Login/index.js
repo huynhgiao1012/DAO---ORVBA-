@@ -91,7 +91,7 @@ export default function LoginComponent() {
               description: "Successfully",
               icon: <DownOutlined style={{ color: "green" }} />,
             });
-            navigate("/mHome");
+            navigate("/garaDetails");
             localStorage.setItem("token", payload.token);
           } else {
             notification.open({

@@ -153,15 +153,6 @@ const Datatable = () => {
           service = val.serviceName;
         }
       });
-      const obj = {
-        customerName: values.customerName,
-        phone: values.phone,
-        service: service,
-        address: values.address,
-        price: serPrice,
-        note: values.note === undefined ? "None" : values.note,
-      };
-
       await createForm({
         customerName: values.customerName,
         phone: values.phone,

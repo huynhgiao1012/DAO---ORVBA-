@@ -4,6 +4,7 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDetailMutation } from "../../services/User";
+import loading from "../../Image/loading.gif";
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const navigate = useNavigate();
@@ -37,7 +38,8 @@ const Navbar = () => {
     <div className="navbar">
       <div className="wrapper">
         <div className="name">
-          <h2>Welcome back ! </h2>
+          {/* <img src={loading} /> */}
+          <h2>Welcome back !</h2>
         </div>
         <div className="items">
           {/* <div className="mode" style={{ color: "#cccccc" }}>

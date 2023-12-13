@@ -5,6 +5,7 @@
   align-items: center;
   font-size: 14px;
   color: #555;
+  overflow: hidden;
 }
 .navbar .wrapper {
   width: 100%;
@@ -12,11 +13,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 5px;
+}
+.navbar .wrapper .name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar .wrapper .name img {
+  width: 60px;
+  height: 60px;
 }
 .navbar .wrapper .name h2 {
   color: #34acaf;
-  font-style: oblique;
 }
 .navbar .wrapper .items {
   display: flex;
