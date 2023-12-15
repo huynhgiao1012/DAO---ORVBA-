@@ -64,6 +64,7 @@ router.get(
   authorize("manager"),
   managerController.getEmergencyForm
 );
+router.post("/upload", managerController.upload);
 router.get(
   "/getAllForm",
   jwtAuth,

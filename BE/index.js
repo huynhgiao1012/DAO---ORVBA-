@@ -22,11 +22,10 @@ const feedbackRoutes = require("./route/feedbackRoutes");
 const mechanicRoutes = require("./route/mechanicRoutes");
 const accountantRoutes = require("./route/accountantRoutes");
 const customerRoutes = require("./route/customerRoutes");
-app.use(express.json());
+app.use(express.json({ limit: "2000kb" }));
 app.use(cors());
 EmailService.init();
 Mongo.connect();
-
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/garage", garageRoutes);
 app.use("/api/v1/service", serviceRoutes);

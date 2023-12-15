@@ -390,22 +390,24 @@ exports.updateGarage = catchAsync(async (req, res) => {
     closeTime,
     longitude,
     latitude,
+    img,
     address,
     description,
     transferInfo,
   } = req.body;
-  const gara = await Garage.findOneAndUpdate(
-    { id: manager.garageId },
+  const gara = await Garage.findByIdAndUpdate(
+    manager.garageId,
     {
-      name,
-      phone,
-      openTime,
-      closeTime,
-      longitude,
-      latitude,
-      address,
-      description,
-      transferInfo,
+      name: name,
+      phone: phone,
+      openTime: openTime,
+      closeTime: closeTime,
+      longitude: longitude,
+      latitude: latitude,
+      img: img,
+      address: address,
+      description: description,
+      transferInfo: transferInfo,
     },
     { new: true }
   );
@@ -488,5 +490,10 @@ exports.deleteAccountant = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Delete successfully!",
+  });
+});
+exports.upload = catchAsync(async (req, res) => {
+  res.status(200).json({
+    success: true,
   });
 });
