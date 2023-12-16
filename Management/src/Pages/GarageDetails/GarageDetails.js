@@ -326,8 +326,10 @@ const GarageDetails = () => {
                   autoplay
                   style={{ width: 580, margin: "10px 0px", height: 280 }}
                 >
-                  {data.img.map((val) => {
-                    return <img src={val} width="100%" height={280} />;
+                  {data.img.map((val, index) => {
+                    return (
+                      <img src={val} width="100%" height={280} key={index} />
+                    );
                   })}
                 </Carousel>
                 <h1>Statistics</h1>

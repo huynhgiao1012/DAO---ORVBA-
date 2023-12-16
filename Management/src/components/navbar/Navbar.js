@@ -1,14 +1,17 @@
 import "./navbar.scss";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDetailMutation } from "../../services/User";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
+import { useGetGarageIdMutation } from "../../services/Manager";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [getUserDetail] = useGetUserDetailMutation();
+  const [getGarageId] = useGetGarageIdMutation();
+  const [num, setNum] = useState([]);
+  const [ID, setID] = useState("");
   const [data, setData] = useState({
     _id: "",
     email: "",
@@ -19,19 +22,19 @@ const Navbar = () => {
     img: "",
   });
   useEffect(() => {
-    // const socketIo = io("http://localhost:3000");
-    // socketIo.on("getEmergencyForm", (data) => {
-    //   if (data) {
-    //     getForms()
-    //       .unwrap()
-    //       .then((payload) => {
-    //         setForms([]);
-    //         setForms((prev) => [...prev, ...payload.orderForm]);
-    //       })
-    //       .catch((error) => console.log(error));
-    //   }
-    // });
+    // getGarageId()
+    //   .then((payload) => {
+    //     setID(payload.data.data.garageId);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    const socketIo = io.connect("http://localhost:3000");
+    socketIo.on("getMaintenanceForm", (data) => {
+      setNum((prev) => [...prev, data]);
+    });
   }, []);
+
   useEffect(() => {
     getUserDetail()
       .unwrap()
@@ -53,17 +56,13 @@ const Navbar = () => {
     <div className="navbar">
       <div className="wrapper">
         <div className="name">
-          {/* <img src={loading} /> */}
           <h2>Welcome back !</h2>
         </div>
         <div className="items">
-          {/* <div className="mode" style={{ color: "#cccccc" }}>
-            <DarkModeOutlinedIcon
-              className="icon"
-              onClick={() => dispatch({ type: "TOGGLE" })}
-            />
-            <h4>Dark mode</h4>
-          </div> */}
+          <div className="newForm">
+            <span className="num">{num.length}</span>
+            <button className="btn2">NEW MAINTENANCE FORM</button>
+          </div>
           <button onClick={() => logOut()} className="btn">
             <PowerSettingsNewIcon
               className="icon"

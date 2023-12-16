@@ -22,7 +22,8 @@
         height: 60px;
       }
       h2 {
-        color: #34acaf;
+        color: #3c3434;
+        font-weight: bolder;
       }
     }
 
@@ -30,26 +31,36 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .mode {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 20px;
-        background-color: #34acaf;
-        padding: 5px 10px;
-        .icon {
-          font-size: 14px;
-          color: white;
-        }
-        h4 {
-          color: white;
-        }
-      }
       .btn {
         background-color: #34acaf;
         border: none;
         color: white;
         border-radius: 10px;
+        margin-left: 10px;
+      }
+      .newForm {
+        position: relative;
+        .num {
+          width: 25px;
+          height: 25px;
+          position: absolute;
+          top: -8px;
+          left: -10px;
+          background-color: red;
+          border-radius: 50px;
+          text-align: center;
+          color: white;
+          vertical-align: middle;
+          font-weight: bold;
+        }
+        .btn2 {
+          background-color: #34acaf;
+          border: none;
+          color: white;
+          border-radius: 10px;
+          padding: 5px 20px;
+          font-weight: 700;
+        }
       }
     }
   }

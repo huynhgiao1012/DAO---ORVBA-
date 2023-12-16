@@ -24,31 +24,42 @@
   height: 60px;
 }
 .navbar .wrapper .name h2 {
-  color: #34acaf;
+  color: #3c3434;
+  font-weight: bolder;
 }
 .navbar .wrapper .items {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.navbar .wrapper .items .mode {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 20px;
-  background-color: #34acaf;
-  padding: 5px 10px;
-}
-.navbar .wrapper .items .mode .icon {
-  font-size: 14px;
-  color: white;
-}
-.navbar .wrapper .items .mode h4 {
-  color: white;
-}
 .navbar .wrapper .items .btn {
   background-color: #34acaf;
   border: none;
   color: white;
   border-radius: 10px;
+  margin-left: 10px;
+}
+.navbar .wrapper .items .newForm {
+  position: relative;
+}
+.navbar .wrapper .items .newForm .num {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: -8px;
+  left: -10px;
+  background-color: red;
+  border-radius: 50px;
+  text-align: center;
+  color: white;
+  vertical-align: middle;
+  font-weight: bold;
+}
+.navbar .wrapper .items .newForm .btn2 {
+  background-color: #34acaf;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  padding: 5px 20px;
+  font-weight: 700;
 }/*# sourceMappingURL=navbar.css.map */

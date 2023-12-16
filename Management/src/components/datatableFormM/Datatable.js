@@ -16,6 +16,7 @@ import Modal from "@mui/material/Modal";
 import Alert from "@mui/material/Alert";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
+import moment from "moment";
 // import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
@@ -188,42 +189,12 @@ const Datatable = () => {
   // };
   const actionColumn = [
     {
-      field: "isPaid",
-      headerName: "Payment Status",
+      field: "created",
+      headerName: "Created",
       flex: 1,
       headerAlign: "center",
       renderCell: (params) => {
-        if (params.row.isPaid) {
-          return (
-            <div
-              style={{
-                backgroundColor: "#34acaf",
-                color: "white",
-                borderRadius: 10,
-                paddingTop: 5,
-                paddingLeft: 5,
-                paddingRight: 5,
-              }}
-            >
-              <DoneIcon />
-            </div>
-          );
-        } else {
-          return (
-            <div
-              style={{
-                backgroundColor: "#196462",
-                color: "white",
-                borderRadius: 10,
-                paddingTop: 5,
-                paddingLeft: 5,
-                paddingRight: 5,
-              }}
-            >
-              <ClearIcon />
-            </div>
-          );
-        }
+        return moment(params.row.date + " " + "11:00:00").fromNow();
       },
     },
     {
