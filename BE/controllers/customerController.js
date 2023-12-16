@@ -4,6 +4,7 @@ const Account = require("../models/account");
 const Customer = require("../models/customer");
 const OrderForm = require("../models/orderForm");
 const ApiError = require("../utils/ApiError");
+const { io } = require("socket.io-client");
 
 // each users get their information
 exports.getUserDetails = catchAsync(async (req, res) => {
@@ -77,6 +78,11 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     type: "maintenance",
     price,
     note,
+  });
+  const socketIo = io("http://localhost:3000");
+  socketIo.emit("sendMaintenanceForm", {
+    data: orderForm,
+    garageId: garageId,
   });
   if (orderForm) {
     res.status(200).json({

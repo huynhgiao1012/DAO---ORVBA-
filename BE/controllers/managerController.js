@@ -142,45 +142,48 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
   const accountInfo = await Account.findOne({ phone: phone });
-  const customer = await Customer.findOne({ accountId: accountInfo._id });
-  const currentDay = new Date();
-  const orderForm = await OrderForm.create({
-    customerName,
-    phone,
-    service,
-    address,
-    date: currentDay.toISOString().slice(0, 10),
-    time:
-      currentDay.getHours() +
-      ":" +
-      currentDay.getMinutes() +
-      ":" +
-      (currentDay.getSeconds() + 1),
-    managerId: manager._id,
-    customerId: customer._id,
-    garageId: manager.garageId,
-    imgAf: "None",
-    imgBf: "None",
-    automaker: "None",
-    type: "emergency",
-    price,
-    note,
-  });
-  const socketIo = io("http://localhost:3000");
-  socketIo.emit("sendEmergencyForm", {
-    data: orderForm,
-  });
-  if (orderForm) {
-    res.status(200).json({
-      success: true,
-      message: "Successfull",
-      orderForm: orderForm,
+  if (accountInfo) {
+    const customer = await Customer.findOne({ accountId: accountInfo._id });
+    const currentDay = new Date();
+    const orderForm = await OrderForm.create({
+      customerName,
+      phone,
+      service,
+      address,
+      date: currentDay.toISOString().slice(0, 10),
+      time:
+        currentDay.getHours() +
+        ":" +
+        currentDay.getMinutes() +
+        ":" +
+        (currentDay.getSeconds() + 1),
+      managerId: manager._id,
+      customerId: customer._id,
+      garageId: manager.garageId,
+      imgAf: "None",
+      imgBf: "None",
+      automaker: "None",
+      type: "emergency",
+      price,
+      note,
     });
+    const socketIo = io("http://localhost:3000");
+    socketIo.emit("sendEmergencyForm", {
+      data: orderForm,
+    });
+    if (orderForm) {
+      res.status(200).json({
+        success: true,
+        message: "Successfull",
+        orderForm: orderForm,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "Failed",
+      });
+    }
   } else {
-    res.status(400).json({
-      success: false,
-      message: "Failed",
-    });
   }
 });
 exports.createService = catchAsync(async (req, res) => {

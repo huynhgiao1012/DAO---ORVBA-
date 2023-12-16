@@ -80,6 +80,12 @@ io.on("connection", (socket) => {
       data: data,
     });
   });
+  socket.on("sendMaintenanceForm", ({ data, garageId }) => {
+    io.emit("getEmergencyForm", {
+      data: data,
+      id: garageId,
+    });
+  });
   socket.on("disconnectUser", () => {
     removeUser(socket.id);
   });
