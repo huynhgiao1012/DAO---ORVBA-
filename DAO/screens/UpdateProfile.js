@@ -68,9 +68,14 @@ export default function UpdateProfile() {
       } else if (response.error) {
         console.log('Image picker error: ', response.error);
       } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
-        console.log(response);
-        setSelectedImage(imageUri);
+        let str =
+          'data:' +
+          response.assets[0].type +
+          ';' +
+          'base64' +
+          ',' +
+          response.assets[0].base64;
+        setSelectedImage(str);
       }
     });
   };
