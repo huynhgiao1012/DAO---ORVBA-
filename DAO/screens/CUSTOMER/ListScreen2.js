@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  Modal,
 } from 'react-native';
 import {Rating} from 'react-native-ratings';
 import React from 'react';
@@ -35,7 +36,7 @@ export default function ListScreen2() {
   const [markers, setMarkers] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
   const [cor, setCor] = useState([]);
-  const [getCorCompany] = useGetCorGarageMutation();
+  const [getCorCompany, {isLoading}] = useGetCorGarageMutation();
   const [getCompanyDetail] = useGetGarageDetailMutation();
   const [totalRatings, setTotalRating] = useState(0);
   const [rating, setRating] = useState(0);
@@ -273,124 +274,148 @@ export default function ListScreen2() {
         }}>
         Nearby places in {distanceNum}km
       </Text>
-
-      <FlatList
-        style={{marginBottom: 150}}
-        ItemSeparatorComponent={
-          Platform.OS !== 'android' &&
-          (({highlighted}) => (
-            <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
-          ))
-        }
-        data={markers.length === 0 ? [] : markers}
-        renderItem={({item, index}) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('GarageDetail', {
-                id: item.id,
-                distance: item.distance,
-              })
-            }
-            key={item.id}>
+      {isLoading ? (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#f8f8f8aa',
+              flex: 1,
+            }}>
             <View
               style={{
-                paddingHorizontal: 20,
-                paddingBottom: 10,
-                borderBottomWidth: 1,
-                borderBottomColor: themeColors.gray,
-                marginVertical: 10,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
               }}>
-              <View>
-                <Text
-                  style={{
-                    fontWeight: '900',
-                    fontSize: 20,
-                    color: themeColors.primaryColor7,
-                  }}>
-                  {item.title}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View style={styles.rating}>
-                    <Rating
-                      ratingCount={rating}
-                      type="star"
-                      readonly={true}
-                      startingValue={rating || 0}
-                      imageSize={14}
-                    />
-                    <Text style={styles.ratingTxt}>
-                      {rating || 0} ({totalRatings || 0} Ratings)
-                    </Text>
-                  </View>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      ) : (
+        <FlatList
+          style={{marginBottom: 150}}
+          ItemSeparatorComponent={
+            Platform.OS !== 'android' &&
+            (({highlighted}) => (
+              <View
+                style={[styles.separator, highlighted && {marginLeft: 0}]}
+              />
+            ))
+          }
+          data={markers.length === 0 ? [] : markers}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('GarageDetail', {
+                  id: item.id,
+                  distance: item.distance,
+                })
+              }
+              key={item.id}>
+              <View
+                style={{
+                  paddingHorizontal: 20,
+                  paddingBottom: 10,
+                  borderBottomWidth: 1,
+                  borderBottomColor: themeColors.gray,
+                  marginVertical: 10,
+                }}>
+                <View>
                   <Text
                     style={{
-                      fontSize: 18,
-                      color: themeColors.primaryColor4,
-                      fontWeight: 'bold',
+                      fontWeight: '900',
+                      fontSize: 20,
+                      color: themeColors.primaryColor7,
                     }}>
-                    {item.distance}
+                    {item.title}
                   </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View style={styles.rating}>
+                      <Rating
+                        ratingCount={rating}
+                        type="star"
+                        readonly={true}
+                        startingValue={rating || 0}
+                        imageSize={14}
+                      />
+                      <Text style={styles.ratingTxt}>
+                        {rating || 0} ({totalRatings || 0} Ratings)
+                      </Text>
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        color: themeColors.primaryColor4,
+                        fontWeight: 'bold',
+                      }}>
+                      {item.distance}
+                    </Text>
+                  </View>
+                  <View style={styles.content}>
+                    <Icon name="map-marker" size={24} color="red" />
+                    <Text style={[styles.content_text, {fontStyle: 'italic'}]}>
+                      {item.address}
+                    </Text>
+                  </View>
+                  <View style={styles.content}>
+                    <Icon
+                      name="clock-o"
+                      size={18}
+                      color={themeColors.primaryColor7}
+                    />
+                    <Text style={styles.content_text}>
+                      {item.openTime} - {item.closeTime}
+                    </Text>
+                  </View>
+                  <View style={styles.content}>
+                    <Icon
+                      name="envelope"
+                      size={16}
+                      color={themeColors.primaryColor7}
+                    />
+                    <Text style={styles.content_text}>{item.email}</Text>
+                  </View>
+                  <View style={styles.content}>
+                    <Icon
+                      name="phone"
+                      size={20}
+                      color={themeColors.primaryColor7}
+                    />
+                    <Text style={styles.content_text}>{item.phoneNo}</Text>
+                  </View>
                 </View>
-                <View style={styles.content}>
-                  <Icon name="map-marker" size={24} color="red" />
-                  <Text style={[styles.content_text, {fontStyle: 'italic'}]}>
-                    {item.address}
-                  </Text>
-                </View>
-                <View style={styles.content}>
-                  <Icon
-                    name="clock-o"
-                    size={18}
-                    color={themeColors.primaryColor7}
-                  />
-                  <Text style={styles.content_text}>
-                    {item.openTime} - {item.closeTime}
-                  </Text>
-                </View>
-                <View style={styles.content}>
-                  <Icon
-                    name="envelope"
-                    size={16}
-                    color={themeColors.primaryColor7}
-                  />
-                  <Text style={styles.content_text}>{item.email}</Text>
-                </View>
-                <View style={styles.content}>
-                  <Icon
-                    name="phone"
-                    size={20}
-                    color={themeColors.primaryColor7}
-                  />
-                  <Text style={styles.content_text}>{item.phoneNo}</Text>
+                <View style={{alignSelf: 'flex-end'}}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('Booking', {id: item.id})
+                    }
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: themeColors.primaryColor4,
+                      paddingHorizontal: 10,
+                      paddingVertical: 5,
+                      borderRadius: 10,
+                      marginVertical: 5,
+                    }}>
+                    <Text
+                      style={[styles.content_text, {color: themeColors.white}]}>
+                      BOOKING SERVICE
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <View style={{alignSelf: 'flex-end'}}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Booking', {id: item.id})}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: themeColors.primaryColor4,
-                    paddingHorizontal: 10,
-                    paddingVertical: 5,
-                    borderRadius: 10,
-                    marginVertical: 5,
-                  }}>
-                  <Text
-                    style={[styles.content_text, {color: themeColors.white}]}>
-                    BOOKING SERVICE
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </View>
   );
 }

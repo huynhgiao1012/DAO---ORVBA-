@@ -237,7 +237,6 @@ export default function MeMainHome() {
           style={{height: 400, paddingHorizontal: 10}}
           data={forms.reverse()}
           renderItem={({item}) => {
-            const str = item.date + ' ' + item.time;
             const date = new Date().toISOString().slice(0, 10);
             if (item.date === date) {
               return (
