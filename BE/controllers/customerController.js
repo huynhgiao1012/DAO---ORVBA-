@@ -79,12 +79,12 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     price,
     note,
   });
-  const socketIo = io("http://localhost:3000");
-  socketIo.emit("sendMaintenanceForm", {
-    data: orderForm,
-    garageId: garageId,
-  });
   if (orderForm) {
+    const socketIo = io("http://localhost:3000");
+    socketIo.emit("sendMaintenanceForm", {
+      data: orderForm,
+      garageId: garageId,
+    });
     res.status(200).json({
       success: true,
       message: "Successfull",

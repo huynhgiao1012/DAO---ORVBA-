@@ -500,3 +500,14 @@ exports.upload = catchAsync(async (req, res) => {
     success: true,
   });
 });
+exports.getGarageId = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  if (manager) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      data: manager,
+    });
+  }
+});

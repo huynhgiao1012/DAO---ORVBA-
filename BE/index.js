@@ -7,7 +7,11 @@ const Mongo = require("./config/db");
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 const EmailService = require("./utils/EmailService");
 const catchError = require("./middleware/error");
@@ -81,9 +85,10 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("sendMaintenanceForm", ({ data, garageId }) => {
-    io.emit("getEmergencyForm", {
-      data: data,
-      id: garageId,
+    // console.log(data);
+    // console.log(garageId);
+    io.emit("getMaintenanceForm", {
+      data: { data: data, id: garageId },
     });
   });
   socket.on("disconnectUser", () => {

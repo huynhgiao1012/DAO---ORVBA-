@@ -40,4 +40,5 @@ router.get(
   authorize("mechanic"),
   mechanicController.getMePoint
 );
+
 module.exports = router;
