@@ -4,9 +4,9 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDetailMutation } from "../../services/User";
-import loading from "../../Image/loading.gif";
+import { io } from "socket.io-client";
+
 const Navbar = () => {
-  const { dispatch } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const [getUserDetail] = useGetUserDetailMutation();
   const [data, setData] = useState({
@@ -19,6 +19,20 @@ const Navbar = () => {
     img: "",
   });
   useEffect(() => {
+    // const socketIo = io("http://localhost:3000");
+    // socketIo.on("getEmergencyForm", (data) => {
+    //   if (data) {
+    //     getForms()
+    //       .unwrap()
+    //       .then((payload) => {
+    //         setForms([]);
+    //         setForms((prev) => [...prev, ...payload.orderForm]);
+    //       })
+    //       .catch((error) => console.log(error));
+    //   }
+    // });
+  }, []);
+  useEffect(() => {
     getUserDetail()
       .unwrap()
       .then((payload) => {
@@ -30,6 +44,7 @@ const Navbar = () => {
         }
       });
   }, []);
+
   const logOut = () => {
     localStorage.clear();
     navigate("/login");

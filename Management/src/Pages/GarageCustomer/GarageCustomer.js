@@ -1,4 +1,4 @@
-import "./list.scss";
+import "./style8.scss";
 import Sidebar from "../../components/sidebarMa/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 

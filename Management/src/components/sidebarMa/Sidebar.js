@@ -82,7 +82,7 @@ const Sidebar = () => {
               <span>Order-forms</span>
             </li>
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/garaCustomer"
             style={{ textDecoration: "none" }}
             className={({ isActive }) => (isActive ? "active" : "none")}
@@ -91,7 +91,7 @@ const Sidebar = () => {
               <ListAltIcon className="icon" />
               <span>Customer</span>
             </li>
-          </NavLink>
+          </NavLink> */}
         </ul>
       </div>
       <div className="bottom">

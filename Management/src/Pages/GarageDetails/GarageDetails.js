@@ -12,9 +12,8 @@ import {
 import Text from "../../components/text";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UploadOutlined } from "@ant-design/icons";
 import { IP } from "../../Utils/constants";
-import { Carousel } from "antd";
+import { Carousel, Skeleton } from "antd";
 const contentStyle = {
   height: "160px",
   color: "#fff",
@@ -25,7 +24,7 @@ const contentStyle = {
 };
 const GarageDetails = () => {
   const navigate = useNavigate();
-  const [getGarageDetail] = useGetGarageDetailMutation();
+  const [getGarageDetail, { isLoading }] = useGetGarageDetailMutation();
   const [form] = Form.useForm();
   const [getAllEmployee] = useGetAllEmployeeMutation();
   const [getAllSer] = useGetAllServiceMaMutation();
@@ -115,7 +114,6 @@ const GarageDetails = () => {
       };
     });
   };
-  const onChange = (currentSlide) => {};
   const props = {
     name: "file",
     action: `http://${IP}:3000/api/v1/manager/upload`,
@@ -224,198 +222,209 @@ const GarageDetails = () => {
       <Sidebar />
       <div className="listContainer">
         <Navbar />
-        <Row style={{ marginBottom: 20 }}>
-          <Col span={12}>
-            <Row style={{ margin: 20 }}>
-              <Button
-                onClick={handleOpen}
-                style={{
-                  backgroundColor: "#34acaf",
-                  border: "None",
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-              >
-                Update detail
-              </Button>
-            </Row>
-            <Row style={{ margin: 20 }}>
-              <Col span={12}>
-                <Text data={{ key: "Garage's Name", value: data.name }} />
-                <Text data={{ key: "Phone", value: data.phone }} />
-                <Text data={{ key: "Email", value: data.email }} />
-                <Text data={{ key: "Address", value: data.address }} />
-                <div style={{ width: "90%" }}>
-                  <h3 style={{ color: "#34acaf" }}>Transfering Information</h3>
-                  <p
-                    style={{
-                      backgroundColor: "#f8f8f8",
-                      padding: 10,
-                      color: "#3C3434",
-                      borderRadius: 10,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {data.transferInfo.length === 1
-                      ? data.transferInfo[0].bank
-                      : ""}
-                    <br />
-                    {data.transferInfo.length === 1
-                      ? data.transferInfo[0].num
-                      : ""}
-                    <br />
-                    {data.transferInfo.length === 1
-                      ? data.transferInfo[0].name
-                      : ""}
-                  </p>
-                </div>
-              </Col>
-              <Col span={12}>
-                <Row
+        {isLoading ? (
+          <div style={{ margin: 20 }}>
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+          </div>
+        ) : (
+          <Row style={{ marginBottom: 20 }}>
+            <Col span={12}>
+              <Row style={{ margin: 20 }}>
+                <Button
+                  onClick={handleOpen}
                   style={{
-                    color: "black",
-                    fontStyle: "italic",
-                    margin: "10px 0px",
-                    backgroundColor: "#f8f8f8",
-                    width: "90%",
-                    padding: 10,
+                    backgroundColor: "#34acaf",
+                    border: "None",
+                    color: "white",
+                    fontWeight: "bold",
                   }}
                 >
-                  ID: {data._id}
-                </Row>
-                <Text data={{ key: "Longitude", value: data.longitude }} />
-                <Text data={{ key: "Latitude", value: data.latitude }} />
-                <Text
-                  data={{
-                    key: "Time",
-                    value: data.openTime + " " + "-" + " " + data.closeTime,
-                  }}
-                />
-                <div style={{ width: "90%" }}>
-                  <h3 style={{ color: "#34acaf" }}>Description</h3>
-                  <Input.TextArea
-                    value={data.description}
-                    autoSize={{
-                      minRows: 2,
-                      maxRows: 6,
+                  Update detail
+                </Button>
+              </Row>
+              <Row style={{ margin: 20 }}>
+                <Col span={12}>
+                  <Text data={{ key: "Garage's Name", value: data.name }} />
+                  <Text data={{ key: "Phone", value: data.phone }} />
+                  <Text data={{ key: "Email", value: data.email }} />
+                  <Text data={{ key: "Address", value: data.address }} />
+                  <div style={{ width: "90%" }}>
+                    <h3 style={{ color: "#34acaf" }}>
+                      Transfering Information
+                    </h3>
+                    <p
+                      style={{
+                        backgroundColor: "#f8f8f8",
+                        padding: 10,
+                        color: "#3C3434",
+                        borderRadius: 10,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {data.transferInfo.length === 1
+                        ? data.transferInfo[0].bank
+                        : ""}
+                      <br />
+                      {data.transferInfo.length === 1
+                        ? data.transferInfo[0].num
+                        : ""}
+                      <br />
+                      {data.transferInfo.length === 1
+                        ? data.transferInfo[0].name
+                        : ""}
+                    </p>
+                  </div>
+                </Col>
+                <Col span={12}>
+                  <Row
+                    style={{
+                      color: "black",
+                      fontStyle: "italic",
+                      margin: "10px 0px",
+                      backgroundColor: "#f8f8f8",
+                      width: "90%",
+                      padding: 10,
                     }}
-                    readOnly
+                  >
+                    ID: {data._id}
+                  </Row>
+                  <Text data={{ key: "Longitude", value: data.longitude }} />
+                  <Text data={{ key: "Latitude", value: data.latitude }} />
+                  <Text
+                    data={{
+                      key: "Time",
+                      value: data.openTime + " " + "-" + " " + data.closeTime,
+                    }}
                   />
-                </div>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={11}>
-            <div
-              style={{
-                color: "#3C3434",
-                marginTop: 20,
-                borderLeft: "1px solid #D8E5E5",
-                paddingLeft: 20,
-              }}
-            >
-              <Carousel
-                autoplay
-                style={{ width: 580, margin: "10px 0px", height: 280 }}
+                  <div style={{ width: "90%" }}>
+                    <h3 style={{ color: "#34acaf" }}>Description</h3>
+                    <Input.TextArea
+                      value={data.description}
+                      autoSize={{
+                        minRows: 2,
+                        maxRows: 6,
+                      }}
+                      readOnly
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={11}>
+              <div
+                style={{
+                  color: "#3C3434",
+                  marginTop: 20,
+                  borderLeft: "1px solid #D8E5E5",
+                  paddingLeft: 20,
+                }}
               >
-                {data.img.map((val) => {
-                  return <img src={val} width="100%" height={280} />;
-                })}
-              </Carousel>
-              <h1>Statistics</h1>
-              <Row gutter={16} style={{ marginBottom: 10 }}>
-                <Col span={12}>
-                  <Card
-                    title="TOTAL STAFF"
-                    bordered={true}
-                    style={{ border: "1px solid #98C4C4" }}
-                    headStyle={{
-                      borderBottom: "1px dashed #98C4C4",
-                      color: "#34acaf",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    }}
-                    bodyStyle={{
-                      fontSize: 24,
-                      fontWeight: "bolder",
-                      padding: "10px 20px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {totalEm.length}
-                  </Card>
-                </Col>
-                <Col span={12}>
-                  <Card
-                    title="TOTAL FORM"
-                    bordered={true}
-                    style={{ border: "1px solid #98C4C4" }}
-                    headStyle={{
-                      borderBottom: "1px dashed #98C4C4",
-                      color: "#34acaf",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    }}
-                    bodyStyle={{
-                      fontSize: 24,
-                      fontWeight: "bolder",
-                      padding: "10px 20px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {totalForm.length}
-                  </Card>
-                </Col>
-              </Row>
-              <Row></Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Card
-                    title="TOTAL SERVICE"
-                    bordered={true}
-                    style={{ border: "1px solid #98C4C4" }}
-                    headStyle={{
-                      borderBottom: "1px dashed #98C4C4",
-                      color: "#34acaf",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    }}
-                    bodyStyle={{
-                      fontSize: 24,
-                      fontWeight: "bolder",
-                      padding: "10px 20px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {totalSer.length}
-                  </Card>
-                </Col>
-                <Col span={12}>
-                  <Card
-                    title="TOTAL REVENUE"
-                    bordered={true}
-                    style={{ border: "1px solid #98C4C4" }}
-                    headStyle={{
-                      borderBottom: "1px dashed #98C4C4",
-                      color: "#34acaf",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    }}
-                    bodyStyle={{
-                      fontSize: 24,
-                      fontWeight: "bolder",
-                      padding: "10px 20px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {totalRe}
-                  </Card>
-                </Col>
-              </Row>
-              <Row></Row>
-            </div>
-          </Col>
-        </Row>
+                <Carousel
+                  autoplay
+                  style={{ width: 580, margin: "10px 0px", height: 280 }}
+                >
+                  {data.img.map((val) => {
+                    return <img src={val} width="100%" height={280} />;
+                  })}
+                </Carousel>
+                <h1>Statistics</h1>
+                <Row gutter={16} style={{ marginBottom: 10 }}>
+                  <Col span={12}>
+                    <Card
+                      title="TOTAL STAFF"
+                      bordered={true}
+                      style={{ border: "1px solid #98C4C4" }}
+                      headStyle={{
+                        borderBottom: "1px dashed #98C4C4",
+                        color: "#34acaf",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                      bodyStyle={{
+                        fontSize: 24,
+                        fontWeight: "bolder",
+                        padding: "10px 20px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {totalEm.length}
+                    </Card>
+                  </Col>
+                  <Col span={12}>
+                    <Card
+                      title="TOTAL FORM"
+                      bordered={true}
+                      style={{ border: "1px solid #98C4C4" }}
+                      headStyle={{
+                        borderBottom: "1px dashed #98C4C4",
+                        color: "#34acaf",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                      bodyStyle={{
+                        fontSize: 24,
+                        fontWeight: "bolder",
+                        padding: "10px 20px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {totalForm.length}
+                    </Card>
+                  </Col>
+                </Row>
+                <Row></Row>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Card
+                      title="TOTAL SERVICE"
+                      bordered={true}
+                      style={{ border: "1px solid #98C4C4" }}
+                      headStyle={{
+                        borderBottom: "1px dashed #98C4C4",
+                        color: "#34acaf",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                      bodyStyle={{
+                        fontSize: 24,
+                        fontWeight: "bolder",
+                        padding: "10px 20px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {totalSer.length}
+                    </Card>
+                  </Col>
+                  <Col span={12}>
+                    <Card
+                      title="TOTAL REVENUE"
+                      bordered={true}
+                      style={{ border: "1px solid #98C4C4" }}
+                      headStyle={{
+                        borderBottom: "1px dashed #98C4C4",
+                        color: "#34acaf",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                      bodyStyle={{
+                        fontSize: 24,
+                        fontWeight: "bolder",
+                        padding: "10px 20px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {totalRe}
+                    </Card>
+                  </Col>
+                </Row>
+                <Row></Row>
+              </div>
+            </Col>
+          </Row>
+        )}
       </div>
       <Drawer
         title={"UPDATE DETAIL"}

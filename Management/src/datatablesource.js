@@ -57,7 +57,11 @@ export const mechanicColumns = [
       return (
         <img
           className="cellImg"
-          src="https://img.freepik.com/premium-vector/cute-boy-thinking-cartoon-avatar_138676-2439.jpg"
+          src={
+            params.row.img !== ""
+              ? params.row.img
+              : "https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg"
+          }
           alt="avatar"
         />
       );
