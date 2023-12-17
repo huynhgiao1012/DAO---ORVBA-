@@ -7,6 +7,7 @@ import {
   useGetMaintenanceFormMutation,
   useUpdateFormMutation,
   useFormConfirmMutation,
+  useGetNewMaintenanceFormMutation,
 } from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm, Radio } from "antd";
 import Box from "@mui/material/Box";
@@ -32,23 +33,12 @@ const style = {
 const Datatable = () => {
   const [data, setData] = useState([]);
   const [getAllForm] = useGetMaintenanceFormMutation();
+  const [getNewForm] = useGetNewMaintenanceFormMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const logOut = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
-  const handleOpen = (data) => {
-    setOpen(true);
-    form.setFieldsValue({
-      ...data,
-    });
-  };
-  const handleClose = () => setOpen(false);
-
   const loadData = () => {
     setData([]);
     getAllForm()
@@ -69,7 +59,28 @@ const Datatable = () => {
   useEffect(() => {
     setData([]);
     loadData();
+    getNewForm()
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          logOut();
+        }
+      });
   }, []);
+  const logOut = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+  const handleOpen = (data) => {
+    setOpen(true);
+    form.setFieldsValue({
+      ...data,
+    });
+  };
+  const handleClose = () => setOpen(false);
   const cancelConfirm = (e) => {
     console.log(e);
   };

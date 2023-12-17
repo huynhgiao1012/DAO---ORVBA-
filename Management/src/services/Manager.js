@@ -53,6 +53,11 @@ export const managerApi = createApi({
         url: "/getMaintenanceForm",
       }),
     }),
+    getNewMaintenanceForm: builder.mutation({
+      query: () => ({
+        url: "/getNewMaintenanceForm",
+      }),
+    }),
     getSubService: builder.mutation({
       query: ({ id }) => ({
         url: `/getSubService/${id}`,
@@ -207,4 +212,5 @@ export const {
   useGetAllFormMutation,
   useGetGarageDetailMutation,
   useGetGarageIdMutation,
+  useGetNewMaintenanceFormMutation,
 } = managerApi;

@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDetailMutation } from "../../services/User";
 import io from "socket.io-client";
-import { useGetGarageIdMutation } from "../../services/Manager";
+import { useGetNewMaintenanceFormMutation } from "../../services/Manager";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [getUserDetail] = useGetUserDetailMutation();
-  const [getGarageId] = useGetGarageIdMutation();
+  const [getNewForm] = useGetNewMaintenanceFormMutation();
   const [num, setNum] = useState([]);
-  const [ID, setID] = useState("");
   const [data, setData] = useState({
     _id: "",
     email: "",
@@ -21,25 +20,29 @@ const Navbar = () => {
     role: "",
     img: "",
   });
-  useEffect(() => {
-    // getGarageId()
-    //   .then((payload) => {
-    //     setID(payload.data.data.garageId);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    const socketIo = io.connect("http://localhost:3000");
-    socketIo.on("getMaintenanceForm", (data) => {
-      setNum((prev) => [...prev, data]);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const socketIo = io.connect("http://localhost:3000");
+  //   socketIo.on("getMaintenanceForm", (data) => {
+  //     console.log("data", data);
+  //     setNum((prev) => [...prev, data]);
+  //   });
+  // }, []);
 
   useEffect(() => {
     getUserDetail()
       .unwrap()
       .then((payload) => {
         setData((prev) => ({ ...prev, ...payload.data }));
+      })
+      .catch((error) => {
+        if (error.data.message === "Token is exprired") {
+          logOut();
+        }
+      });
+    getNewForm()
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
       })
       .catch((error) => {
         if (error.data.message === "Token is exprired") {
@@ -61,7 +64,7 @@ const Navbar = () => {
         <div className="items">
           <div className="newForm">
             <span className="num">{num.length}</span>
-            <button className="btn2">NEW MAINTENANCE FORM</button>
+            <button className="btn2">TODAY MAINTENANCE FORM</button>
           </div>
           <button onClick={() => logOut()} className="btn">
             <PowerSettingsNewIcon

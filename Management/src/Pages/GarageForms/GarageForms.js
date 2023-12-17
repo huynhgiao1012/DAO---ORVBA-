@@ -7,7 +7,7 @@ import Datatable3 from "../../components/datatableFormM/Datatable";
 import { Tabs } from "antd";
 const GarageForms = () => {
   const onChange = (key) => {
-    console.log(key);
+    // console.log(key);
   };
   const items = [
     {
@@ -41,6 +41,7 @@ const GarageForms = () => {
             fontWeight: "bold",
             marginBottom: 0,
           }}
+          style={{ height: "100%" }}
         />
       </div>
     </div>
