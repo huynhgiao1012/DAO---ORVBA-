@@ -288,6 +288,32 @@ exports.getMaintenanceForm = catchAsync(async (req, res) => {
     orderForm,
   });
 });
+exports.getNewMaintenanceForm = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  let arr = [];
+  const date = new Date().toISOString().slice(0, 10);
+  const orderForm = await OrderForm.find({
+    garageId: manager.garageId,
+    type: GROUP.MAINTENANCE,
+    date: date,
+  });
+  orderForm.map((val) => {
+    if (
+      val.date === new Date().toISOString().slice(0, 10) ||
+      val.date > new Date().toISOString().slice(0, 10)
+    ) {
+      arr.push(val);
+    }
+  });
+  if (!orderForm) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    arr,
+  });
+});
 exports.getGarageDetail = catchAsync(async (req, res) => {
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
@@ -361,11 +387,10 @@ exports.formConfirm = catchAsync(async (req, res) => {
   const { id } = req.params;
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
-  const orderForm = await OrderForm.findOneAndUpdate(
+  const orderForm = await OrderForm.findByIdAndUpdate(
     id,
     {
       managerId: manager._id,
-      status: FORM_STATUS.BOOKED,
     },
     { new: true }
   );

@@ -77,6 +77,12 @@ router.get(
   authorize("manager"),
   managerController.getMaintenanceForm
 );
+router.get(
+  "/getNewMaintenanceForm",
+  jwtAuth,
+  authorize("manager"),
+  managerController.getNewMaintenanceForm
+);
 router.post(
   "/updateGarage",
   jwtAuth,

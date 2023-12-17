@@ -78,13 +78,14 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     type: "maintenance",
     price,
     note,
+    status: FORM_STATUS.BOOKED,
   });
   if (orderForm) {
-    const socketIo = io("http://localhost:3000");
-    socketIo.emit("sendMaintenanceForm", {
-      data: orderForm,
-      garageId: garageId,
-    });
+    // const socketIo = io("http://localhost:3000");
+    // socketIo.emit("sendMaintenanceForm", {
+    //   data: orderForm,
+    //   garageId: garageId,
+    // });
     res.status(200).json({
       success: true,
       message: "Successfull",
@@ -97,7 +98,23 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     });
   }
 });
-
+exports.getAllFormTime = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { date } = req.body;
+  const orderForm = await OrderForm.find({
+    garageId: id,
+    type: GROUP.MAINTENANCE,
+    status: FORM_STATUS.BOOKED,
+    date: date,
+  });
+  const time = orderForm.map((val) => {
+    return val.time;
+  });
+  res.status(200).json({
+    success: true,
+    time,
+  });
+});
 exports.getUnFeedForm = catchAsync(async (req, res) => {
   const accountId = req.user;
   const customer = await Customer.findOne({ accountId: accountId.id });

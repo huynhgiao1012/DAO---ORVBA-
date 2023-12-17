@@ -10,6 +10,12 @@ router.get(
   authorize("customer"),
   customerController.getUserDetails
 );
+router.post(
+  "/getAllFormTime/:id",
+  jwtAuth,
+  authorize("customer"),
+  customerController.getAllFormTime
+);
 router.get(
   "/getAllForm",
   jwtAuth,
