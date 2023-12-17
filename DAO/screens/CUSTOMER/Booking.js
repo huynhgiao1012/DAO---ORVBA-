@@ -22,6 +22,7 @@ import GetLocation from 'react-native-get-location';
 import {
   useGetCustomerDetailMutation,
   useBookingMaintenanceMutation,
+  useGetAllFormTimeMutation,
 } from '../../services/Customer';
 import {useGetCompanyServiceMutation} from '../../services/Service';
 import {useNavigation} from '@react-navigation/native';
@@ -46,6 +47,7 @@ export default function Booking({route}) {
   const minDate = new Date();
   const [address, setAddress] = useState('');
   const [getUserDetail] = useGetCustomerDetailMutation();
+  const [getAllFormTime] = useGetAllFormTimeMutation();
   const time = ['7:00', '10:00', '13:00', '15:00'];
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
@@ -62,6 +64,7 @@ export default function Booking({route}) {
   const [service, setService] = useState([]);
   const [allService, setAll] = useState([]);
   const [price, setPrice] = useState(0);
+  const [formTime, setTime] = useState([]);
   const {id} = route.params;
   const getCurrentLocation = () => {
     GetLocation.getCurrentPosition({
@@ -109,6 +112,21 @@ export default function Booking({route}) {
         return error;
       });
   }, []);
+  useEffect(() => {
+    setTime([]);
+    const obj = {date: selectedDate.split('/').reverse().join('-')};
+    getAllFormTime({id: id, ...obj})
+      .unwrap()
+      .then(payload => {
+        console.log(payload);
+        setTime(prev => [...prev, ...payload.time]);
+      })
+      .catch(error => {
+        if (error.data.message === 'Token is exprired') {
+          navigation.navigate('Login');
+        }
+      });
+  }, [selectedDate]);
   const AppointmentFill = values => {
     const obj = {
       customerName: values.name,
@@ -276,43 +294,56 @@ export default function Booking({route}) {
                       />
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.titleText}>
-                    <Text style={styles.title}>Available Time</Text>
-                    {errors.time && touched.time && (
-                      <Text style={styles.errorText}> {errors.time} </Text>
-                    )}
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-evenly',
-                      flexWrap: 'wrap',
-                    }}>
-                    {time.map((val, index) => {
-                      return (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            setFieldValue('time', val);
-                            setActive(index);
-                          }}
-                          style={[
-                            index === active
-                              ? styles.buttonActive
-                              : styles.button,
-                          ]}>
-                          <Text
-                            style={[
-                              index === active
-                                ? styles.textActive
-                                : styles.text,
-                            ]}>
-                            {val}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
+                  {selectedDate.length > 0 && (
+                    <View>
+                      <View style={styles.titleText}>
+                        <Text style={styles.title}>Available Time</Text>
+                        {errors.time && touched.time && (
+                          <Text style={styles.errorText}> {errors.time} </Text>
+                        )}
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly',
+                          flexWrap: 'wrap',
+                        }}>
+                        {time.map((val, index) => {
+                          return (
+                            <TouchableOpacity
+                              key={index}
+                              onPress={() => {
+                                setFieldValue('time', val);
+                                setActive(index);
+                              }}
+                              disabled={formTime.includes(val) ? true : false}
+                              style={
+                                formTime.includes(val)
+                                  ? styles.disabledBtn
+                                  : [
+                                      index === active
+                                        ? styles.buttonActive
+                                        : styles.button,
+                                    ]
+                              }>
+                              <Text
+                                style={
+                                  formTime.includes(val)
+                                    ? styles.disabledText
+                                    : [
+                                        index === active
+                                          ? styles.textActive
+                                          : styles.text,
+                                      ]
+                                }>
+                                {val}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  )}
                 </View>
                 <View
                   style={{
@@ -556,6 +587,21 @@ const styles = StyleSheet.create({
   },
   textActive: {
     color: themeColors.white,
+    fontWeight: '700',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  disabledBtn: {
+    borderWidth: 1,
+    borderColor: '#e8e8e8',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 15,
+    width: 70,
+    backgroundColor: themeColors.white,
+  },
+  disabledText: {
+    color: '#e8e8e8',
     fontWeight: '700',
     fontSize: 15,
     textAlign: 'center',

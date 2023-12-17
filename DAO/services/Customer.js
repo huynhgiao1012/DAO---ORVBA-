@@ -34,6 +34,16 @@ export const customerApi = createApi({
         url: '/getAllForm',
       }),
     }),
+    getAllFormTime: builder.mutation({
+      query: ({id, ...payload}) => ({
+        url: `/getAllFormTime/${id}`,
+        method: 'POST',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
     getEmergencyForm: builder.mutation({
       query: () => ({
         url: '/getEmergencyForm',
@@ -86,4 +96,5 @@ export const {
   useGetAllFormMutation,
   useGetEmergencyFormMutation,
   useGetMaintainFormMutation,
+  useGetAllFormTimeMutation,
 } = customerApi;
