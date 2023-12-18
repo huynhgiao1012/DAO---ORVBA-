@@ -297,6 +297,7 @@ exports.getNewMaintenanceForm = catchAsync(async (req, res) => {
     garageId: manager.garageId,
     type: GROUP.MAINTENANCE,
     date: date,
+    status: FORM_STATUS.BOOKED,
   });
   orderForm.map((val) => {
     if (
@@ -391,6 +392,7 @@ exports.formConfirm = catchAsync(async (req, res) => {
     id,
     {
       managerId: manager._id,
+      status: FORM_STATUS.PROCESS,
     },
     { new: true }
   );
