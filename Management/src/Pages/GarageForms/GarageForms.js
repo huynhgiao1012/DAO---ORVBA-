@@ -12,8 +12,8 @@ const GarageForms = () => {
   const items = [
     {
       key: "1",
-      label: "ALL FORMS",
-      children: <Datatable />,
+      label: "MAINTENANCE FORMS",
+      children: <Datatable3 />,
     },
     {
       key: "2",
@@ -22,8 +22,8 @@ const GarageForms = () => {
     },
     {
       key: "3",
-      label: "MAINTENANCE FORMS",
-      children: <Datatable3 />,
+      label: "ALL FORMS",
+      children: <Datatable />,
     },
   ];
   return (

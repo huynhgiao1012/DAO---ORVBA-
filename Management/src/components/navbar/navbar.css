@@ -39,27 +39,30 @@
   border-radius: 10px;
   margin-left: 10px;
 }
-.navbar .wrapper .items .newForm {
-  position: relative;
+.navbar .wrapper .items h2 {
+  padding-top: 11px;
+  color: hsl(184, 91%, 44%);
+  font-size: 20px !important;
+  font-weight: bold !important;
+  font-family: monospace;
+  letter-spacing: 3px !important;
+  cursor: pointer;
+  text-transform: uppercase;
 }
-.navbar .wrapper .items .newForm .num {
-  width: 25px;
-  height: 25px;
-  position: absolute;
-  top: -8px;
-  left: -10px;
-  background-color: red;
-  border-radius: 50px;
-  text-align: center;
-  color: white;
-  vertical-align: middle;
-  font-weight: bold;
+.navbar .wrapper .items h2 {
+  background: linear-gradient(to right, hsl(184, 91%, 44%) 0, hsl(0, 0%, 100%) 10%, hsl(184, 91%, 44%) 20%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 5s infinite linear;
 }
-.navbar .wrapper .items .newForm .btn2 {
-  background-color: #34acaf;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  padding: 5px 20px;
-  font-weight: 700;
+@keyframes shine {
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 600px;
+  }
+  100% {
+    background-position: 800px;
+  }
 }/*# sourceMappingURL=navbar.css.map */

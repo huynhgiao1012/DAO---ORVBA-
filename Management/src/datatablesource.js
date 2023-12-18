@@ -183,6 +183,12 @@ export const serviceColumns2 = [
 export const formColumn = [
   { field: "id", headerName: "ID", flex: 1, headerAlign: "center" },
   {
+    field: "phone",
+    headerName: "Phone",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
     field: "service",
     headerName: "Service Name",
     flex: 1,

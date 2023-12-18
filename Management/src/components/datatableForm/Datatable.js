@@ -43,6 +43,7 @@ const Datatable = () => {
         payload.orderForm.map((val, index) => {
           newArr.push({
             id: val._id,
+            phone: val.phone,
             service: val.service,
             type: val.type,
             status: val.status,
@@ -312,7 +313,7 @@ const Datatable = () => {
         <Form
           form={form}
           name="form"
-          labelCol={{ span: 6 }}
+          labelCol={{ span: 18 }}
           wrapperCol={{ span: 18 }}
           initialValues={{ remember: true }}
           onFinish={onSubmit}

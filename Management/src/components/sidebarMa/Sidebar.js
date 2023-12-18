@@ -3,15 +3,32 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import CarRepairIcon from "@mui/icons-material/CarRepair";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { NavLink, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext } from "react";
-import maintain from "../../Image/maintain.png";
+import { useContext, useEffect, useState } from "react";
+import { useGetNewMaintenanceFormMutation } from "../../services/Manager";
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const navigate = useNavigate();
+  const [num, setNum] = useState([]);
+  const [getNewForm] = useGetNewMaintenanceFormMutation();
+  // const logOut = () => {
+  //   localStorage.clear();
+  //   navigate("/login");
+  // };
+  // useEffect(() => {
+  //   setNum([]);
+  //   getNewForm()
+  //     .unwrap()
+  //     .then((payload) => {
+  //       setNum((prev) => [...prev, ...payload.arr]);
+  //     })
+  //     .catch((error) => {
+  //       if (error.data.message === "Token is exprired") {
+  //         logOut();
+  //       }
+  //     });
+  // }, []);
   return (
     <div className="sidebar">
       <div className="top">
@@ -77,9 +94,48 @@ const Sidebar = () => {
             style={{ textDecoration: "none" }}
             className={({ isActive }) => (isActive ? "active" : "none")}
           >
-            <li>
-              <ListAltIcon className="icon" />
-              <span>Order-forms</span>
+            <li
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+              >
+                <ListAltIcon className="icon" />
+                <span>Order-forms</span>
+              </div>
+              {/* <div
+                style={{
+                  alignSelf: "flex-end",
+                }}
+              >
+                <span
+                  style={{
+                    width: 25,
+                    height: 25,
+
+                    backgroundColor: "red",
+                    borderRadius: 50,
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {num.length}
+                </span>
+              </div> */}
             </li>
           </NavLink>
           {/* <NavLink

@@ -29,6 +29,7 @@ const Navbar = () => {
   // }, []);
 
   useEffect(() => {
+    setNum([]);
     getUserDetail()
       .unwrap()
       .then((payload) => {
@@ -42,7 +43,7 @@ const Navbar = () => {
     getNewForm()
       .unwrap()
       .then((payload) => {
-        console.log(payload);
+        setNum((prev) => [...prev, ...payload.arr]);
       })
       .catch((error) => {
         if (error.data.message === "Token is exprired") {
@@ -62,10 +63,11 @@ const Navbar = () => {
           <h2>Welcome back !</h2>
         </div>
         <div className="items">
-          <div className="newForm">
+          <h2>{num.length} Maintanence Form TODAY</h2>
+          {/* <div className="newForm">
             <span className="num">{num.length}</span>
-            <button className="btn2">TODAY MAINTENANCE FORM</button>
-          </div>
+            <div className="btn2">MAINTENANCE FORM TODAY</div>
+          </div> */}
           <button onClick={() => logOut()} className="btn">
             <PowerSettingsNewIcon
               className="icon"

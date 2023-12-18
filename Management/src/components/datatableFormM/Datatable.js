@@ -18,6 +18,7 @@ import Alert from "@mui/material/Alert";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import moment from "moment";
+import Navbar from "../navbar/Navbar";
 // import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
@@ -34,6 +35,7 @@ const Datatable = () => {
   const [data, setData] = useState([]);
   const [getAllForm] = useGetMaintenanceFormMutation();
   const [getNewForm] = useGetNewMaintenanceFormMutation();
+  const [formMark] = useFormConfirmMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,9 +96,19 @@ const Datatable = () => {
     //     }
     //   });
   };
-  const handleEdit = (id) => {
-    handleOpen(id);
-    setIsEdit(true);
+  const handleMark = (id) => {
+    formMark({ id: id })
+      .unwrap()
+      .then((payload) => {
+        if (payload.success) {
+          loadData();
+        }
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          logOut();
+        }
+      });
   };
   const handleView = (data) => {
     handleOpen(data);
@@ -148,56 +160,7 @@ const Datatable = () => {
       //   });
     }
   };
-  // const handleChange = (SelectChangeEvent) => {
-  //   // settab(SelectChangeEvent.target.value);
-  //   // var newArr = [];
-  //   // getAllUser()
-  //   //   .unwrap()
-  //   //   .then((payload) => {
-  //   //     if (payload.success === true) {
-  //   //       payload.data.map((val) => {
-  //   //         newArr.push({
-  //   //           id: val._id,
-  //   //           username: val.name,
-  //   //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-  //   //           status: val.isActive ? "active" : "inactive",
-  //   //           email: val.email,
-  //   //           phone: val.phone,
-  //   //           role: val.role,
-  //   //           dbId: val._id,
-  //   //         });
-  //   //       });
-  //   //     }
-  //   //     if (SelectChangeEvent.target.value === 20) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "customer") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 30) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "company") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 40) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "admin") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else {
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...newArr]);
-  //   //     }
-  //   //   });
-  // };
+
   const actionColumn = [
     {
       field: "created",
@@ -268,18 +231,20 @@ const Datatable = () => {
             >
               <div className="deleteButton">Delete</div>
             </Popconfirm>
-            <div
+            {/* <div
               className="editButton"
               onClick={() => handleEdit(params.row._id)}
             >
               Edit
-            </div>
-            <div
-              className="editButton"
-              onClick={() => handleEdit(params.row._id)}
-            >
-              Mark
-            </div>
+            </div> */}
+            {params.row.status === "booked" && (
+              <div
+                className="editButton"
+                onClick={() => handleMark(params.row._id)}
+              >
+                Mark
+              </div>
+            )}
           </div>
         );
       },
