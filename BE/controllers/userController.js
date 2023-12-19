@@ -44,9 +44,30 @@ exports.updateUser = catchAsync(async (req, res) => {
     .status(200)
     .json({ success: true, message: "Update successfully", data: user });
 });
+exports.setInActive = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const user = await User.findByIdAndUpdate(
+    id,
+    { isActive: status },
+    { new: true }
+  );
+  if (!user) {
+    throw new ApiError(400, "This user is not available");
+  }
+  res
+    .status(200)
+    .json({ success: true, message: "Update successfully", data: user });
+});
 // admin gets all users
 exports.getAllUser = catchAsync(async (req, res) => {
-  const data = await User.find({});
+  const result = await User.find({});
+  let data = [];
+  result.map((val) => {
+    if (val.role !== ROLES.ADMIN) {
+      data.push(val);
+    }
+  });
   res.status(200).json({
     success: true,
     data,

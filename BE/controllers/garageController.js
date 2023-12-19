@@ -41,54 +41,6 @@ exports.createGarage = catchAsync(async (req, res) => {
     garage,
   });
 });
-// exports.createGarage = catchAsync(async (req, res) => {
-//   const {
-//     name,
-//     email,
-//     phone,
-//     logitude,
-//     latitude,
-//     address,
-//     description,
-//     openTime,
-//     closeTime,
-//   } = req.body;
-//   var password = generator.generateMultiple(1, {
-//     length: 10,
-//     numbers: true,
-//     symbols: true,
-//     lowercase: true,
-//     uppercase: true,
-//     strict: true,
-//   })[0];
-//   const account = await Account.create({
-//     name,
-//     email,
-//     phone,
-//     password,
-//     role: ROLES.MANAGER,
-//   });
-//   const company = await Company.create({
-//     accountId: account.id,
-//     openTime,
-//     closeTime,
-//     long,
-//     lat,
-//     address,
-//   });
-//   await EmailService.sendMail(
-//     process.env.EMAIL,
-//     `${email}`,
-//     "REGISTER COMPANY SUCCESS",
-//     `Your passwors: ${password}`
-//   );
-//   res.status(200).json({
-//     success: true,
-//     message: "Successfull",
-//     account,
-//     company,
-//   });
-// });
 // exports.deleteGarage = catchAsync(async (req, res) => {
 //   const { id } = req.params;
 //   const account = await Garage.findById(id);
@@ -103,29 +55,45 @@ exports.createGarage = catchAsync(async (req, res) => {
 //     data: account,
 //   });
 // });
-// exports.updateCompany = catchAsync(async (req, res) => {
-//   const { id } = req.params;
-//   const { name, phone, openTime, closeTime, long, lat, address } = req.body;
-//   const account = await Account.findByIdAndUpdate(
-//     id,
-//     { name, phone },
-//     { new: true }
-//   );
-//   const company = await Company.findOneAndUpdate(
-//     { accountId: id },
-//     { openTime, closeTime, long, lat, address },
-//     { new: true }
-//   );
-//   if (!account || !company) {
-//     throw new ApiError(400, "This company is not available");
-//   }
-//   res.status(200).json({
-//     success: true,
-//     message: "Update successfully",
-//     accountInfo: account,
-//     companyInfo: company,
-//   });
-// });
+exports.updateGarage = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    email,
+    phone,
+    openTime,
+    closeTime,
+    longitude,
+    latitude,
+    address,
+    description,
+    transferInfo,
+  } = req.body;
+  const gara = await Garage.findByIdAndUpdate(
+    id,
+    {
+      name: name,
+      email: email,
+      phone: phone,
+      openTime: openTime,
+      closeTime: closeTime,
+      longitude: longitude,
+      latitude: latitude,
+      address: address,
+      description: description,
+      transferInfo: transferInfo,
+    },
+    { new: true }
+  );
+  if (!gara) {
+    throw new ApiError(400, "This garage is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Update successfully",
+    garage: gara,
+  });
+});
 
 // admin get all garages
 exports.getAllGarage = catchAsync(async (req, res) => {

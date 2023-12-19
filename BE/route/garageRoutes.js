@@ -47,6 +47,12 @@ router.post(
   authorize("admin"),
   garageController.createManagerAccount
 );
+router.post(
+  "/updateGarage/:id",
+  jwtAuth,
+  authorize("admin"),
+  garageController.updateGarage
+);
 // router.delete(
 //   "/:id",
 //   jwtAuth,

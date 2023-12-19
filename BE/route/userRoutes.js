@@ -11,10 +11,16 @@ router.get(
   userController.getAllUser
 );
 router.get("/detail/:id", jwtAuth, authorize("admin"), userController.getUser);
+router.post(
+  "/setInActive/:id",
+  jwtAuth,
+  authorize("admin"),
+  userController.setInActive
+);
 router.get(
   "/userDetail",
   jwtAuth,
-  authorize("customer", "manager", "mechanic", "accountant"),
+  authorize("customer", "manager", "mechanic", "accountant", "admin"),
   userController.getUserDetails
 );
 
