@@ -28,6 +28,11 @@ export const userApi = createApi({
         url: "/userPoint",
       }),
     }),
+    getAllUser: builder.mutation({
+      query: () => ({
+        url: "/getAllUser",
+      }),
+    }),
     getCompanyAccountDetail: builder.mutation({
       query: () => ({
         url: "/userDetail",
@@ -47,6 +52,16 @@ export const userApi = createApi({
       query: (payload) => ({
         url: `/updateUserPoint`,
         method: "PATCH",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    setInActive: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/setInActive/${id}`,
+        method: "POST",
         body: payload,
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -75,4 +90,6 @@ export const {
   useChangePasswordMutation,
   useUpdateUserPointMutation,
   useUpdateInfoMutation,
+  useGetAllUserMutation,
+  useSetInActiveMutation,
 } = userApi;

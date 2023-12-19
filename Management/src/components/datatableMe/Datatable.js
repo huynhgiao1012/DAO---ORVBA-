@@ -28,8 +28,6 @@ const style = {
 };
 const Datatable = () => {
   const [data, setData] = useState([]);
-  const [tab, settab] = useState(10);
-  const [detail, setDetailUser] = useState({});
   const [getAllMechanic] = useGetAllMechanicMutation();
   const [createMechanicAccount] = useCreateMechanicAccountMutation();
   const [deleteMechanic] = useDeleteMechanicMutation();
@@ -208,7 +206,7 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 300,
+      width: 500,
       headerAlign: "center",
       renderCell: (params) => {
         return (
@@ -255,11 +253,6 @@ const Datatable = () => {
           </p>
         </div>
       </div>
-      {/* <Table
-        columns={mechanicColumns.concat(actionColumn)}
-        dataSource={data}
-        style={{ width: "100%" }}
-      /> */}
       <DataGrid
         className="datagrid"
         rows={data}

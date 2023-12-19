@@ -1,320 +1,210 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  serviceColumns,
-  serviceColumns2,
-  formColumn,
-} from "../../datatablesource";
-import { Link, useNavigate } from "react-router-dom";
+import { garageColumn } from "../../datatablesource";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-// import { useGetAllUserMutation, useGetUserMutation } from "../../services/User";
-import {
-  Select,
-  InputLabel,
-  FormControl,
-  MenuItem,
-  Alert,
-} from "@mui/material";
-import { Col, Form, Input, Row, Drawer, notification } from "antd";
+import { Col, Form, Input, Row, Drawer, Popconfirm, Skeleton } from "antd";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-// import {
-//   useGetCompanyServiceMutation,
-//   useUpdateServiceMutation,
-//   useDeleteServiceMutation,
-//   useAddServiceMutation,
-// } from "../../services/Service";
-// import { useGetAllFormMutation } from "../../services/OrderForm";
-const { TextArea } = Input;
+import {
+  useGetAllGarageMutation,
+  useUpdateGarageMutation,
+  useCreateGarageMutation,
+} from "../../services/Garage";
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 1000,
-  height: 600,
+  width: 800,
   bgcolor: "white",
-  border: "2px solid #6439ff",
+  border: "2px solid #98C4C4",
   boxShadow: 24,
   p: 4,
 };
 const Datatable = () => {
   const [data, setData] = useState([]);
-  const [service, setService] = useState([]);
-  const [orderForm, setForm] = useState([]);
-  // const [getAllUser] = useGetAllUserMutation();
-  // const [getService] = useGetCompanyServiceMutation();
-  // const [deleteService] = useDeleteServiceMutation();
-  // const [getAllForm] = useGetAllFormMutation();
-  // const [updateService] = useUpdateServiceMutation();
-  // const [addService] = useAddServiceMutation();
-  const [serviceId, setServiceId] = useState("");
-  const [isCreate, setIsCreate] = useState(false);
+  const [getAllGarage, { isLoading }] = useGetAllGarageMutation();
+  const [updateGarage] = useUpdateGarageMutation();
+  const [createGarage] = useCreateGarageMutation();
+  const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  // const handleOpen = (id) => {
-  //   if (isService) {
-  //     setOpen(true);
-  //     getService({ id: id })
-  //       .unwrap()
-  //       .then((payload) => {
-  //         setService([]);
-  //         let newArr = [];
-  //         payload.data.map((val, index) => {
-  //           newArr.push({
-  //             id: val._id,
-  //             service: val.type,
-  //             description: val.description,
-  //             price: val.price,
-  //           });
-  //         });
-  //         setService((prev) => [...prev, ...newArr]);
-  //       })
-  //       .catch((error) => console.log(error));
-  //   } else {
-  //     setIsModalOpen(true);
-  //     getAllForm({ id: id })
-  //       .unwrap()
-  //       .then((payload) => {
-  //         console.log(payload);
-  //         setForm([]);
-  //         let newArr = [];
-  //         payload.data.map((val, index) => {
-  //           newArr.push({
-  //             id: val._id,
-  //             cusName: val.customerId.name,
-  //             cusPhone: val.customerId.phone,
-  //             cusAdd: val.address,
-  //             serName: val.serviceId.type,
-  //             date: val.date.slice(0, 9).split("-").reverse().join("/"),
-  //             price: val.price,
-  //             isPaid: val.isPaid === true ? "Paid" : "Unpaid",
-  //           });
-  //         });
-  //         setForm((prev) => [...prev, ...newArr]);
-  //       })
-  //       .catch((error) => console.log(error));
-  //   }
-  // };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const logOut = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+  const handleOpen = (data) => {
+    setOpen(true);
+    form.setFieldsValue({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      openTime: data.openTime,
+      closeTime: data.closeTime,
+      description: data.description,
+      bank: data.bank,
+      num: data.num,
+      accName: data.accName,
+    });
+  };
   const handleClose = () => {
     setOpen(false);
     setIsModalOpen(false);
-    setIsCreate(false);
     form.resetFields();
   };
 
   const loadData = () => {
     setData([]);
-    // getAllUser()
-    //   .unwrap()
-    //   .then((payload) => {
-    //     if (payload.success === true) {
-    //       let newArr = [];
-    //       payload.data.map((val, index) => {
-    //         if (val.role === "company") {
-    //           console.log(val);
-    //           newArr.push({
-    //             id: index,
-    //             garage: val.name,
-    //             garageId: val._id,
-    //           });
-    //         }
-    //       });
-    //       setData((prev) => [...prev, ...newArr]);
-    //     }
-    //   });
+    getAllGarage()
+      .unwrap()
+      .then((payload) => {
+        var newArr = [];
+        payload.data.map((val) => {
+          newArr.push({
+            id: val._id,
+            name: val.name,
+            email: val.email,
+            phone: val.phone,
+            address: val.address,
+            latitude: val.latitude,
+            longitude: val.longitude,
+            openTime: val.openTime,
+            closeTime: val.closeTime,
+            description: val.description,
+            bank: val.transferInfo[0].bank,
+            num: val.transferInfo[0].num,
+            accName: val.transferInfo[0].name,
+          });
+        });
+        setData((prev) => [...prev, ...newArr]);
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          logOut();
+        }
+      });
   };
   useEffect(() => {
     setData([]);
-    // getAllUser()
+    loadData();
+  }, []);
+  const cancelConfirm = (e) => {
+    console.log(e);
+  };
+  const handleDelete = async (id) => {
+    // await deleteMechanic({ id: id })
     //   .unwrap()
     //   .then((payload) => {
-    //     if (payload.success === true) {
-    //       let newArr = [];
-    //       payload.data.map((val, index) => {
-    //         if (val.role === "company") {
-    //           newArr.push({
-    //             id: index,
-    //             garage: val.name,
-    //             garageId: val._id,
-    //           });
-    //         }
-    //       });
-    //       setData((prev) => [...prev, ...newArr]);
+    //     if (payload.success) {
+    //       <Alert severity="success">{payload.message}</Alert>;
+    //       loadData();
     //     }
     //   });
-    // if (getAllUser.error) {
-    //   <Alert severity="error">
-    //     {getAllUser.error.data.message}...Please login again !
-    //   </Alert>;
-    //   localStorage.clear();
-    //   navigate("/login");
-    // }
-  }, []);
-
-  const handleDelete = (id) => {
-    // deleteService({ id: id })
-    //   .unwrap()
-    //   .then((payload) => {
-    //     if (payload.success === true) {
-    //       notification.open({
-    //         message: "Delete service",
-    //         description: payload.message,
-    //       });
-    //       handleClose();
-    //     }
-    //   })
-    //   .catch((error) => console.log(error));
   };
-  const handleViewService = (id) => {
-    // setOpen(true);
-    // getService({ id: id })
-    //   .unwrap()
-    //   .then((payload) => {
-    //     setService([]);
-    //     let newArr = [];
-    //     payload.data.map((val, index) => {
-    //       newArr.push({
-    //         id: val._id,
-    //         garageId: val.accountId,
-    //         service: val.type,
-    //         description: val.description,
-    //         price: val.price,
-    //       });
-    //     });
-    //     form.setFieldsValue({
-    //       GarageId: id,
-    //     });
-    //     setService((prev) => [...prev, ...newArr]);
-    //   })
-    //   .catch((error) => console.log(error));
+  const handleEdit = (data) => {
+    setIsEdit(true);
+    handleOpen(data);
   };
-  const handleViewForm = (id) => {
+  const handleView = (data) => {
+    handleOpen(data);
+    setIsEdit(false);
+  };
+  const handleCreate = () => {
     setIsModalOpen(true);
-    // getAllForm({ id: id })
-    //   .unwrap()
-    //   .then((payload) => {
-    //     console.log(payload);
-    //     setForm([]);
-    //     let newArr = [];
-    //     payload.data.map((val, index) => {
-    //       newArr.push({
-    //         id: val._id,
-    //         cusName: val.customerId.name,
-    //         cusPhone: val.customerId.phone,
-    //         cusAdd: val.address,
-    //         serName: val.serviceId.type,
-    //         date: val.date.slice(0, 9).split("-").reverse().join("/"),
-    //         price: val.price,
-    //         isPaid: val.isPaid === true ? "Paid" : "Unpaid",
-    //       });
-    //     });
-    //     setForm((prev) => [...prev, ...newArr]);
-    //   })
-    //   .catch((error) => console.log(error));
+    setOpen(false);
+    setIsEdit(false);
   };
-
-  const createService = () => {
-    form.setFieldsValue({
-      Id: "",
-      Service: "",
-      Description: "",
-      Price: "",
-    });
-    setIsCreate(true);
-  };
-
-  const viewSevice = (id) => {
-    service.map((val) => {
-      if (val.id === id[0]) {
-        form.setFieldsValue({
-          Id: val.id,
-          Service: val.service,
-          Description: val.description,
-          Price: val.price,
+  const onSubmit = async (value) => {
+    const obj = {
+      name: value.name,
+      email: value.email,
+      phone: value.phone,
+      openTime: value.openTime,
+      closeTime: value.closeTime,
+      longitude: value.longitude,
+      latitude: value.latitude,
+      address: value.address,
+      description: value.description,
+      transferInfo: [
+        {
+          bank: value.bank,
+          name: value.accName,
+          num: value.num,
+        },
+      ],
+    };
+    console.log(obj);
+    if (isEdit) {
+      await updateGarage({
+        id: value.id,
+        ...obj,
+      })
+        .unwrap()
+        .then((payload) => {
+          if (payload.success === true) {
+            setOpen(false);
+            alert(payload.message);
+            loadData();
+          }
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
         });
-      }
-    });
-  };
-  const onSubmit = async (values) => {
-    // if (isCreate === false) {
-    //   await updateService({
-    //     id: values.Id,
-    //     type: values.Service,
-    //     price: values.Price,
-    //     description: values.Description,
-    //   })
-    //     .unwrap()
-    //     .then(async (payload) => {
-    //       if (payload.success === true) {
-    //         notification.open({
-    //           message: "Update service",
-    //           description: "Success",
-    //         });
-    //         handleClose();
-    //       } else {
-    //         notification.open({
-    //           message: "Update service",
-    //           description: "False",
-    //         });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       if (error) {
-    //         notification.open({
-    //           message: "Update service",
-    //           description: "False",
-    //         });
-    //       }
-    //     });
-    // } else {
-    //   await addService({
-    //     id: values.GarageId,
-    //     type: values.Service,
-    //     price: values.Price,
-    //     description: values.Description,
-    //   })
-    //     .unwrap()
-    //     .then((payload) => {
-    //       if (payload.success === true) {
-    //         notification.open({
-    //           message: "Create service",
-    //           description: "Success",
-    //         });
-    //         handleClose();
-    //       } else {
-    //         notification.open({
-    //           message: "Update service",
-    //           description: "False",
-    //         });
-    //       }
-    //     })
-    //     .catch((error) => console.log(error));
-    // }
+    } else {
+      await createGarage({ ...obj })
+        .unwrap()
+        .then((payload) => {
+          if (payload.success === true) {
+            setOpen(false);
+            alert(payload.message);
+            handleClose();
+            loadData();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    }
   };
   const actionColumn = [
     {
       field: "action",
-      headerName: "Action",
-      width: 500,
+      headerName: "Garage Action",
+      width: 250,
+      headerAlign: "center",
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <div
-              className="viewButton"
-              onClick={() => handleViewService(params.row.garageId)}
-            >
-              View Service
+            <div className="viewButton" onClick={() => handleView(params.row)}>
+              View
             </div>
-            <div
-              className="viewButton"
-              onClick={() => handleViewForm(params.row.garageId)}
+            <Popconfirm
+              title="DELETE ACCOUNT"
+              description="Are you sure to delete?"
+              onConfirm={() => handleDelete(params.row.id)}
+              onCancel={cancelConfirm}
+              okText="Yes"
+              cancelText="No"
             >
-              View Order Form
+              <div className="deleteButton">Delete</div>
+            </Popconfirm>
+            <div className="activeBtn" onClick={() => handleEdit(params.row)}>
+              Edit
             </div>
           </div>
         );
@@ -324,14 +214,46 @@ const Datatable = () => {
 
   return (
     <div className="datatable">
-      <DataGrid
-        className="datagrid"
-        rows={data}
-        columns={serviceColumns.concat(actionColumn)}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
-        disableVirtualization
-      />
+      <div className="datatableTitle">
+        <button
+          onClick={handleCreate}
+          style={{
+            backgroundColor: "#34acaf",
+            border: "none",
+            color: "white",
+            fontWeight: "bold",
+            fontSize: 16,
+            padding: "5px 20px",
+            borderRadius: 10,
+          }}
+        >
+          Create Garage
+        </button>
+      </div>
+      {isLoading ? (
+        <div style={{ margin: 20 }}>
+          <Skeleton active />
+          <Skeleton active />
+          <Skeleton active />
+          <Skeleton active />
+        </div>
+      ) : (
+        <DataGrid
+          className="datagrid"
+          rows={data}
+          columns={garageColumn.concat(actionColumn)}
+          pageSize={9}
+          rowsPerPageOptions={[9]}
+          disableVirtualization
+          rowSelection={false}
+          sx={{
+            boxShadow: 2,
+            border: 2,
+            borderColor: "white",
+          }}
+        />
+      )}
+      {/* modal to create garage */}
       <div>
         <Modal
           open={isModalOpen}
@@ -340,160 +262,224 @@ const Datatable = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <DataGrid
-              className="datagrid"
-              rows={orderForm}
-              columns={formColumn}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-              disableVirtualization
-            />
-          </Box>
-        </Modal>
-      </div>
-      <Drawer
-        title={"SERVICE"}
-        width={910}
-        onClose={handleClose}
-        open={open}
-        bodyStyle={{
-          paddingBottom: 80,
-          marginTop: 10,
-        }}
-      >
-        <Typography
-          style={{ fontSize: 14, fontStyle: "italic", color: "#bbbbbb" }}
-        >
-          *Click this button to create service*
-        </Typography>
-        <Button
-          onClick={createService}
-          style={{
-            backgroundColor: "#6439ff",
-            color: "white",
-            marginBottom: 20,
-            width: 220,
-          }}
-        >
-          Create Service
-        </Button>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <DataGrid
-            className="datagrid"
-            rows={service}
-            columns={serviceColumns2}
-            pageSize={9}
-            rowsPerPageOptions={[9]}
-            disableVirtualization
-            onRowSelectionModelChange={(item) => {
-              viewSevice(item);
-              setServiceId(item[0]);
-            }}
-            disableMultipleSelection={true}
-          />
-          <Form
-            form={form}
-            name="form"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 30 }}
-            initialValues={{ remember: true }}
-            onFinish={onSubmit}
-            autoComplete="off"
-            layout="vertical"
-            style={{ marginLeft: 20 }}
-          >
-            <Row gutter={16}>
-              <Col span={24}>
-                <Typography
-                  style={{
-                    color: "#6439ff",
-                    fontWeight: "bolder",
-                    fontSize: 20,
-                    marginBottom: 10,
-                  }}
-                >
-                  Service Detail
-                </Typography>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  name="Id"
-                  label="Id"
-                  style={{ fontWeight: "bolder" }}
-                >
-                  <Input
-                    style={{
-                      border: "1px solid #100444",
-                      width: 150,
-                      color: "#e7e7e7",
-                    }}
-                    readOnly
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="GarageId"
-                  label="GarageId"
-                  style={{ fontWeight: "bolder" }}
-                >
-                  <Input
-                    style={{
-                      border: "1px solid #100444",
-                      width: 140,
-                      color: "#e7e7e7",
-                    }}
-                    readOnly
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form.Item
-                  name="Service"
-                  label="Service"
-                  style={{ fontWeight: "bolder" }}
-                >
-                  <Input style={{ border: "1px solid #100444", width: 300 }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form.Item
-                  name="Description"
-                  label="Description"
-                  style={{ fontWeight: "bolder" }}
-                >
-                  <TextArea
-                    style={{ border: "1px solid #100444", width: 300 }}
-                    autoSize={{ minRows: 2, maxRows: 6 }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form.Item
-                  name="Price"
-                  label="Price"
-                  style={{ fontWeight: "bolder" }}
-                >
-                  <Input style={{ border: "1px solid #100444", width: 300 }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
+            <Typography
+              style={{
+                textAlign: "center",
+                color: "#3C3434",
+                fontWeight: "bold",
+                marginBottom: 20,
+                fontSize: 22,
+              }}
+            >
+              ADD NEW GARAGE
+            </Typography>
+            <Form
+              form={form}
+              name="form"
+              labelCol={{ span: 18 }}
+              initialValues={{ remember: true }}
+              wrapperCol={{ span: 24 }}
+              onFinish={onSubmit}
+              autoComplete="off"
+              layout="vertical"
+            >
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Form.Item
+                    name="name"
+                    label="Name"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="email"
+                    label="Email"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="phone"
+                    label="Phone"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Form.Item
+                    name="longitude"
+                    label="Longitude"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="latitude"
+                    label="Latitude"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="openTime"
+                    label="Open Time"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Form.Item
+                    name="closeTime"
+                    label="Close Time"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="address"
+                    label="Address"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input.TextArea
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                      autoSize={{
+                        minRows: 2,
+                        maxRows: 4,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="bank"
+                    label="Bank"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={8}>
+                  <Form.Item
+                    name="num"
+                    label="Card Number"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="accName"
+                    label="Account Holder"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name="description"
+                    label="Description"
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    <Input.TextArea
+                      style={{
+                        border: "1px solid #D8E5E5",
+                        width: "100%",
+                        color: "#3C3434",
+                      }}
+                      autoSize={{
+                        minRows: 2,
+                        maxRows: 3,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
                 <Button
                   type="primary"
                   htmlType="submit"
@@ -501,29 +487,278 @@ const Datatable = () => {
                   style={{
                     textAlign: "center",
                     color: "white",
-                    backgroundColor: "#6439ff",
+                    backgroundColor: "#34acaf",
                     width: "100%",
+                    fontWeight: "bold",
+                    border: "none",
+                    marginTop: 20,
+                    height: 40,
                   }}
                 >
                   Submit
                 </Button>
-              </Col>
-              <Col span={12}>
-                <Button
-                  onClick={() => handleDelete(serviceId)}
+              </Row>
+            </Form>
+          </Box>
+        </Modal>
+      </div>
+      {/* view + edit garage */}
+      <Drawer
+        title={"GARAGE DETAIL"}
+        width={700}
+        onClose={handleClose}
+        open={open}
+        bodyStyle={{
+          paddingBottom: 80,
+        }}
+      >
+        <Form
+          form={form}
+          name="form"
+          labelCol={{ span: 18 }}
+          initialValues={{ remember: true }}
+          wrapperCol={{ span: 24 }}
+          onFinish={onSubmit}
+          autoComplete="off"
+          layout="vertical"
+        >
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="id" label="ID" style={{ fontWeight: "bolder" }}>
+                <Input
                   style={{
-                    textAlign: "center",
-                    color: "white",
-                    backgroundColor: "#6439ff",
+                    border: "1px solid #D8E5E5",
                     width: "100%",
+                    color: "#3C3434",
                   }}
-                >
-                  Delete
-                </Button>
-              </Col>
+                  readOnly
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="email"
+                label="Email"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="name"
+                label="Name"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="phone"
+                label="Phone"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="description"
+                label="Description"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input.TextArea
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                  autoSize={{
+                    minRows: 2,
+                    maxRows: 3,
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="address"
+                label="Address"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input.TextArea
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                  autoSize={{
+                    minRows: 2,
+                    maxRows: 4,
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="longitude"
+                label="Longitude"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="latitude"
+                label="Latitude"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="openTime"
+                label="Open Time"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="closeTime"
+                label="Close Time"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="bank"
+                label="Bank"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="num"
+                label="Card Number"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}></Col>
+            <Col span={12}>
+              <Form.Item
+                name="accName"
+                label="Account Holder"
+                style={{ fontWeight: "bolder" }}
+              >
+                <Input
+                  style={{
+                    border: "1px solid #D8E5E5",
+                    width: "100%",
+                    color: "#3C3434",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          {isEdit && (
+            <Row>
+              <Button
+                type="primary"
+                htmlType="submit"
+                form="form"
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  backgroundColor: "#34acaf",
+                  width: "100%",
+                  fontWeight: "bold",
+                  border: "none",
+                  marginTop: 20,
+                  height: 40,
+                }}
+              >
+                Submit
+              </Button>
             </Row>
-          </Form>
-        </div>
+          )}
+        </Form>
       </Drawer>
     </div>
   );

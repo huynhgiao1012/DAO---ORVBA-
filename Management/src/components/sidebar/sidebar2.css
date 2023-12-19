@@ -9,7 +9,6 @@
   align-items: center;
   justify-content: center;
   background-color: #3cbcc4;
-  padding: 10px 0px;
 }
 .sidebar .top .name {
   font-size: 16px;
@@ -24,6 +23,14 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
+.sidebar .center ul .title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #3c3434;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-style: oblique;
 }
 .sidebar .center ul .active li {
   display: flex;
@@ -86,4 +93,4 @@
 }
 .sidebar .bottom .colorOption:nth-child(2) {
   background-color: #333;
-}/*# sourceMappingURL=sidebar.css.map */
+}/*# sourceMappingURL=sidebar2.css.map */

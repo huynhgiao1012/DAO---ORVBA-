@@ -1,3 +1,4 @@
+import "./style/login.scss";
 import { notification } from "antd";
 import {
   GlobalOutlined,
@@ -8,49 +9,26 @@ import {
 } from "@ant-design/icons";
 import * as React from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import logo from "../../Image/logo.png";
-import blue from "@mui/material/colors/blue";
+import car2 from "../../Image/car2.gif";
 import { useLoginMutation } from "../../services/Auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Row, Col } from "antd";
 function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="black" align="center" {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        DAO Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
+      DAO Website - {new Date().getFullYear()}
     </Typography>
   );
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
-
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: blue[500],
-    },
-  },
-});
 
 export default function LoginComponent() {
   const [login] = useLoginMutation();
@@ -83,7 +61,7 @@ export default function LoginComponent() {
               description: "Successfully",
               icon: <DownOutlined style={{ color: "green" }} />,
             });
-            navigate("/home");
+            navigate("/adminProfile");
             localStorage.setItem("token", payload.token);
           } else if (payload.role === "manager") {
             notification.open({
@@ -114,63 +92,113 @@ export default function LoginComponent() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container
-        component="main"
-        maxWidth="xs"
-        style={{ backgroundColor: "white", height: "100vh", padding: 30 }}
-      >
-        <CssBaseline />
-        <Box
-          sx={{
+    <Container
+      component="main"
+      maxWidth="100%"
+      style={{ backgroundColor: "white", height: "100vh" }}
+    >
+      <Row>
+        <Col
+          span={14}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <h2
+            style={{
+              fontWeight: "bold",
+              fontSize: 100,
+              textTransform: "uppercase",
+              color: "#3cbcc4",
+            }}
+          >
+            DAO
+          </h2>
+          <h3 className="animationText">ONROAD VEHICLE BREAKDOWN ASSISTANCE</h3>
+          <img
+            src={car2}
+            style={{
+              width: "65%",
+              height: "65%",
+              objectFit: "cover",
+            }}
+          />
+        </Col>
+        <Col
+          span={10}
+          style={{
+            backgroundColor: "#fffafa",
+            height: "100vh",
             display: "flex",
             flexDirection: "column",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <img src={logo} style={{ width: 200, height: 200 }} />
-          <Typography component="h1" variant="h3" style={{ color: "#F2A902" }}>
-            Sign in
-          </Typography>
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "70%",
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              style={{ backgroundColor: "#F2A902" }}
+            <Typography
+              component="h1"
+              variant="h4"
+              style={{ color: "#34acaf", fontWeight: "bold" }}
             >
-              Sign In
-            </Button>
+              SIGN IN
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 5 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                name="email"
+                autoComplete="email"
+                placeholder="Email Address"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                type="password"
+                id="password"
+                placeholder="Password"
+                autoComplete="current-password"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                style={{
+                  backgroundColor: "#3cbcc4",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  border: "3px solid white",
+                }}
+              >
+                Sign In
+              </Button>
+            </Box>
+            <Copyright sx={{ mt: 5, mb: 4 }} />
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+        </Col>
+      </Row>
+    </Container>
   );
 }

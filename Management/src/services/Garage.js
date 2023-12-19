@@ -33,6 +33,31 @@ export const garageApi = createApi({
         url: "/getSpecificCorGarage",
       }),
     }),
+    getAllGarage: builder.mutation({
+      query: () => ({
+        url: "/getAllGarage",
+      }),
+    }),
+    updateGarage: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/updateGarage/${id}`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
+    createGarage: builder.mutation({
+      query: (payload) => ({
+        url: `/create`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
   }),
 });
 
@@ -42,4 +67,7 @@ export const {
   useGetCorGarageMutation,
   useGetGarageDetailMutation,
   useGetSpecificCorGarageMutation,
+  useGetAllGarageMutation,
+  useUpdateGarageMutation,
+  useCreateGarageMutation,
 } = garageApi;

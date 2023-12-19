@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Layout, Menu, Dropdown } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useTranslation, withTranslation } from "react-i18next";
-import logo from "../../Image/logo.png";
 import Home from "../../Pages/home/Home";
 import Mechanic from "../../Pages/Mechanic/Mechanic";
 import Accountant from "../../Pages/Accountant/Accountant";
@@ -10,28 +8,18 @@ import GarageService from "../../Pages/GarageService/GarageService";
 import GarageDetails from "../../Pages/GarageDetails/GarageDetails";
 import GarageCustomer from "../../Pages/GarageCustomer/GarageCustomer";
 import GarageForms from "../../Pages/GarageForms/GarageForms";
+import AdminProfile from "../../Pages/Admin/AdminProfile";
+import AccountMana from "../../Pages/Admin/AccountMana";
+import GarageMana from "../../Pages/Admin/GarageMana";
 import MyProfile from "../../Pages/MyProfile/MyProfile";
 import ManagerHome from "../../Pages/mHome/index";
 import Login from "../../Pages/Login/index";
 import List from "../../Pages/list/List";
 import ListService from "../../Pages/ListService/List";
-import Single from "../../Pages/single/Single";
-import New from "../../Pages/new/New";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { productInputs, userInputs } from "../../formSource";
+import { Routes, Route } from "react-router-dom";
 import "../../style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
-const { Header, Content, Sider } = Layout;
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  };
-}
-
 const DefaultLayoutComponent = () => {
   const { i18n } = useTranslation();
   const { darkMode } = useContext(DarkModeContext);
@@ -76,6 +64,15 @@ const DefaultLayoutComponent = () => {
         </Route>
         <Route path="myProfile">
           <Route index element={<MyProfile />} />
+        </Route>
+        <Route path="adminProfile">
+          <Route index element={<AdminProfile />} />
+        </Route>
+        <Route path="account">
+          <Route index element={<AccountMana />} />
+        </Route>
+        <Route path="garageManagement">
+          <Route index element={<GarageMana />} />
         </Route>
       </Routes>
     </div>
