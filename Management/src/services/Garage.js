@@ -38,6 +38,11 @@ export const garageApi = createApi({
         url: "/getAllGarage",
       }),
     }),
+    getAllManager: builder.mutation({
+      query: ({ id }) => ({
+        url: `/getAllManager/${id}`,
+      }),
+    }),
     updateGarage: builder.mutation({
       query: ({ id, ...payload }) => ({
         url: `/updateGarage/${id}`,
@@ -58,6 +63,16 @@ export const garageApi = createApi({
         },
       }),
     }),
+    createManagerAccount: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/createManagerAccount/${id}`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
   }),
 });
 
@@ -70,4 +85,6 @@ export const {
   useGetAllGarageMutation,
   useUpdateGarageMutation,
   useCreateGarageMutation,
+  useGetAllManagerMutation,
+  useCreateManagerAccountMutation,
 } = garageApi;

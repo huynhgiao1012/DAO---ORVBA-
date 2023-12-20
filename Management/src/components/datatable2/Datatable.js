@@ -1,9 +1,18 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { garageColumn } from "../../datatablesource";
+import { garageColumn, banksData } from "../../datatablesource";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Col, Form, Input, Row, Drawer, Popconfirm, Skeleton } from "antd";
+import {
+  Col,
+  Form,
+  Input,
+  Row,
+  Drawer,
+  Popconfirm,
+  Skeleton,
+  Select,
+} from "antd";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -23,6 +32,7 @@ const style = {
   border: "2px solid #98C4C4",
   boxShadow: 24,
   p: 4,
+  zIndex: 10,
 };
 const Datatable = () => {
   const [data, setData] = useState([]);
@@ -34,7 +44,6 @@ const Datatable = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const logOut = () => {
     localStorage.clear();
     navigate("/login");
@@ -125,6 +134,12 @@ const Datatable = () => {
     setIsEdit(false);
   };
   const onSubmit = async (value) => {
+    let bankNum = "";
+    banksData.forEach((val) => {
+      if (value.bank === val.value) {
+        bankNum = val.label;
+      }
+    });
     const obj = {
       name: value.name,
       email: value.email,
@@ -137,13 +152,12 @@ const Datatable = () => {
       description: value.description,
       transferInfo: [
         {
-          bank: value.bank,
+          bank: bankNum,
           name: value.accName,
           num: value.num,
         },
       ],
     };
-    console.log(obj);
     if (isEdit) {
       await updateGarage({
         id: value.id,
@@ -260,6 +274,7 @@ const Datatable = () => {
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          style={{ zIndex: 10 }}
         >
           <Box sx={style}>
             <Typography
@@ -288,6 +303,13 @@ const Datatable = () => {
                   <Form.Item
                     name="name"
                     label="Name"
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                      { min: 5 },
+                    ]}
                     style={{ fontWeight: "bolder" }}
                   >
                     <Input
@@ -304,6 +326,12 @@ const Datatable = () => {
                     name="email"
                     label="Email"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "email",
+                      },
+                    ]}
                   >
                     <Input
                       style={{
@@ -319,6 +347,13 @@ const Datatable = () => {
                     name="phone"
                     label="Phone"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                      { min: 10, max: 12 },
+                    ]}
                   >
                     <Input
                       style={{
@@ -336,6 +371,12 @@ const Datatable = () => {
                     name="longitude"
                     label="Longitude"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "double",
+                      },
+                    ]}
                   >
                     <Input
                       style={{
@@ -351,6 +392,12 @@ const Datatable = () => {
                     name="latitude"
                     label="Latitude"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "double",
+                      },
+                    ]}
                   >
                     <Input
                       style={{
@@ -366,6 +413,12 @@ const Datatable = () => {
                     name="openTime"
                     label="Open Time"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                    ]}
                   >
                     <Input
                       style={{
@@ -383,6 +436,12 @@ const Datatable = () => {
                     name="closeTime"
                     label="Close Time"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                    ]}
                   >
                     <Input
                       style={{
@@ -398,6 +457,13 @@ const Datatable = () => {
                     name="address"
                     label="Address"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                      { min: 10 },
+                    ]}
                   >
                     <Input.TextArea
                       style={{
@@ -417,13 +483,30 @@ const Datatable = () => {
                     name="bank"
                     label="Bank"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                    ]}
                   >
-                    <Input
+                    <Select
+                      showSearch
                       style={{
-                        border: "1px solid #D8E5E5",
                         width: "100%",
-                        color: "#3C3434",
+                        zIndex: 1,
                       }}
+                      placeholder="Select bank"
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        (option?.label ?? "").includes(input)
+                      }
+                      filterSort={(optionA, optionB) =>
+                        (optionA?.label ?? "")
+                          .toLowerCase()
+                          .localeCompare((optionB?.label ?? "").toLowerCase())
+                      }
+                      options={banksData}
                     />
                   </Form.Item>
                 </Col>
@@ -434,6 +517,13 @@ const Datatable = () => {
                     name="num"
                     label="Card Number"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                      { min: 10, max: 19 },
+                    ]}
                   >
                     <Input
                       style={{
@@ -449,6 +539,13 @@ const Datatable = () => {
                     name="accName"
                     label="Account Holder"
                     style={{ fontWeight: "bolder" }}
+                    required
+                    rules={[
+                      {
+                        type: "string",
+                      },
+                      { min: 5 },
+                    ]}
                   >
                     <Input
                       style={{
@@ -694,13 +791,34 @@ const Datatable = () => {
                 label="Bank"
                 style={{ fontWeight: "bolder" }}
               >
-                <Input
-                  style={{
-                    border: "1px solid #D8E5E5",
-                    width: "100%",
-                    color: "#3C3434",
-                  }}
-                />
+                {isEdit ? (
+                  <Select
+                    showSearch
+                    style={{
+                      width: "100%",
+                      zIndex: 1,
+                    }}
+                    placeholder="Select bank"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "").includes(input)
+                    }
+                    filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? "")
+                        .toLowerCase()
+                        .localeCompare((optionB?.label ?? "").toLowerCase())
+                    }
+                    options={banksData}
+                  />
+                ) : (
+                  <Input
+                    style={{
+                      border: "1px solid #D8E5E5",
+                      width: "100%",
+                      color: "#3C3434",
+                    }}
+                  />
+                )}
               </Form.Item>
             </Col>
             <Col span={12}>

@@ -12,8 +12,11 @@ import AdminProfile from "../../Pages/Admin/AdminProfile";
 import AccountMana from "../../Pages/Admin/AccountMana";
 import GarageMana from "../../Pages/Admin/GarageMana";
 import MyProfile from "../../Pages/MyProfile/MyProfile";
-import ManagerHome from "../../Pages/mHome/index";
-import Login from "../../Pages/Login/index";
+import AccountantProfile from "../../Pages/AccountantPages/Profile/index";
+import CarSpare from "../../Pages/AccountantPages/CarSpare/index";
+import OrderForm from "../../Pages/AccountantPages/OrderForm/index";
+// import ManagerHome from "../../Pages/mHome/index";
+// import Login from "../../Pages/Login/index";
 import List from "../../Pages/list/List";
 import ListService from "../../Pages/ListService/List";
 import { Routes, Route } from "react-router-dom";
@@ -73,6 +76,15 @@ const DefaultLayoutComponent = () => {
         </Route>
         <Route path="garageManagement">
           <Route index element={<GarageMana />} />
+        </Route>
+        <Route path="accountantProfile">
+          <Route index element={<AccountantProfile />} />
+        </Route>
+        <Route path="carSpares">
+          <Route index element={<CarSpare />} />
+        </Route>
+        <Route path="form">
+          <Route index element={<OrderForm />} />
         </Route>
       </Routes>
     </div>

@@ -53,7 +53,6 @@ export default function LoginComponent() {
     })
       .unwrap()
       .then((payload) => {
-        console.log(payload);
         if (payload) {
           if (payload.role === "admin") {
             notification.open({
@@ -71,6 +70,14 @@ export default function LoginComponent() {
             });
             navigate("/garaDetails");
             localStorage.setItem("token", payload.token);
+          } else if (payload.role === "accountant") {
+            notification.open({
+              message: "Login",
+              description: "Successfully",
+              icon: <DownOutlined style={{ color: "green" }} />,
+            });
+            navigate("/accountantProfile");
+            localStorage.setItem("token", payload.token);
           } else {
             notification.open({
               message: "Login",
@@ -81,6 +88,7 @@ export default function LoginComponent() {
         }
       })
       .catch((error) => {
+        console.log(error);
         if (error) {
           notification.open({
             message: "Login",
