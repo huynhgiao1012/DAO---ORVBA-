@@ -35,6 +35,12 @@ router.get(
   authorize("admin"),
   garageController.getAllGarage
 );
+router.get(
+  "/getAllManager/:id",
+  jwtAuth,
+  authorize("admin"),
+  garageController.getAllManager
+);
 router.get("/getCorGarage", jwtAuth, garageController.getCorGarage);
 router.get(
   "/getSpecificCorGarage",
