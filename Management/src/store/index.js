@@ -8,6 +8,7 @@ import { serviceApi } from "../services/Service";
 import { formApi } from "../services/OrderForm";
 import { managerApi } from "../services/Manager";
 import { vietQRApi } from "../services/VietQR";
+import { accountantApi } from "../services/Accountant";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     [formApi.reducerPath]: formApi.reducer,
     [managerApi.reducerPath]: managerApi.reducer,
     [vietQRApi.reducerPath]: vietQRApi.reducer,
+    [accountantApi.reducerPath]: accountantApi.reducer,
     authSlice,
   },
   middleware: (getDefaultMiddleware) =>
@@ -28,7 +30,8 @@ export const store = configureStore({
       serviceApi.middleware,
       formApi.middleware,
       managerApi.middleware,
-      vietQRApi.middleware
+      vietQRApi.middleware,
+      accountantApi.middleware
     ),
 });
 setupListeners(store.dispatch);

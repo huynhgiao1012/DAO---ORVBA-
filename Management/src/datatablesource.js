@@ -340,6 +340,39 @@ export const managerColumn = [
     flex: 1,
   },
 ];
+export const brandColumn = [
+  {
+    field: "_id",
+    headerName: "ID",
+    headerAlign: "center",
+    flex: 1,
+  },
+  {
+    field: "brand",
+    headerName: "Name",
+    headerAlign: "center",
+    flex: 1,
+  },
+  {
+    field: "img",
+    headerName: "Brand's Image",
+    renderCell: (params) => {
+      return (
+        <img
+          className="cellImg"
+          src={
+            params.row.img !== ""
+              ? params.row.img
+              : "https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg"
+          }
+          alt="avatar"
+        />
+      );
+    },
+    headerAlign: "center",
+    flex: 1,
+  },
+];
 export const banksData = [
   {
     id: 1,
