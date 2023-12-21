@@ -22,6 +22,12 @@ router.post(
   authorize("accountant"),
   accountantController.updateCarSpares
 );
+router.post(
+  "/addSubCarSpares",
+  jwtAuth,
+  authorize("accountant"),
+  accountantController.addSubCarSpare
+);
 router.get(
   "/getUnPaidForms",
   jwtAuth,

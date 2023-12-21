@@ -12,6 +12,7 @@ const Service = require("../models/service");
 const SubService = require("../models/subService");
 const Garage = require("../models/garage");
 const CarSpares = require("../models/carSpares");
+const SubCarSpares = require("../models/subCarSpares");
 
 exports.updateDone = catchAsync(async (req, res) => {
   const id = req.params;
@@ -61,13 +62,37 @@ exports.getUnPaidForms = catchAsync(async (req, res) => {
 });
 exports.addCarSpares = catchAsync(async (req, res) => {
   const accountId = req.user;
-  const { name, price } = req.body;
+  const { brand, img } = req.body;
   const accountant = await Accountant.findOne({ accountId: accountId.id });
   const carSpares = await CarSpares.create({
     garageId: accountant.garageId,
     accountantId: accountId.id,
-    name,
-    price,
+    brand,
+    img,
+  });
+  if (carSpares) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      carSpares: carSpares,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.addSubCarSpare = catchAsync(async (req, res) => {
+  const { data } = req.body;
+  const removeItems = await SubCarSpares.find({
+    carSpareId: data[0].carSpareId,
+  });
+  removeItems.map(async (val) => {
+    await val.remove();
+  });
+  const carSpares = await SubCarSpares.insertMany([...data], {
+    ordered: false,
   });
   if (carSpares) {
     res.status(200).json({
@@ -84,12 +109,12 @@ exports.addCarSpares = catchAsync(async (req, res) => {
 });
 exports.updateCarSpares = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { name, price } = req.body;
+  const { brand, img } = req.body;
   const carSpares = await CarSpares.findOneAndUpdate(
     id,
     {
-      name,
-      price,
+      brand,
+      img,
     },
     { new: true }
   );

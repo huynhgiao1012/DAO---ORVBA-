@@ -10,13 +10,13 @@ const CarSparesSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Accountant",
     },
-    name: {
+    brand: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, "Brand is required"],
     },
-    price: {
-      type: Number,
-      required: [true, "Price is required"],
+    img: {
+      type: String,
+      required: [true, "Image is required"],
     },
     createAt: {
       type: Date,
