@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -15,12 +16,19 @@ import {themeColors} from '../../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-
+import {useReverseGeoMutation} from '../../services/Map';
+import GetLocation from 'react-native-get-location';
+import {useUpdateBeforeMutation} from '../../services/Mechanic';
 export default function UpdateForm({route}) {
   const {id} = route.params;
+  const navigation = useNavigation();
   const [getFormDetail] = useGetFormDetailMutation();
+  const [updateBefore] = useUpdateBeforeMutation();
   const [selectedImage, setSelectedImage] = useState('');
-
+  const [address, setAddress] = useState('');
+  const [brand, setBrand] = useState('');
+  const [value, onChangeText] = useState('');
+  const [reverseGeo] = useReverseGeoMutation();
   const [detail, setDetail] = useState({
     _id: '',
     address: '',
@@ -47,11 +55,27 @@ export default function UpdateForm({route}) {
     status: 'process',
     time: '14:13:41',
   });
+  const getCurrentLocation = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: false,
+      timeout: 10000,
+    })
+      .then(location => {
+        reverseGeo({latitude: location.latitude, longitude: location.longitude})
+          .then(payload => {
+            setAddress(payload.data.results[0].formatted_address);
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => {
+        return error;
+      });
+  };
   useEffect(() => {
+    getCurrentLocation();
     getFormDetail({id: id})
       .unwrap()
       .then(payload => {
-        console.log(payload.data);
         setDetail(prev => ({...prev, ...payload.data}));
       })
       .catch(error => {
@@ -103,6 +127,27 @@ export default function UpdateForm({route}) {
       }
     });
   };
+  const handleUpdate = () => {
+    if (selectedImage === '' || brand === '') {
+      Alert.alert("Please update image and brand's name");
+    } else {
+      const obj = {
+        automaker: brand,
+        imgBf: selectedImage,
+        address: detail.address !== 'Updating...' ? detail.address : address,
+      };
+      updateBefore({id: id, ...obj})
+        .unwrap()
+        .then(payload => {
+          if (payload.success) {
+            navigation.goBack();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  };
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
       <Header2 name="Update Form" />
@@ -135,7 +180,10 @@ export default function UpdateForm({route}) {
               color={themeColors.primaryColor7}
               style={{width: 24, textAlign: 'center'}}
             />
-            <Text style={styles.content}>Address : {detail.address}</Text>
+            <Text style={styles.content}>
+              Address :{' '}
+              {detail.address !== 'Updating...' ? detail.address : address}
+            </Text>
           </View>
         </View>
         {/* FORM INFORMATION */}
@@ -145,7 +193,12 @@ export default function UpdateForm({route}) {
           <Text style={styles.text2}>Image ( before repairing )</Text>
           <View style={{width: '50%', alignSelf: 'center', marginBottom: 10}}>
             <Image
-              source={require('../../assets/avt.jpg')}
+              source={{
+                uri:
+                  selectedImage.length !== 0
+                    ? selectedImage
+                    : 'https://t3.ftcdn.net/jpg/02/18/21/86/360_F_218218632_jF6XAkcrlBjv1mAg9Ow0UBMLBaJrhygH.jpg',
+              }}
               style={{
                 width: '100%',
                 height: 180,
@@ -187,6 +240,9 @@ export default function UpdateForm({route}) {
           </View>
           <Text style={styles.text2}>Automaker</Text>
           <TextInput
+            onChangeText={value => {
+              setBrand(value);
+            }}
             style={{
               backgroundColor: '#f8f8f8',
               color: themeColors.primaryColor7,
@@ -196,6 +252,7 @@ export default function UpdateForm({route}) {
             }}
           />
           <TouchableOpacity
+            onPress={handleUpdate}
             style={{
               backgroundColor: themeColors.primaryColor,
               padding: 10,

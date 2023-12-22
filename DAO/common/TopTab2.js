@@ -1,12 +1,10 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Emergency from '../screens/CUSTOMER/Emergency';
-import AllForm from '../screens/CUSTOMER/AllForm';
-import Maintenance from '../screens/CUSTOMER/Maintenance';
 import {themeColors} from './theme';
-
+import MeForm from '../screens/MECHANIC/MeForm1';
+import MeForm2 from '../screens/MECHANIC/MeForm2';
 const Tab = createMaterialTopTabNavigator();
-export default function TopTab() {
+export default function TopTab2() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -16,11 +14,10 @@ export default function TopTab() {
           borderBottomColor: themeColors.primaryColor,
           borderBottomWidth: 3,
         },
-        tabBarLabelStyle: {fontWeight: '700'},
+        tabBarLabelStyle: {fontWeight: '700', fontSize: 16},
       }}>
-      <Tab.Screen name="All" component={AllForm} />
-      <Tab.Screen name="Emergency" component={Emergency} />
-      <Tab.Screen name="Maintenance" component={Maintenance} />
+      <Tab.Screen name="Step1" component={MeForm} />
+      <Tab.Screen name="Step2" component={MeForm2} />
     </Tab.Navigator>
   );
 }

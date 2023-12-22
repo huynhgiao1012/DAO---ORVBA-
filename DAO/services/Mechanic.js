@@ -40,6 +40,16 @@ export const mechanicApi = createApi({
         method: 'POST',
       }),
     }),
+    updateBefore: builder.mutation({
+      query: ({id, ...payload}) => ({
+        url: `updateBefore/${id}`,
+        method: 'POST',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -50,4 +60,5 @@ export const {
   useGetFormsMutation,
   usePickFormMutation,
   useGetPickedFormsMutation,
+  useUpdateBeforeMutation,
 } = mechanicApi;

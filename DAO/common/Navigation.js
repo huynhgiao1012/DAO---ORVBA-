@@ -21,6 +21,8 @@ import HelpCenter from '../screens/CUSTOMER/HelpCenter';
 import LoyalCustomer from '../screens/CUSTOMER/LoyalCustomer';
 import MeHome from '../screens/MECHANIC/MeHome';
 import UpdateForm from '../screens/MECHANIC/UpdateForm';
+import Step1 from '../screens/MECHANIC/MeForm1';
+import Step2 from '../screens/MECHANIC/MeForm2';
 
 const Stack = createStackNavigator();
 export default function Navigation() {
@@ -121,6 +123,16 @@ export default function Navigation() {
           name="UpdateForm"
           options={{headerShown: false}}
           component={UpdateForm}
+        />
+        <Stack.Screen
+          name="Step1"
+          options={{headerShown: false}}
+          component={Step1}
+        />
+        <Stack.Screen
+          name="Step2"
+          options={{headerShown: false}}
+          component={Step2}
         />
       </Stack.Navigator>
     </NavigationContainer>
