@@ -20,6 +20,7 @@ import MyFeedback from '../screens/CUSTOMER/MyFeedback';
 import HelpCenter from '../screens/CUSTOMER/HelpCenter';
 import LoyalCustomer from '../screens/CUSTOMER/LoyalCustomer';
 import MeHome from '../screens/MECHANIC/MeHome';
+import UpdateForm from '../screens/MECHANIC/UpdateForm';
 
 const Stack = createStackNavigator();
 export default function Navigation() {
@@ -115,6 +116,11 @@ export default function Navigation() {
           name="MeHome"
           options={{headerShown: false}}
           component={MeHome}
+        />
+        <Stack.Screen
+          name="UpdateForm"
+          options={{headerShown: false}}
+          component={UpdateForm}
         />
       </Stack.Navigator>
     </NavigationContainer>
