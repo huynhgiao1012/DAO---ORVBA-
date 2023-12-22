@@ -36,7 +36,7 @@ router.delete(
 router.get(
   "/getFormDetail/:id",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("mechanic", "customer"),
   formController.getFormDetail
 );
 router.patch(

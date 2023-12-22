@@ -106,7 +106,7 @@ exports.getFormDetail = catchAsync(async (req, res) => {
   const data = await orderForm
     .findById(id)
     .populate("customerId", "name email phone _id")
-    .populate("serviceId", "type price description _id")
+    .populate("mechanicId", "name email phone _id")
     .populate("garageId", "name email phone _id");
   if (!data) {
     throw new ApiError(400, "Form is unavailable");

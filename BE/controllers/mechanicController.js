@@ -23,6 +23,11 @@ exports.pickForm = catchAsync(async (req, res) => {
     },
     { new: true }
   );
+  await Mechanic.findOneAndUpdate(
+    { accountId: mechanicId.id },
+    { isAvailable: false },
+    { new: true }
+  );
   if (orderForm) {
     res.status(200).json({
       success: true,
