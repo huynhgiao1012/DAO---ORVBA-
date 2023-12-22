@@ -43,12 +43,13 @@ exports.pickForm = catchAsync(async (req, res) => {
 });
 exports.updateBefore = catchAsync(async (req, res) => {
   const id = req.params;
-  const { automaker, imgBf } = req.body;
+  const { automaker, imgBf, address } = req.body;
   const orderForm = await OrderForm.findByIdAndUpdate(
     id.id,
     {
       automaker: automaker,
       imgBf: imgBf,
+      address: address,
     },
     { new: true }
   );
