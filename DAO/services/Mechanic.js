@@ -34,6 +34,16 @@ export const mechanicApi = createApi({
         url: '/getPickedForms',
       }),
     }),
+    getCarSparesMe: builder.mutation({
+      query: () => ({
+        url: '/getCarSparesMe',
+      }),
+    }),
+    getSubCarSpareMe: builder.mutation({
+      query: ({id}) => ({
+        url: `/getSubCarSpareMe/${id}`,
+      }),
+    }),
     pickForm: builder.mutation({
       query: ({id}) => ({
         url: `/pickForm/${id}`,
@@ -61,4 +71,6 @@ export const {
   usePickFormMutation,
   useGetPickedFormsMutation,
   useUpdateBeforeMutation,
+  useGetCarSparesMeMutation,
+  useGetSubCarSpareMeMutation,
 } = mechanicApi;

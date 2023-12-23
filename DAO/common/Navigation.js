@@ -22,7 +22,7 @@ import LoyalCustomer from '../screens/CUSTOMER/LoyalCustomer';
 import MeHome from '../screens/MECHANIC/MeHome';
 import UpdateForm from '../screens/MECHANIC/UpdateForm';
 import Step1 from '../screens/MECHANIC/MeForm1';
-import Step2 from '../screens/MECHANIC/MeForm2';
+import Step2 from '../screens/MECHANIC/UpdateBefore';
 
 const Stack = createStackNavigator();
 export default function Navigation() {

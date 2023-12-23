@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useGetPickedFormsMutation} from '../../services/Mechanic';
 import {themeColors} from '../../common/theme';
 import TopTab2 from '../../common/TopTab2';
-
+import MeForm1 from './MeForm1';
 export default function MeForm() {
   return (
     <View style={{backgroundColor: themeColors.white, flex: 1}}>
@@ -12,6 +12,8 @@ export default function MeForm() {
         style={{
           paddingHorizontal: 20,
           paddingVertical: 10,
+          borderBottomColor: themeColors.primaryColor5,
+          borderBottomWidth: 1,
         }}>
         <Text
           style={{
@@ -23,7 +25,7 @@ export default function MeForm() {
           Information Line
         </Text>
       </View>
-      <TopTab2 />
+      <MeForm1 />
     </View>
   );
 }
