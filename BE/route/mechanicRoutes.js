@@ -40,5 +40,16 @@ router.get(
   authorize("mechanic"),
   mechanicController.getMePoint
 );
-
+router.get(
+  "/getCarSparesMe",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getAllCarSpares
+);
+router.get(
+  "/getSubCarSpareMe/:id",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getSubCarSpare
+);
 module.exports = router;

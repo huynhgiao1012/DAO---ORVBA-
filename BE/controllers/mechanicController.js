@@ -12,6 +12,8 @@ const Service = require("../models/service");
 const SubService = require("../models/subService");
 const Garage = require("../models/garage");
 const Payment = require("../models/payment");
+const CarSpares = require("../models/carSpares");
+const SubCarSpares = require("../models/subCarSpares");
 exports.pickForm = catchAsync(async (req, res) => {
   const mechanicId = req.user;
   const id = req.params;
@@ -160,6 +162,44 @@ exports.getMePoint = catchAsync(async (req, res) => {
       success: true,
       message: "Successfull",
       data: mechanic,
+    });
+  }
+});
+exports.getAllCarSpares = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const accountant = await Mechanic.findOne({ accountId: accountId.id });
+  const carSpares = await CarSpares.find({
+    garageId: accountant.garageId,
+  });
+  if (carSpares) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      carSpares: carSpares,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.getSubCarSpare = catchAsync(async (req, res) => {
+  const id = req.params;
+  const subCarSpares = await SubCarSpares.find({
+    carSpareId: id.id,
+  });
+  if (subCarSpares) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      carSpares: subCarSpares,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+      carSpares: [],
     });
   }
 });
