@@ -119,6 +119,12 @@ router.post(
   authorize("manager"),
   managerController.updateSubService
 );
+router.post(
+  "/checkAccount",
+  jwtAuth,
+  authorize("manager"),
+  managerController.checkAccount
+);
 router.get("/getSubService/:id", jwtAuth, managerController.getSubService);
 router.get("/getGarageId", jwtAuth, managerController.getGarageId);
 router.get("/getGarageDetail", jwtAuth, managerController.getGarageDetail);

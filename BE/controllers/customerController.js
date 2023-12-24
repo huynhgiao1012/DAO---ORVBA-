@@ -79,6 +79,7 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     price,
     note,
     status: FORM_STATUS.BOOKED,
+    carSpares,
   });
   if (orderForm) {
     // const socketIo = io("http://localhost:3000");

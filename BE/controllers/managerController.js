@@ -138,7 +138,8 @@ exports.getAllEmployee = catchAsync(async (req, res) => {
   });
 });
 exports.createEmergencyForm = catchAsync(async (req, res) => {
-  const { customerName, phone, service, address, price, note } = req.body;
+  const { customerName, phone, service, address, price, note, email } =
+    req.body;
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
   const accountInfo = await Account.findOne({ phone: phone });
@@ -162,6 +163,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       garageId: manager.garageId,
       imgAf: "None",
       imgBf: "None",
+      carSpares: [],
       automaker: "None",
       type: "emergency",
       price,
@@ -184,6 +186,62 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       });
     }
   } else {
+    var password = generator.generateMultiple(1, {
+      length: 10,
+      numbers: true,
+      symbols: true,
+      lowercase: true,
+      uppercase: true,
+      strict: true,
+    })[0];
+    const account = await Account.create({
+      name: customerName,
+      email,
+      phone,
+      password,
+      role: ROLES.CUSTOMER,
+      isActive: true,
+    });
+    await Customer.create({ accountId: account._id });
+    const orderForm = await OrderForm.create({
+      customerName,
+      phone,
+      service,
+      address,
+      date: currentDay.toISOString().slice(0, 10),
+      time:
+        currentDay.getHours() +
+        ":" +
+        currentDay.getMinutes() +
+        ":" +
+        (currentDay.getSeconds() + 1),
+      managerId: manager._id,
+      customerId: account._id,
+      garageId: manager.garageId,
+      imgAf: "None",
+      imgBf: "None",
+      carSpares: [],
+      automaker: "None",
+      type: "emergency",
+      price,
+      note,
+    });
+    const socketIo = io("http://localhost:3000");
+    socketIo.emit("sendEmergencyForm", {
+      data: orderForm,
+    });
+    if (orderForm) {
+      res.status(200).json({
+        success: true,
+        message: "Successfull",
+        orderForm: orderForm,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "Failed",
+      });
+    }
   }
 });
 exports.createService = catchAsync(async (req, res) => {
@@ -536,5 +594,18 @@ exports.getGarageId = catchAsync(async (req, res) => {
       message: "Successfull",
       data: manager,
     });
+  }
+});
+exports.checkAccount = catchAsync(async (req, res) => {
+  const { phone } = req.body;
+  const account = await Account.findOne({ phone: phone });
+  if (account) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      data: account,
+    });
+  } else {
+    throw new ApiError(404, "Account is not available");
   }
 });

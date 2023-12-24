@@ -84,6 +84,10 @@ const OrderFormSchema = new Schema(
       type: String,
       required: true,
     },
+    carSpares: {
+      type: Array,
+      default: [],
+    },
     payType: {
       type: String,
       enum: PAYTYPE,
