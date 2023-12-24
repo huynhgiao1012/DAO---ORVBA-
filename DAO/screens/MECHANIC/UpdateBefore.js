@@ -7,6 +7,8 @@ import {
   Image,
   TextInput,
   Alert,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -149,6 +151,26 @@ export default function UpdateBeFore({id}) {
   };
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
+      {isLoading && (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#000000aa',
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
+              }}>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      )}
       <ScrollView>
         {/* CUSTOMER INFORMATION */}
         <Text style={styles.title}>Customer's Information</Text>
@@ -179,8 +201,7 @@ export default function UpdateBeFore({id}) {
               style={{width: 24, textAlign: 'center'}}
             />
             <Text style={styles.content}>
-              Address :{' '}
-              {detail.address !== 'Updating...' ? detail.address : address}
+              Address : {detail.address !== 'Update' ? detail.address : address}
             </Text>
           </View>
         </View>
