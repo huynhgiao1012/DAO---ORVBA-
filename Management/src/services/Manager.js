@@ -148,6 +148,16 @@ export const managerApi = createApi({
         },
       }),
     }),
+    checkAccount: builder.mutation({
+      query: (payload) => ({
+        url: `/checkAccount`,
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
     createSubService: builder.mutation({
       query: ({ id, ...payload }) => ({
         url: `/createSubService/${id}`,
@@ -213,4 +223,5 @@ export const {
   useGetGarageDetailMutation,
   useGetGarageIdMutation,
   useGetNewMaintenanceFormMutation,
+  useCheckAccountMutation,
 } = managerApi;

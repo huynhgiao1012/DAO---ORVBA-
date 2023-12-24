@@ -7,6 +7,7 @@ import {
   useGetEmergencyFormMutation,
   useCreateEmergencyFormMutation,
   useGetAllServiceMaMutation,
+  useCheckAccountMutation,
 } from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm, Select } from "antd";
 import Box from "@mui/material/Box";
@@ -34,7 +35,10 @@ const Datatable = () => {
   const [getAllForm] = useGetEmergencyFormMutation();
   const [getService] = useGetAllServiceMaMutation();
   const [createForm] = useCreateEmergencyFormMutation();
+  const [checkAccount] = useCheckAccountMutation();
   const [isEdit, setIsEdit] = useState(false);
+  const [regis, setRegis] = useState(false);
+  const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,6 +58,8 @@ const Datatable = () => {
     setOpen(false);
     setIsModalOpen(false);
     setPrice(0);
+    setRegis(false);
+    setName("");
     form.resetFields();
   };
 
@@ -154,12 +160,13 @@ const Datatable = () => {
         }
       });
       await createForm({
-        customerName: values.customerName,
+        customerName: name.length > 0 ? name : values.customerName,
         phone: values.phone,
         service: service,
-        address: values.address,
+        address: values.address === undefined ? "Update" : values.address,
         price: serPrice,
         note: values.note === undefined ? "None" : values.note,
+        email: values.email ? values.email : "",
       })
         .unwrap()
         .then((payload) => {
@@ -333,6 +340,33 @@ const Datatable = () => {
       },
     },
   ];
+  const onChange = async (e) => {
+    if (e.target.value.length === 10 || e.target.value.length === 11) {
+      const obj = { phone: e.target.value };
+      await checkAccount({ ...obj })
+        .unwrap()
+        .then((payload) => {
+          setName(payload.data.name);
+        })
+        .catch((error) => {
+          if (error.status === 404) {
+            setRegis(true);
+            alert(
+              error.data.message +
+                "!" +
+                " " +
+                "Please provide email for quick register"
+            );
+          }
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    } else {
+      setName("");
+    }
+  };
+
   return (
     <div className="datatable">
       <div className="datatableTitle">
@@ -392,28 +426,6 @@ const Datatable = () => {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    name="customerName"
-                    label="Customer Name"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter name",
-                        type: "string",
-                      },
-                      { whitespace: true },
-                      { min: 3 },
-                    ]}
-                    hasFeedback
-                  >
-                    <Input
-                      style={{ border: "1px solid #98C4C4", width: 220 }}
-                      type="string"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
                     name="phone"
                     label="Phone"
                     required
@@ -429,10 +441,79 @@ const Datatable = () => {
                   >
                     <Input
                       style={{ border: "1px solid #98C4C4", width: 220 }}
+                      onChange={onChange}
                     />
                   </Form.Item>
                 </Col>
+                <Col span={12}>
+                  {!regis ? (
+                    <Form.Item
+                      label="Customer Name"
+                      required
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter name",
+                          type: "string",
+                        },
+                        { whitespace: true },
+                        { min: 3 },
+                      ]}
+                      hasFeedback
+                    >
+                      <Input
+                        style={{ border: "1px solid #98C4C4", width: 220 }}
+                        type="string"
+                        value={name}
+                      />
+                      {console.log(name)}
+                    </Form.Item>
+                  ) : (
+                    <Form.Item
+                      name="customerName"
+                      label="Customer Name"
+                      required
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter name",
+                          type: "string",
+                        },
+                        { whitespace: true },
+                        { min: 3 },
+                      ]}
+                      hasFeedback
+                    >
+                      <Input
+                        style={{ border: "1px solid #98C4C4", width: 220 }}
+                        type="string"
+                      />
+                    </Form.Item>
+                  )}
+                </Col>
               </Row>
+              {regis && (
+                <Row>
+                  <Form.Item
+                    name="email"
+                    label="Email"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter email",
+                        type: "email",
+                      },
+                    ]}
+                    hasFeedback
+                  >
+                    <Input
+                      style={{ border: "1px solid #98C4C4", width: 480 }}
+                      type="string"
+                    />
+                  </Form.Item>
+                </Row>
+              )}
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
@@ -468,14 +549,12 @@ const Datatable = () => {
                   <Form.Item
                     name="address"
                     label="Address"
-                    required
                     rules={[
                       {
-                        required: true,
-                        message: "Please enter service",
+                        message: "Please enter address",
                         type: "string",
                       },
-                      { min: 10 },
+                      { min: 6 },
                     ]}
                     hasFeedback
                   >
