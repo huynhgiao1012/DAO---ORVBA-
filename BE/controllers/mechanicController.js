@@ -70,13 +70,15 @@ exports.updateBefore = catchAsync(async (req, res) => {
 });
 exports.updateFinish = catchAsync(async (req, res) => {
   const id = req.params;
-  const { imgAf, payType } = req.body;
+  const { imgAf, payType, carSpares, price } = req.body;
   const orderForm = await OrderForm.findByIdAndUpdate(
     id.id,
     {
       imgAf: imgAf,
       payType: payType,
       status: FORM_STATUS.HOLDING,
+      carSpares: carSpares,
+      price: price,
     },
     { new: true }
   );
