@@ -82,6 +82,12 @@ exports.updateFinish = catchAsync(async (req, res) => {
     },
     { new: true }
   );
+  const form = await OrderForm.findById(id.id);
+  await Mechanic.findOneAndUpdate(
+    { accountId: form.mechanicId },
+    { isAvailable: true },
+    { new: true }
+  );
   if (orderForm) {
     res.status(200).json({
       success: true,
@@ -145,6 +151,22 @@ exports.getPickedForms = catchAsync(async (req, res) => {
       success: true,
       message: "Successfull",
       orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.getPayInfo = catchAsync(async (req, res) => {
+  const id = req.params;
+  const gara = await Garage.findById(id.id);
+  if (gara) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      garage: gara.transferInfo,
     });
   } else {
     res.status(400).json({
