@@ -128,16 +128,16 @@ export default function UpdateBeFore({id}) {
       }
     });
   };
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (selectedImage === '' || brand === '') {
       Alert.alert("Please update image and brand's name");
     } else {
       const obj = {
         automaker: brand,
         imgBf: selectedImage,
-        address: detail.address !== 'Updating...' ? detail.address : address,
+        address: detail.address !== 'Update' ? detail.address : address,
       };
-      updateBefore({id: detail._id, ...obj})
+      await updateBefore({id: detail._id, ...obj})
         .unwrap()
         .then(payload => {
           if (payload.success) {

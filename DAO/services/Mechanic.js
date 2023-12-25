@@ -60,6 +60,16 @@ export const mechanicApi = createApi({
         },
       }),
     }),
+    updateAfter: builder.mutation({
+      query: ({id, ...payload}) => ({
+        url: `updateAfter/${id}`,
+        method: 'POST',
+        body: payload,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -73,4 +83,5 @@ export const {
   useUpdateBeforeMutation,
   useGetCarSparesMeMutation,
   useGetSubCarSpareMeMutation,
+  useUpdateAfterMutation,
 } = mechanicApi;

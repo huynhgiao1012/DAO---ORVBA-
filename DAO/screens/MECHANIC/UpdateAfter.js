@@ -22,25 +22,30 @@ import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {useReverseGeoMutation} from '../../services/Map';
 import GetLocation from 'react-native-get-location';
 import {
-  useUpdateBeforeMutation,
+  useUpdateAfterMutation,
   useGetCarSparesMeMutation,
   useGetSubCarSpareMeMutation,
 } from '../../services/Mechanic';
-import SelectDropdown from 'react-native-select-dropdown';
+import {
+  MultipleSelectList,
+  SelectList,
+} from 'react-native-dropdown-select-list';
 export default function UpdateAfter({id}) {
   const navigation = useNavigation();
   const [getFormDetail, {isLoading}] = useGetFormDetailMutation();
   const [getCarSpares] = useGetCarSparesMeMutation();
   const [getSubCarSpare] = useGetSubCarSpareMeMutation();
-  const [updateBefore] = useUpdateBeforeMutation();
+  const [updateAfter] = useUpdateAfterMutation();
   const [selectedImage, setSelectedImage] = useState('');
   const [address, setAddress] = useState('');
-  const [brand, setBrand] = useState('');
+  const [payType, setPayType] = useState('cash');
   const [value, onChangeText] = useState('');
   const [visible, setVisible] = useState(false);
   const [carSpare, setCarSpare] = useState([]);
   const [subCarSpare, setSub] = useState([]);
+  const [selected, setSelected] = useState([]);
   const [reverseGeo] = useReverseGeoMutation();
+  const [options, setOptions] = useState([]);
   const [detail, setDetail] = useState({
     _id: '',
     address: '',
@@ -84,8 +89,14 @@ export default function UpdateAfter({id}) {
         return error;
       });
   };
+  const data = [
+    {key: '1', value: 'cash'},
+    {key: '2', value: 'transfer'},
+  ];
   useEffect(() => {
     setCarSpare([]);
+    setVisible(false);
+    setSelected([]);
     getCurrentLocation();
     getFormDetail({id: id})
       .unwrap()
@@ -149,33 +160,58 @@ export default function UpdateAfter({id}) {
       }
     });
   };
-  const handleUpdate = () => {
-    if (selectedImage === '' || brand === '') {
-      Alert.alert("Please update image and brand's name");
+  const handleUpdate = async () => {
+    if (selectedImage === '') {
+      Alert.alert('Please update image after repairing');
     } else {
-      const obj = {
-        automaker: brand,
-        imgBf: selectedImage,
-        address: detail.address !== 'Updating...' ? detail.address : address,
-      };
-      updateBefore({id: id, ...obj})
-        .unwrap()
-        .then(payload => {
-          if (payload.success) {
-            navigation.goBack();
-          }
-        })
-        .catch(error => {
-          console.log(error);
+      // const obj = {
+      //   imgAf: selectedImage,
+      //   payType: payType,
+      //   carSpares: selected,
+      //   price,
+      // };
+      let priceAf = 0;
+      if (selected.length > 0) {
+        selected.map(val => {
+          console.log(val.split('-')[1]);
         });
+      }
+      console.log(obj);
+      // await updateAfter({id: detail._id, ...obj})
+      //   .unwrap()
+      //   .then(payload => {
+      //     if (payload.success) {
+      //       navigation.navigate('MeForm');
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
     }
   };
   const handleOpenModal = id => {
+    setOptions([]);
     getSubCarSpare({id})
       .unwrap()
       .then(payload => {
         if (payload.success) {
           setSub(prev => [...prev, ...payload.carSpares]);
+          const arr = payload.carSpares.map(val => {
+            const obj = {
+              key: val._id,
+              value:
+                val.name +
+                ' ' +
+                '-' +
+                ' ' +
+                new Intl.NumberFormat('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND',
+                }).format(val.price),
+            };
+            return obj;
+          });
+          setOptions(prev => [...prev, ...arr]);
         }
       })
       .catch(error => {
@@ -260,34 +296,54 @@ export default function UpdateAfter({id}) {
                   alignSelf: 'center',
                 }}
               />
-              {/* <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                onPress={handleCameraLaunch}
+            </View>
+            <Text style={styles.text2}>Image ( after repairing )</Text>
+            <View style={{width: '50%', alignSelf: 'center', marginBottom: 10}}>
+              <Image
+                source={{
+                  uri:
+                    selectedImage.length !== 0
+                      ? selectedImage
+                      : 'https://t3.ftcdn.net/jpg/02/18/21/86/360_F_218218632_jF6XAkcrlBjv1mAg9Ow0UBMLBaJrhygH.jpg',
+                }}
                 style={{
-                  width: '50%',
-                  alignItems: 'center',
-                  padding: 10,
-                  backgroundColor: themeColors.primaryColor7,
-                }}>
-                <Icon name="camera" size={20} color={themeColors.white} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={openImagePicker}
+                  width: '100%',
+                  height: 180,
+                  marginBottom: 10,
+                  borderWidth: 1,
+                  borderColor: themeColors.primaryColor5,
+                  borderRadius: 20,
+                  alignSelf: 'center',
+                }}
+              />
+              <View
                 style={{
-                  width: '50%',
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  padding: 10,
-                  backgroundColor: themeColors.primaryColor,
                 }}>
-                <Icon name="upload" size={20} color={themeColors.white} />
-              </TouchableOpacity>
-            </View> */}
+                <TouchableOpacity
+                  onPress={handleCameraLaunch}
+                  style={{
+                    width: '50%',
+                    alignItems: 'center',
+                    padding: 10,
+                    backgroundColor: themeColors.primaryColor7,
+                  }}>
+                  <Icon name="camera" size={20} color={themeColors.white} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={openImagePicker}
+                  style={{
+                    width: '50%',
+                    alignItems: 'center',
+                    padding: 10,
+                    backgroundColor: themeColors.primaryColor,
+                  }}>
+                  <Icon name="upload" size={20} color={themeColors.white} />
+                </TouchableOpacity>
+              </View>
             </View>
             <Text style={styles.text2}>Automaker</Text>
             <TextInput
@@ -342,6 +398,63 @@ export default function UpdateAfter({id}) {
                 );
               })}
             </View>
+            <TextInput
+              value={selected.toString()}
+              multiline={true}
+              style={{
+                backgroundColor: '#f8f8f8',
+                color: themeColors.primaryColor7,
+                fontWeight: '700',
+                paddingHorizontal: 10,
+                borderRadius: 10,
+              }}
+            />
+            {visible && (
+              <MultipleSelectList
+                setSelected={val => setSelected(val)}
+                data={options}
+                save="value"
+                onSelect={() => console.log(selected)}
+                dropdownTextStyles={{
+                  color: themeColors.primaryColor7,
+                  fontWeight: '700',
+                }}
+                inputStyles={{
+                  color: themeColors.primaryColor7,
+                  fontWeight: '700',
+                }}
+                boxStyles={{marginTop: 10}}
+                dropdownStyles={{height: 200}}
+              />
+            )}
+            <Text style={styles.text2}>Pay Type</Text>
+            <SelectList
+              onSelect={() => setPayType(selected)}
+              data={data}
+              placeholder="Select pay type"
+              save="value"
+              dropdownTextStyles={{
+                color: themeColors.primaryColor7,
+                fontWeight: '700',
+              }}
+              inputStyles={{
+                color: themeColors.primaryColor7,
+                fontWeight: '700',
+              }}
+              boxStyles={{marginTop: 10}}
+              dropdownStyles={{height: 100}}
+            />
+            <Text style={styles.text2}>Note</Text>
+            <TextInput
+              value={detail.note}
+              style={{
+                backgroundColor: '#f8f8f8',
+                color: themeColors.primaryColor7,
+                fontWeight: '700',
+                paddingHorizontal: 10,
+                borderRadius: 10,
+              }}
+            />
             <Text style={[styles.text2, {alignSelf: 'flex-end'}]}>
               TOTAL PRICE : {detail.price}
             </Text>
@@ -364,84 +477,6 @@ export default function UpdateAfter({id}) {
               </Text>
             </TouchableOpacity>
           </View>
-          <Modal visible={visible} transparent={true}>
-            <View
-              style={{
-                backgroundColor: '#000000aa',
-                flex: 1,
-              }}>
-              <View
-                style={{
-                  alignSelf: 'center',
-                  marginVertical: '50%',
-                  backgroundColor: themeColors.white,
-                  width: '80%',
-                  height: '60%',
-                }}>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setVisible(false)}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      padding: 10,
-                      backgroundColor: themeColors.primaryColor,
-                      alignSelf: 'flex-end',
-                      borderBottomLeftRadius: 20,
-                      textAlign: 'center',
-                      fontWeight: '700',
-                    }}>
-                    Close
-                  </Text>
-                </Pressable>
-                <ScrollView>
-                  <View
-                    style={{
-                      padding: 10,
-                    }}>
-                    <TextInput
-                      placeholder="Search"
-                      placeholderTextColor={themeColors.primaryColor6}
-                      style={{
-                        width: '95%',
-                        borderColor: themeColors.primaryColor5,
-                        borderWidth: 2,
-                        borderRadius: 10,
-                        paddingHorizontal: 10,
-                        marginHorizontal: 10,
-                        color: themeColors.primaryColor7,
-                      }}
-                    />
-                    {subCarSpare.map(val => {
-                      return (
-                        <View
-                          style={{
-                            padding: 10,
-                            borderBottomColor: themeColors.primaryColor5,
-                            borderBottomWidth: 1,
-                          }}>
-                          <Text
-                            style={{
-                              color: themeColors.primaryColor2,
-                              fontWeight: '700',
-                            }}>
-                            {val.price} VND
-                          </Text>
-                          <Text
-                            style={{
-                              color: themeColors.black,
-                              fontWeight: '700',
-                            }}>
-                            {val.name}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                </ScrollView>
-              </View>
-            </View>
-          </Modal>
         </ScrollView>
       )}
     </View>

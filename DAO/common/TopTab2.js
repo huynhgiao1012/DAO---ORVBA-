@@ -16,8 +16,7 @@ export default function TopTab2() {
         },
         tabBarLabelStyle: {fontWeight: '700', fontSize: 16},
       }}>
-      <Tab.Screen name="Step1" component={MeForm} />
-      <Tab.Screen name="Step2" component={MeForm2} />
+      <Tab.Screen name="MeForm" component={MeForm} />
     </Tab.Navigator>
   );
 }
