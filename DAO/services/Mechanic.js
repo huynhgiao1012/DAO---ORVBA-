@@ -44,6 +44,11 @@ export const mechanicApi = createApi({
         url: `/getSubCarSpareMe/${id}`,
       }),
     }),
+    getPayInfo: builder.mutation({
+      query: ({id}) => ({
+        url: `/getPayInfo/${id}`,
+      }),
+    }),
     pickForm: builder.mutation({
       query: ({id}) => ({
         url: `/pickForm/${id}`,
@@ -62,7 +67,7 @@ export const mechanicApi = createApi({
     }),
     updateAfter: builder.mutation({
       query: ({id, ...payload}) => ({
-        url: `updateAfter/${id}`,
+        url: `updateFinish/${id}`,
         method: 'POST',
         body: payload,
         headers: {
@@ -84,4 +89,5 @@ export const {
   useGetCarSparesMeMutation,
   useGetSubCarSpareMeMutation,
   useUpdateAfterMutation,
+  useGetPayInfoMutation,
 } = mechanicApi;

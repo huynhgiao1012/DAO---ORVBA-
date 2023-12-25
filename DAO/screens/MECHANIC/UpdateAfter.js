@@ -26,20 +26,18 @@ import {
   useGetCarSparesMeMutation,
   useGetSubCarSpareMeMutation,
 } from '../../services/Mechanic';
-import {
-  MultipleSelectList,
-  SelectList,
-} from 'react-native-dropdown-select-list';
+import SelectDropdown from 'react-native-select-dropdown';
+import {MultipleSelectList} from 'react-native-dropdown-select-list';
 export default function UpdateAfter({id}) {
   const navigation = useNavigation();
   const [getFormDetail, {isLoading}] = useGetFormDetailMutation();
   const [getCarSpares] = useGetCarSparesMeMutation();
   const [getSubCarSpare] = useGetSubCarSpareMeMutation();
-  const [updateAfter] = useUpdateAfterMutation();
+  const [updateAfter, {isSuccess}] = useUpdateAfterMutation();
   const [selectedImage, setSelectedImage] = useState('');
   const [address, setAddress] = useState('');
   const [payType, setPayType] = useState('cash');
-  const [value, onChangeText] = useState('');
+  const [totalPrice, setTotalPrice] = useState(0);
   const [visible, setVisible] = useState(false);
   const [carSpare, setCarSpare] = useState([]);
   const [subCarSpare, setSub] = useState([]);
@@ -89,14 +87,12 @@ export default function UpdateAfter({id}) {
         return error;
       });
   };
-  const data = [
-    {key: '1', value: 'cash'},
-    {key: '2', value: 'transfer'},
-  ];
+  const data = ['cash', 'transfer'];
   useEffect(() => {
     setCarSpare([]);
     setVisible(false);
     setSelected([]);
+    setSelectedImage('');
     getCurrentLocation();
     getFormDetail({id: id})
       .unwrap()
@@ -160,33 +156,46 @@ export default function UpdateAfter({id}) {
       }
     });
   };
+  const handlePrice = () => {
+    let priceAf = 0;
+    if (selected.length > 0) {
+      selected.map(val => {
+        priceAf = priceAf + Number(val.split('-')[1].replace(/[ ₫.]+/g, ''));
+      });
+    }
+    setTotalPrice(priceAf + detail.price);
+  };
   const handleUpdate = async () => {
     if (selectedImage === '') {
       Alert.alert('Please update image after repairing');
     } else {
-      // const obj = {
-      //   imgAf: selectedImage,
-      //   payType: payType,
-      //   carSpares: selected,
-      //   price,
-      // };
       let priceAf = 0;
       if (selected.length > 0) {
         selected.map(val => {
-          console.log(val.split('-')[1]);
+          priceAf = priceAf + Number(val.split('-')[1].replace(/[ ₫.]+/g, ''));
         });
       }
-      console.log(obj);
-      // await updateAfter({id: detail._id, ...obj})
-      //   .unwrap()
-      //   .then(payload => {
-      //     if (payload.success) {
-      //       navigation.navigate('MeForm');
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
+      const obj = {
+        imgAf: selectedImage,
+        payType: payType,
+        carSpares: selected,
+        price: totalPrice,
+      };
+      await updateAfter({id: detail._id, ...obj})
+        .unwrap()
+        .then(payload => {
+          if (payload.success) {
+            Alert.alert(payload.message);
+            if (payType === 'cash') {
+              navigation.navigate('MeForm');
+            } else {
+              navigation.navigate('QRCode', {id: detail.garageId});
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   };
   const handleOpenModal = id => {
@@ -398,23 +407,12 @@ export default function UpdateAfter({id}) {
                 );
               })}
             </View>
-            <TextInput
-              value={selected.toString()}
-              multiline={true}
-              style={{
-                backgroundColor: '#f8f8f8',
-                color: themeColors.primaryColor7,
-                fontWeight: '700',
-                paddingHorizontal: 10,
-                borderRadius: 10,
-              }}
-            />
             {visible && (
               <MultipleSelectList
                 setSelected={val => setSelected(val)}
                 data={options}
                 save="value"
-                onSelect={() => console.log(selected)}
+                onSelect={handlePrice}
                 dropdownTextStyles={{
                   color: themeColors.primaryColor7,
                   fontWeight: '700',
@@ -424,25 +422,29 @@ export default function UpdateAfter({id}) {
                   fontWeight: '700',
                 }}
                 boxStyles={{marginTop: 10}}
-                dropdownStyles={{height: 200}}
               />
             )}
             <Text style={styles.text2}>Pay Type</Text>
-            <SelectList
-              onSelect={() => setPayType(selected)}
+            <SelectDropdown
+              buttonStyle={{
+                width: '100%',
+                backgroundColor: '#f8f8f8',
+                borderRadius: 10,
+              }}
               data={data}
-              placeholder="Select pay type"
-              save="value"
-              dropdownTextStyles={{
-                color: themeColors.primaryColor7,
-                fontWeight: '700',
+              onSelect={(selectedItem, index) => {
+                setPayType(selectedItem);
               }}
-              inputStyles={{
-                color: themeColors.primaryColor7,
-                fontWeight: '700',
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
               }}
-              boxStyles={{marginTop: 10}}
-              dropdownStyles={{height: 100}}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
             />
             <Text style={styles.text2}>Note</Text>
             <TextInput
@@ -456,7 +458,16 @@ export default function UpdateAfter({id}) {
               }}
             />
             <Text style={[styles.text2, {alignSelf: 'flex-end'}]}>
-              TOTAL PRICE : {detail.price}
+              TOTAL PRICE :{' '}
+              {totalPrice !== 0
+                ? new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  }).format(totalPrice)
+                : new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  }).format(detail.price)}
             </Text>
             <TouchableOpacity
               onPress={handleUpdate}
