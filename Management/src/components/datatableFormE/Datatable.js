@@ -176,6 +176,9 @@ const Datatable = () => {
         })
         .catch((error) => {
           console.log(error);
+          if (error.status === 400) {
+            alert(error.data.message.duplicate);
+          }
         });
     }
   };
