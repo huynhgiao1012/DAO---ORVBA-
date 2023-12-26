@@ -9,18 +9,15 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {
-  useGetPickedFormsMutation,
-  useGetHoldingFormsMutation,
-} from '../../services/Mechanic';
+import {useGetHoldingFormsMutation} from '../../services/Mechanic';
 import {themeColors} from '../../common/theme';
 import {FlatList} from 'react-native';
-export default function MeForm1({route}) {
-  const [getPickedForms, {isLoading}] = useGetPickedFormsMutation();
+export default function MeForm2({route}) {
+  const [getHoldingForms, {isLoading}] = useGetHoldingFormsMutation();
   const [forms, setForms] = useState([]);
   const navigation = useNavigation();
   const loadData = () => {
-    getPickedForms()
+    getHoldingForms()
       .unwrap()
       .then(payload => {
         setForms(prev => [...prev, ...payload.orderForm]);
@@ -83,10 +80,7 @@ export default function MeForm1({route}) {
             fontWeight: 700,
             color: themeColors.white,
           }}>
-          {new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND',
-          }).format(item.price)}
+          {item.date}
         </Text>
       </View>
       <View style={{marginVertical: 10, paddingHorizontal: 10}}>
@@ -121,29 +115,17 @@ export default function MeForm1({route}) {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           alignItems: 'center',
           paddingHorizontal: 10,
           paddingBottom: 10,
         }}>
         <TouchableOpacity
-          onPress={() => openDialScreen(item.phone)}
+          onPress={() =>
+            navigation.navigate('ViewFormDetail', {item: {...item}})
+          }
           style={{
-            backgroundColor: themeColors.primaryColor6,
-            padding: 10,
-            borderRadius: 10,
-            marginVertical: 5,
-            width: '40%',
-          }}>
-          <Text
-            style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
-            Contact
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('UpdateForm', {id: item._id})}
-          style={{
-            backgroundColor: themeColors.primaryColor4,
+            backgroundColor: themeColors.primaryColor2,
             padding: 10,
             borderRadius: 10,
             marginVertical: 5,
@@ -151,9 +133,28 @@ export default function MeForm1({route}) {
           }}>
           <Text
             style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
-            Update
+            View Detail
           </Text>
         </TouchableOpacity>
+        <View
+          style={{
+            padding: 8,
+            borderRadius: 10,
+            marginVertical: 5,
+            width: '40%',
+            borderStyle: 'dotted',
+            borderWidth: 2,
+            borderColor: themeColors.primaryColor2,
+          }}>
+          <Text
+            style={{
+              color: themeColors.primaryColor2,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            {item.status.toUpperCase()}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -184,6 +185,7 @@ export default function MeForm1({route}) {
           data={forms}
           renderItem={renderItem}
           keyExtractor={item => item._id}
+          style={{backgroundColor: themeColors.white, padding: 15}}
         />
       ) : (
         <Text

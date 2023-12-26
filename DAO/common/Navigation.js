@@ -24,6 +24,7 @@ import UpdateForm from '../screens/MECHANIC/UpdateForm';
 import Step1 from '../screens/MECHANIC/MeForm1';
 import Step2 from '../screens/MECHANIC/UpdateBefore';
 import QRCode from '../screens/MECHANIC/QRCode';
+import ViewFormDetail from '../screens/ViewFormDetail';
 
 const Stack = createStackNavigator();
 export default function Navigation() {
@@ -129,6 +130,11 @@ export default function Navigation() {
           name="QRCode"
           options={{headerShown: false}}
           component={QRCode}
+        />
+        <Stack.Screen
+          name="ViewFormDetail"
+          options={{headerShown: false}}
+          component={ViewFormDetail}
         />
       </Stack.Navigator>
     </NavigationContainer>
