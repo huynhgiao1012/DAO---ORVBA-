@@ -187,9 +187,12 @@ export default function UpdateAfter({id}) {
           if (payload.success) {
             Alert.alert(payload.message);
             if (payType === 'cash') {
-              navigation.navigate('MeForm');
+              navigation.navigate('MeForm', {loading: true});
             } else {
-              navigation.navigate('QRCode', {id: detail.garageId});
+              navigation.navigate('QRCode', {
+                id: detail.garageId._id,
+                price: obj.price,
+              });
             }
           }
         })

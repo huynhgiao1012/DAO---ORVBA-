@@ -165,7 +165,12 @@ export default function QRCodePages({route}) {
         backgroundColor: themeColors.white,
         flex: 1,
       }}>
-      <Header2 name="QR Code - Payment" />
+      <View
+        style={{
+          width: '100%',
+          height: 50,
+          backgroundColor: themeColors.primaryColor,
+        }}></View>
       {QR.length > 0 ? (
         <View style={{marginTop: 50, flex: 1}}>
           <View

@@ -300,30 +300,6 @@ export default function MeProfile({route}) {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.line}
-          onPress={() =>
-            navigation.navigate('QRCode', {
-              id: point.garageId._id,
-              price: 500000,
-            })
-          }>
-          <View style={{width: 30}}>
-            <Icon
-              name="question-circle-o"
-              size={20}
-              color={themeColors.primaryColor7}
-            />
-          </View>
-          <Text style={styles.line_text}>QRCode</Text>
-          <View style={{width: 30}}>
-            <Icon
-              name="chevron-right"
-              size={15}
-              color={themeColors.primaryColor5}
-            />
-          </View>
-        </TouchableOpacity>
       </View>
     </View>
   );
