@@ -186,6 +186,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       });
     }
   } else {
+    const currentDay = new Date();
     var password = generator.generateMultiple(1, {
       length: 10,
       numbers: true,
