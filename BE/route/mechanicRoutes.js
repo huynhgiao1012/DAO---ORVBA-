@@ -29,6 +29,12 @@ router.get(
   mechanicController.getForms
 );
 router.get(
+  "/getHoldingForms",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getHoldingForms
+);
+router.get(
   "/getPayInfo/:id",
   jwtAuth,
   authorize("mechanic"),

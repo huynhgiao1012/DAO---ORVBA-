@@ -159,6 +159,25 @@ exports.getPickedForms = catchAsync(async (req, res) => {
     });
   }
 });
+exports.getHoldingForms = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const orderForm = await OrderForm.find({
+    mechanicId: accountId.id,
+    status: FORM_STATUS.HOLDING,
+  });
+  if (orderForm) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
 exports.getPayInfo = catchAsync(async (req, res) => {
   const id = req.params;
   const gara = await Garage.findById(id.id);
