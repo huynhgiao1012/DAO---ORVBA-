@@ -85,8 +85,6 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("sendMaintenanceForm", ({ data, garageId }) => {
-    // console.log(data);
-    // console.log(garageId);
     io.emit("getMaintenanceForm", {
       data: { data: data, id: garageId },
     });

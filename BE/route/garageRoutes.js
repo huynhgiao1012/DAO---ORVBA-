@@ -20,7 +20,7 @@ const router = express.Router();
 router.get(
   "/getGarageDetail/:id",
   jwtAuth,
-  authorize("admin", "customer"),
+  authorize("admin", "customer", "mechanic"),
   garageController.getGarageDetails
 );
 router.post(
