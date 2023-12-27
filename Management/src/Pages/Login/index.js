@@ -19,6 +19,8 @@ import { useLoginMutation } from "../../services/Auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Row, Col } from "antd";
+import { jwtDecode } from "jwt-decode";
+import { io } from "socket.io-client";
 function Copyright(props) {
   return (
     <Typography variant="body2" color="black" align="center" {...props}>
@@ -27,9 +29,7 @@ function Copyright(props) {
     </Typography>
   );
 }
-
 // TODO remove, this demo shouldn't need to reset the theme.
-
 export default function LoginComponent() {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
@@ -63,6 +63,10 @@ export default function LoginComponent() {
             navigate("/adminProfile");
             localStorage.setItem("token", payload.token);
           } else if (payload.role === "manager") {
+            const decodedHeader = jwtDecode(payload.token);
+            console.log(decodedHeader);
+            const socketIo = io.connect("http://localhost:3000");
+            socketIo?.emit("newUser", decodedHeader.id);
             notification.open({
               message: "Login",
               description: "Successfully",
