@@ -140,4 +140,10 @@ router.delete(
   authorize("manager"),
   managerController.deleteMechanic
 );
+router.delete(
+  "/deleteForm/:id",
+  jwtAuth,
+  authorize("manager"),
+  managerController.deleteForm
+);
 module.exports = router;

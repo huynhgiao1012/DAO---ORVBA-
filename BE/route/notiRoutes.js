@@ -6,31 +6,31 @@ const router = express.Router();
 router.get(
   "/getUnreadNotification",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("manager", "customer"),
   notiController.getUnreadNotification
 );
 router.get(
   "/getReadNotification",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("manager", "customer"),
   notiController.getReadNotification
 );
 router.post(
   "/create",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("manager", "customer"),
   notiController.createNotification
 );
 router.delete(
   "/:id",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("manager", "customer"),
   notiController.deleteNotification
 );
 router.patch(
   "/updateNoti/:id",
   jwtAuth,
-  authorize("company", "customer"),
+  authorize("manager", "customer"),
   notiController.updateNotification
 );
 module.exports = router;

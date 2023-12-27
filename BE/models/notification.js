@@ -3,13 +3,13 @@ const { NOTI_STATUS } = require("../constant");
 const Schema = mongoose.Schema;
 const NotificationSchema = new Schema(
   {
-    customerId: {
+    from: {
       type: mongoose.Types.ObjectId,
       ref: "Account",
     },
-    garageId: {
+    to: {
       type: mongoose.Types.ObjectId,
-      ref: "Garage",
+      ref: "Account",
     },
     text: {
       type: String,

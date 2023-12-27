@@ -62,16 +62,14 @@ io.on("connection", (socket) => {
       onlineUsers.push({ userId: userId, socketId: socket.id });
   });
   console.log("connected");
-  console.log(onlineUsers);
   socket.on("sendNotification", ({ senderName, receiverName, text }) => {
-    console.log(receiverName);
     // const receiver = getUser(receiverName);
     // if (!receiver) {
     const intervalId = setInterval(() => {
       const receiver = getUser(receiverName);
       console.log(receiver);
       if (receiver) {
-        io.to(receiver.userId).emit("getNotification", {
+        io.to(receiver.socketId).emit("getNotification", {
           senderName,
           receiverName,
           text,

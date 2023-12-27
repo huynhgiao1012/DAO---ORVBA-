@@ -581,6 +581,18 @@ exports.deleteAccountant = catchAsync(async (req, res) => {
     message: "Delete successfully!",
   });
 });
+exports.deleteForm = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const form = await OrderForm.findById(id);
+  if (!form) {
+    throw new ApiError(400, "Form is not available");
+  }
+  await form.remove();
+  res.status(200).json({
+    success: true,
+    message: "Delete successfully!",
+  });
+});
 exports.upload = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,

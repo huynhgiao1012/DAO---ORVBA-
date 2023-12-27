@@ -6,6 +6,7 @@ const OrderForm = require("../models/orderForm");
 const Manager = require("../models/manager");
 const ApiError = require("../utils/ApiError");
 const { io } = require("socket.io-client");
+const Notification = require("../models/notification");
 
 // each users get their information
 exports.getUserDetails = catchAsync(async (req, res) => {
@@ -86,8 +87,13 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
   const socketIo = io("http://localhost:3000");
   socketIo.emit("sendNotification", {
     senderName: customer._id,
-    receiverName: manager._id,
-    text: `NEW BOOKING - ${customerName} has booked your service`,
+    receiverName: manager.accountId,
+    text: `NEW MAINTENANCE BOOKING - ${customerName} has booked your service`,
+  });
+  await Notification.create({
+    from: customer._id,
+    to: manager.accountId,
+    text: `NEW MAINTENANCE BOOKING - ${customerName} has booked your service`,
   });
   if (orderForm) {
     res.status(200).json({
