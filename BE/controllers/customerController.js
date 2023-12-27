@@ -3,6 +3,7 @@ const catchAsync = require("../middleware/async");
 const Account = require("../models/account");
 const Customer = require("../models/customer");
 const OrderForm = require("../models/orderForm");
+const Manager = require("../models/manager");
 const ApiError = require("../utils/ApiError");
 const { io } = require("socket.io-client");
 
@@ -63,6 +64,7 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
   } = req.body;
   const accountId = req.user;
   const customer = await Customer.findOne({ accountId: accountId.id });
+  const manager = await Manager.findOne({ garageId: garageId });
   const orderForm = await OrderForm.create({
     customerName,
     phone,
@@ -79,14 +81,15 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     price,
     note,
     status: FORM_STATUS.BOOKED,
-    carSpares,
+    carSpares: [],
+  });
+  const socketIo = io("http://localhost:3000");
+  socketIo.emit("sendNotification", {
+    senderName: customer._id,
+    receiverName: manager._id,
+    text: `NEW BOOKING - ${customerName} has booked your service`,
   });
   if (orderForm) {
-    // const socketIo = io("http://localhost:3000");
-    // socketIo.emit("sendMaintenanceForm", {
-    //   data: orderForm,
-    //   garageId: garageId,
-    // });
     res.status(200).json({
       success: true,
       message: "Successfull",

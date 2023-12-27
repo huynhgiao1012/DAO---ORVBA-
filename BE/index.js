@@ -46,22 +46,23 @@ const port = process.env.PORT || 3000;
 
 let onlineUsers = [];
 
-const addNewUser = async (userId, socketId) => {
-  !onlineUsers.some((user) => user.userId === userId) &&
-    onlineUsers.push({ userId, socketId });
+const addNewUser = (userId, socketId) => {
+  !onlineUsers.find((user) => user.userId === userId) &&
+    onlineUsers.push({ userId: userId, socketId: socketId });
 };
-
 const removeUser = (socketId) => {
   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
-
 const getUser = (userId) => {
   return onlineUsers.find((user) => user.userId === userId);
 };
 io.on("connection", (socket) => {
   socket.on("newUser", (userId) => {
-    addNewUser(userId, socket.id);
+    !onlineUsers.some((user) => user.userId === userId) &&
+      onlineUsers.push({ userId: userId, socketId: socket.id });
   });
+  console.log("connected");
+  console.log(onlineUsers);
   socket.on("sendNotification", ({ senderName, receiverName, text }) => {
     console.log(receiverName);
     // const receiver = getUser(receiverName);
@@ -70,7 +71,7 @@ io.on("connection", (socket) => {
       const receiver = getUser(receiverName);
       console.log(receiver);
       if (receiver) {
-        io.to(receiver.socketId).emit("getNotification", {
+        io.to(receiver.userId).emit("getNotification", {
           senderName,
           receiverName,
           text,
@@ -93,7 +94,6 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
   });
 });
-
 server.listen(port, () => {
   console.log(`Server is running on PORT ${port}`);
 });
