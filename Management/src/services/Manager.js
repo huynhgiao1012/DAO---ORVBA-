@@ -194,6 +194,12 @@ export const managerApi = createApi({
         method: "DELETE",
       }),
     }),
+    deleteForm: builder.mutation({
+      query: ({ id }) => ({
+        url: `/deleteForm/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -224,4 +230,5 @@ export const {
   useGetGarageIdMutation,
   useGetNewMaintenanceFormMutation,
   useCheckAccountMutation,
+  useDeleteFormMutation,
 } = managerApi;

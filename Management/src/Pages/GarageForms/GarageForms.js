@@ -5,7 +5,7 @@ import Datatable from "../../components/datatableForm/Datatable";
 import Datatable2 from "../../components/datatableFormE/Datatable";
 import Datatable3 from "../../components/datatableFormM/Datatable";
 import { Tabs } from "antd";
-const GarageForms = () => {
+const GarageForms = ({ socket }) => {
   const onChange = (key) => {
     // console.log(key);
   };
@@ -30,7 +30,7 @@ const GarageForms = () => {
     <div className="list">
       <Sidebar />
       <div className="listContainer">
-        <Navbar />
+        <Navbar socket={socket} />
         <Tabs
           defaultActiveKey="1"
           items={items}

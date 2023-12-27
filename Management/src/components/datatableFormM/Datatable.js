@@ -8,6 +8,7 @@ import {
   useUpdateFormMutation,
   useFormConfirmMutation,
   useGetNewMaintenanceFormMutation,
+  useDeleteFormMutation,
 } from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm, Radio } from "antd";
 import Box from "@mui/material/Box";
@@ -36,6 +37,7 @@ const Datatable = () => {
   const [data, setData] = useState([]);
   const [getAllForm] = useGetMaintenanceFormMutation();
   const [getNewForm] = useGetNewMaintenanceFormMutation();
+  const [deleteForm] = useDeleteFormMutation();
   const [formMark] = useFormConfirmMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
@@ -88,14 +90,14 @@ const Datatable = () => {
     console.log(e);
   };
   const handleDelete = async (id) => {
-    // await deleteMechanic({ id: id })
-    //   .unwrap()
-    //   .then((payload) => {
-    //     if (payload.success) {
-    //       <Alert severity="success">{payload.message}</Alert>;
-    //       loadData();
-    //     }
-    //   });
+    await deleteForm({ id: id })
+      .unwrap()
+      .then((payload) => {
+        if (payload.success) {
+          <Alert severity="success">{payload.message}</Alert>;
+          loadData();
+        }
+      });
   };
   const handleMark = (id) => {
     formMark({ id: id })

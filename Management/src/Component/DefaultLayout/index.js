@@ -23,7 +23,7 @@ import { Routes, Route } from "react-router-dom";
 import "../../style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
-const DefaultLayoutComponent = () => {
+const DefaultLayoutComponent = ({ socket }) => {
   const { i18n } = useTranslation();
   const { darkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
@@ -45,46 +45,46 @@ const DefaultLayoutComponent = () => {
           <Route index element={<List />} />
         </Route>
         <Route path="mechanic">
-          <Route index element={<Mechanic />} />
+          <Route index element={<Mechanic socket={socket} />} />
         </Route>
         <Route path="accountant">
-          <Route index element={<Accountant />} />
+          <Route index element={<Accountant socket={socket} />} />
         </Route>
         <Route path="garaServices">
-          <Route index element={<GarageService />} />
+          <Route index element={<GarageService socket={socket} />} />
         </Route>
         <Route path="garaDetails">
-          <Route index element={<GarageDetails />} />
+          <Route index element={<GarageDetails socket={socket} />} />
         </Route>
         <Route path="garaCustomer">
-          <Route index element={<GarageCustomer />} />
+          <Route index element={<GarageCustomer socket={socket} />} />
         </Route>
         <Route path="garaForms">
-          <Route index element={<GarageForms />} />
+          <Route index element={<GarageForms socket={socket} />} />
         </Route>
         <Route path="services">
-          <Route index element={<ListService />} />
+          <Route index element={<ListService socket={socket} />} />
         </Route>
         <Route path="myProfile">
-          <Route index element={<MyProfile />} />
+          <Route index element={<MyProfile socket={socket} />} />
         </Route>
         <Route path="adminProfile">
-          <Route index element={<AdminProfile />} />
+          <Route index element={<AdminProfile socket={socket} />} />
         </Route>
         <Route path="account">
-          <Route index element={<AccountMana />} />
+          <Route index element={<AccountMana socket={socket} />} />
         </Route>
         <Route path="garageManagement">
-          <Route index element={<GarageMana />} />
+          <Route index element={<GarageMana socket={socket} />} />
         </Route>
         <Route path="accountantProfile">
-          <Route index element={<AccountantProfile />} />
+          <Route index element={<AccountantProfile socket={socket} />} />
         </Route>
         <Route path="carSpares">
-          <Route index element={<CarSpare />} />
+          <Route index element={<CarSpare socket={socket} />} />
         </Route>
         <Route path="form">
-          <Route index element={<OrderForm />} />
+          <Route index element={<OrderForm socket={socket} />} />
         </Route>
       </Routes>
     </div>

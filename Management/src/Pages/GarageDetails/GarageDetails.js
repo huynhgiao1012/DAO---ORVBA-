@@ -22,7 +22,7 @@ const contentStyle = {
   background: "#364d79",
   width: "100%",
 };
-const GarageDetails = () => {
+const GarageDetails = ({ socket }) => {
   const navigate = useNavigate();
   const [getGarageDetail, { isLoading }] = useGetGarageDetailMutation();
   const [form] = Form.useForm();
@@ -221,7 +221,7 @@ const GarageDetails = () => {
     <div className="list">
       <Sidebar />
       <div className="listContainer">
-        <Navbar />
+        <Navbar socket={socket} />
         {isLoading ? (
           <div style={{ margin: 20 }}>
             <Skeleton active />

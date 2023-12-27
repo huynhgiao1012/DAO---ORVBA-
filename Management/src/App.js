@@ -2,13 +2,15 @@ import "./App.css";
 import Defaultlayout from "./Component/DefaultLayout";
 import Login from "./Pages/Login";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import socketIO from "socket.io-client";
+const socket = socketIO.connect("http://localhost:3000");
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route exact path="/login" element={<Login />} />
-          <Route path="/*" element={<Defaultlayout />} />
+          <Route exact path="/login" element={<Login socket={socket} />} />
+          <Route path="/*" element={<Defaultlayout socket={socket} />} />
         </Routes>
       </Router>
     </>

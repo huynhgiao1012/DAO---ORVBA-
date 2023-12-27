@@ -30,7 +30,7 @@ function Copyright(props) {
   );
 }
 // TODO remove, this demo shouldn't need to reset the theme.
-export default function LoginComponent() {
+export default function LoginComponent({ socket }) {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
   useEffect(() => {
@@ -64,9 +64,7 @@ export default function LoginComponent() {
             localStorage.setItem("token", payload.token);
           } else if (payload.role === "manager") {
             const decodedHeader = jwtDecode(payload.token);
-            console.log(decodedHeader);
-            const socketIo = io.connect("http://localhost:3000");
-            socketIo?.emit("newUser", decodedHeader.id);
+            socket?.emit("newUser", decodedHeader.id);
             notification.open({
               message: "Login",
               description: "Successfully",
