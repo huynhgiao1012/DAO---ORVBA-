@@ -5,11 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useGetUserDetailMutation} from '../services/User';
 import {useNavigation} from '@react-navigation/native';
 import Header2 from '../common/Header2';
-
+import {useGetGarageDetailMutation} from '../services/Garage';
 export default function ViewFormDetail({route}) {
   const {item} = route.params;
   const navigation = useNavigation();
   const [getUserDetail] = useGetUserDetailMutation();
+  const [getGarageDetail] = useGetGarageDetailMutation();
   const [data, setData] = useState({
     _id: '',
     email: '',
@@ -17,6 +18,17 @@ export default function ViewFormDetail({route}) {
     name: '',
     phone: '',
     role: '',
+    img: '',
+  });
+  const [data2, setData2] = useState({
+    _id: '',
+    address: '',
+    closeTime: '',
+    description: '',
+    email: '',
+    name: '',
+    openTime: '',
+    phone: '',
     img: '',
   });
   useEffect(() => {
@@ -28,6 +40,19 @@ export default function ViewFormDetail({route}) {
           ...payload.data,
         })),
       )
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
+    getGarageDetail({id: item.garageId})
+      .unwrap()
+      .then(payload => {
+        setData2(data => ({
+          ...data,
+          ...payload.data,
+        }));
+      })
       .catch(error => {
         if (error.status === 401) {
           navigation.navigate('Login');
@@ -62,6 +87,59 @@ export default function ViewFormDetail({route}) {
           <View style={styles.info}>
             <Icon name="dot-circle" color={themeColors.primaryColor2} />
             <Text style={styles.value}>{item.address}</Text>
+          </View>
+        </View>
+        <Text style={styles.title}>Garage's Information</Text>
+        <View
+          style={[
+            styles.part,
+            {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            },
+          ]}>
+          <View
+            style={{
+              width: '50%',
+              backgroundColor: '#f8f8f8',
+              marginRight: 10,
+              paddingVertical: 7,
+              borderRadius: 10,
+            }}>
+            <View style={styles.info}>
+              <Text style={[styles.value, {color: themeColors.black}]}>
+                {data2.name}
+              </Text>
+            </View>
+            <View style={styles.info}>
+              <Text style={[styles.value, {color: themeColors.black}]}>
+                {data2.phone}
+              </Text>
+            </View>
+          </View>
+          <View style={{width: '50%'}}>
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: themeColors.primaryColor5,
+                padding: 6,
+                borderRadius: 10,
+                marginBottom: 10,
+              }}>
+              <Text style={styles.value2}>{data2.email}</Text>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: themeColors.primaryColor5,
+                padding: 6,
+                borderRadius: 10,
+              }}>
+              <Text style={styles.value2}>
+                {data2.openTime} - {data2.closeTime}
+              </Text>
+            </View>
           </View>
         </View>
         <Text style={styles.title}>Mechanic's Information</Text>
@@ -257,6 +335,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic',
     marginLeft: 8,
+    textAlign: 'center',
   },
   part: {
     width: '100%',
