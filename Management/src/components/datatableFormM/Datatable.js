@@ -19,6 +19,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import moment from "moment";
 import Navbar from "../navbar/Navbar";
+const { Search } = Input;
 // import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
@@ -114,6 +115,7 @@ const Datatable = () => {
     handleOpen(data);
     setIsEdit(false);
   };
+  const onSearch = (value, _e, info) => console.log(info?.source, value);
   const handleCreate = () => {
     setIsModalOpen(true);
     setIsEdit(false);
@@ -253,7 +255,7 @@ const Datatable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        <div className="addButton" onClick={handleCreate}>
+        {/* <div className="addButton" onClick={handleCreate}>
           <p
             style={{
               fontSize: 16,
@@ -265,7 +267,13 @@ const Datatable = () => {
           >
             Create Emergency Form
           </p>
-        </div>
+        </div> */}
+        <Search
+          placeholder="input search text"
+          onSearch={onSearch}
+          enterButton
+          style={{ backgroundColor: "#3cbcc4" }}
+        />
       </div>
       <DataGrid
         className="datagrid"
@@ -281,158 +289,6 @@ const Datatable = () => {
           borderColor: "white",
         }}
       />
-      <div>
-        <Modal
-          open={isModalOpen}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography
-              style={{
-                textAlign: "center",
-                color: "#3C3434",
-                fontWeight: "bold",
-                marginBottom: 20,
-                fontSize: 22,
-              }}
-            >
-              ADD NEW MECHANIC
-            </Typography>
-            <Form
-              form={form}
-              name="form"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 18 }}
-              initialValues={{ remember: true }}
-              onFinish={onSubmit}
-              autoComplete="off"
-              layout="vertical"
-              style={{ marginLeft: 30, color: "#3C3434" }}
-            >
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    name="Name"
-                    label="Name"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter name",
-                        type: "string",
-                      },
-                      { whitespace: true },
-                      { min: 3 },
-                    ]}
-                    hasFeedback
-                  >
-                    <Input
-                      style={{ border: "1px solid #98C4C4", width: 220 }}
-                      type="string"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    name="Email"
-                    label="Email"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter email",
-                        type: "email",
-                      },
-                      { whitespace: false },
-                    ]}
-                    hasFeedback
-                  >
-                    <Input
-                      style={{ border: "1px solid #98C4C4", width: 220 }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    name="Phone"
-                    label="Phone"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter phone",
-                        type: "string",
-                      },
-                      { whitespace: false },
-                      { min: 10, max: 12 },
-                    ]}
-                    hasFeedback
-                  >
-                    <Input
-                      style={{ border: "1px solid #98C4C4", width: 220 }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    name="Group"
-                    label="Group"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please choose group",
-                        type: "string",
-                      },
-                      { whitespace: true },
-                      { min: 3 },
-                    ]}
-                    hasFeedback
-                  >
-                    <Radio.Group style={{ display: "flex" }}>
-                      <Radio value="emergency">Emergency</Radio>
-                      <Radio value="maintenance">Maintanence</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    form="form"
-                    style={{
-                      width: "90%",
-                      textAlign: "center",
-                      backgroundColor: "#34acaf",
-                      color: "white",
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </Col>
-                <Col span={12}>
-                  <Button
-                    onClick={() => setIsModalOpen(false)}
-                    style={{
-                      width: "90%",
-                      textAlign: "center",
-                      backgroundColor: "#98C4C4",
-                      color: "white",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </Box>
-        </Modal>
-      </div>
       <Drawer width={500} onClose={handleClose} open={open}>
         <p style={{ fontSize: "25px", color: "#34acaf", fontWeight: "bold" }}>
           Form's Detail
