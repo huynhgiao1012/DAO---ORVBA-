@@ -81,10 +81,10 @@
   border: 1px dotted rgba(220, 20, 60, 0.6);
   cursor: pointer;
 }
-.datatable .cellAction .editButton {
+.datatable .cellAction .markBtn {
   padding: 2px 8px;
   border-radius: 5px;
-  color: white;
+  color: #34acaf;
   border: 1px dotted rgba(20, 180, 220, 0.508);
   cursor: pointer;
   margin: 0px 10px;

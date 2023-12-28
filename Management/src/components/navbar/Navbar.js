@@ -10,12 +10,20 @@ import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { useGetUnreadNotiMutation } from "../../services/Notification";
+import {
+  useGetUnreadNotiMutation,
+  useUpdateNotiMutation,
+  useDeleteNotiMutation,
+} from "../../services/Notification";
+import moment from "moment";
+
 const Navbar = ({ socket }) => {
   const navigate = useNavigate();
   const [getUserDetail] = useGetUserDetailMutation();
   const [getNewForm] = useGetNewMaintenanceFormMutation();
   const [getUnread] = useGetUnreadNotiMutation();
+  const [updateNoti] = useUpdateNotiMutation();
+  const [deleteNoti] = useDeleteNotiMutation();
   const [listNoti, setListNoti] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [data, setData] = useState({
@@ -31,19 +39,8 @@ const Navbar = ({ socket }) => {
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  useEffect(() => {
-    setListNoti([]);
     setNotifications([]);
-    socket.on("getNotification", (data) => {
-      if (data) {
-        setNotifications((prev) => [...prev, data]);
-      }
-    });
+    setListNoti([]);
     getUnread()
       .unwrap()
       .then((payload) => {
@@ -54,6 +51,91 @@ const Navbar = ({ socket }) => {
           logOut();
         }
       });
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleRead = (id) => {
+    setListNoti([]);
+    setNotifications([]);
+    updateNoti({ id: id })
+      .unwrap()
+      .then((payload) => {
+        if (payload.success) {
+          alert(payload.message);
+          getUnread()
+            .unwrap()
+            .then((payload) => {
+              setListNoti((prev) => [...prev, ...payload.data]);
+            })
+            .catch((error) => {
+              if (error.data.message === "Token is exprired") {
+                logOut();
+              }
+            });
+        }
+      })
+      .catch((error) => {
+        if (error.data.message === "Token is exprired") {
+          logOut();
+        }
+      });
+  };
+  const handleDelete = (id) => {
+    setListNoti([]);
+    setNotifications([]);
+    deleteNoti({ id: id })
+      .unwrap()
+      .then((payload) => {
+        if (payload.success) {
+          alert(payload.message);
+          getUnread()
+            .unwrap()
+            .then((payload) => {
+              setListNoti((prev) => [...prev, ...payload.data]);
+            })
+            .catch((error) => {
+              if (error.data.message === "Token is exprired") {
+                logOut();
+              }
+            });
+        }
+      })
+      .catch((error) => {
+        if (error.data.message === "Token is exprired") {
+          logOut();
+        }
+      });
+  };
+  useEffect(() => {
+    setListNoti([]);
+    getUnread()
+      .unwrap()
+      .then((payload) => {
+        setListNoti((prev) => [...prev, ...payload.data]);
+      })
+      .catch((error) => {
+        if (error.data.message === "Token is exprired") {
+          logOut();
+        }
+      });
+    socket.on("getNotification", (data) => {
+      if (data) {
+        setNotifications([]);
+        setListNoti([]);
+        setNotifications((prev) => [...prev, data]);
+        getUnread()
+          .unwrap()
+          .then((payload) => {
+            setListNoti((prev) => [...prev, ...payload.data]);
+          })
+          .catch((error) => {
+            if (error.data.message === "Token is exprired") {
+              logOut();
+            }
+          });
+      }
+    });
     getUserDetail()
       .unwrap()
       .then((payload) => {
@@ -90,23 +172,13 @@ const Navbar = ({ socket }) => {
                   display: "flex",
                 }}
               >
-                <span
-                  style={{
-                    backgroundColor: "red",
-                    width: 25,
-                    height: 25,
-                    color: "white",
-                    paddingBottom: 10,
-                    borderRadius: 50,
-                    fontWeight: "bold",
-                    opacity: 0.8,
-                  }}
-                >
-                  {console.log(notifications)}
-                  {notifications.length > 0
-                    ? notifications.length
-                    : listNoti.length}
-                </span>
+                {(notifications.length > 0 || listNoti.length > 0) && (
+                  <img
+                    src={require("../../Image/noti.gif")}
+                    style={{ width: 50, height: 50 }}
+                  />
+                )}
+
                 <h3
                   style={{
                     paddingTop: 10,
@@ -145,17 +217,39 @@ const Navbar = ({ socket }) => {
                           borderBottom: "3px solid #e8e8e8",
                         }}
                       >
-                        <h4
-                          style={{
-                            width: "70%",
-                            color: "#3C3434",
-                            fontStyle: "oblique",
-                          }}
-                        >
-                          {val.text}
-                        </h4>
+                        <div>
+                          <h4
+                            style={{
+                              width: "70%",
+                              color: "#3C3434",
+                              fontStyle: "oblique",
+                            }}
+                          >
+                            {val.text}
+                          </h4>
+                          <h6
+                            style={{
+                              width: "70%",
+                              color: "#34acaf",
+                              fontStyle: "oblique",
+                            }}
+                          >
+                            {moment(
+                              new Date(val.createdAt)
+                                .toLocaleString()
+                                .split(" ")[0] +
+                                " " +
+                                new Date(val.createdAt)
+                                  .toLocaleString()
+                                  .split(" ")[1]
+                            ).fromNow()}
+                          </h6>
+                        </div>
                         <div style={{ width: "30%" }}>
                           <button
+                            onClick={() => {
+                              handleRead(val._id);
+                            }}
                             style={{
                               border: "none",
                               backgroundColor: "#3cbcc4",
@@ -170,6 +264,9 @@ const Navbar = ({ socket }) => {
                             <DraftsIcon />
                           </button>
                           <button
+                            onClick={() => {
+                              handleDelete(val._id);
+                            }}
                             style={{
                               border: "none",
                               backgroundColor: "red",

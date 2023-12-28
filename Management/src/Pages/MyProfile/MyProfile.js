@@ -13,7 +13,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { IP } from "../../Utils/constants";
 
-const MyProfile = () => {
+const MyProfile = ({ socket }) => {
   const navigate = useNavigate();
   const [getUserDetail, { isLoading }] = useGetUserDetailMutation();
   const [updateInfo] = useUpdateInfoMutation();
@@ -110,7 +110,7 @@ const MyProfile = () => {
     <div className="list">
       <Sidebar />
       <div className="listContainer">
-        <Navbar />
+        <Navbar socket={socket} />
         {isLoading ? (
           <div style={{ margin: 20 }}>
             <Skeleton active />

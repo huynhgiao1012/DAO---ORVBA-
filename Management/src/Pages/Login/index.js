@@ -64,7 +64,7 @@ export default function LoginComponent({ socket }) {
             localStorage.setItem("token", payload.token);
           } else if (payload.role === "manager") {
             const decodedHeader = jwtDecode(payload.token);
-            socket?.emit("newUser", decodedHeader.id);
+            socket.emit("newUser", decodedHeader.id);
             notification.open({
               message: "Login",
               description: "Successfully",

@@ -108,6 +108,7 @@ const Datatable = () => {
         }
       })
       .catch((error) => {
+        console.log(error);
         if (error.status === 401) {
           logOut();
         }
@@ -172,7 +173,12 @@ const Datatable = () => {
       flex: 1,
       headerAlign: "center",
       renderCell: (params) => {
-        return moment(params.row.date + " " + "11:00:00").fromNow();
+        console.log(new Date(params.row.createdAt).toLocaleString().split(" "));
+        return moment(
+          new Date(params.row.createdAt).toLocaleString().split(" ")[0] +
+            " " +
+            new Date(params.row.createdAt).toLocaleString().split(" ")[1]
+        ).fromNow();
       },
     },
     {
@@ -241,9 +247,9 @@ const Datatable = () => {
             >
               Edit
             </div> */}
-            {params.row.status === "booked" && (
+            {params.row.status === "await" && (
               <div
-                className="editButton"
+                className="markBtn"
                 onClick={() => handleMark(params.row._id)}
               >
                 Mark
