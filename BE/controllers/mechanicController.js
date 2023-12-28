@@ -124,8 +124,9 @@ exports.getForms = catchAsync(async (req, res) => {
   } else if (mechanic.group === "maintenance") {
     const orderForm = await OrderForm.find({
       type: mechanic.group,
-      status: FORM_STATUS.AWAIT,
+      status: FORM_STATUS.BOOKED,
     });
+    console.log(orderForm);
     if (orderForm) {
       res.status(200).json({
         success: true,

@@ -30,9 +30,14 @@ exports.deleteNotification = catchAsync(async (req, res) => {
 });
 exports.updateNotification = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const noti = await notification.findByIdAndUpdate(id, {
-    status: NOTI_STATUS.READ,
-  });
+  const noti = await notification.findByIdAndUpdate(
+    id,
+    {
+      status: NOTI_STATUS.READ,
+    },
+    { new: true }
+  );
+  console.log(noti);
   if (!noti) {
     throw new ApiError(400, "Notification is not available");
   }
@@ -43,7 +48,7 @@ exports.updateNotification = catchAsync(async (req, res) => {
 });
 exports.getUnreadNotification = catchAsync(async (req, res) => {
   const id = req.user.id;
-  const data = await notification.find({ to: id });
+  const data = await notification.find({ to: id, status: NOTI_STATUS.UNREAD });
   if (!data) {
     throw new ApiError(400, "Notification is unavailable");
   }
@@ -55,7 +60,7 @@ exports.getUnreadNotification = catchAsync(async (req, res) => {
 
 exports.getReadNotification = catchAsync(async (req, res) => {
   const id = req.user.id;
-  const data = await notification.find({ to: id, status: "read" });
+  const data = await notification.find({ to: id });
   if (!data) {
     throw new ApiError(400, "Notification is unavailable");
   }

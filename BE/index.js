@@ -58,8 +58,10 @@ const getUser = (userId) => {
 };
 io.on("connection", (socket) => {
   socket.on("newUser", (userId) => {
-    !onlineUsers.some((user) => user.userId === userId) &&
-      onlineUsers.push({ userId: userId, socketId: socket.id });
+    setInterval(() => {
+      !onlineUsers.some((user) => user.userId === userId) &&
+        onlineUsers.push({ userId: userId, socketId: socket.id });
+    }, 1000);
   });
   console.log("connected");
   socket.on("sendNotification", ({ senderName, receiverName, text }) => {
@@ -67,17 +69,48 @@ io.on("connection", (socket) => {
     // if (!receiver) {
     const intervalId = setInterval(() => {
       const receiver = getUser(receiverName);
-      console.log(receiver);
       if (receiver) {
         io.to(receiver.socketId).emit("getNotification", {
           senderName,
           receiverName,
           text,
         });
+        setInterval(() => {
+          !onlineUsers.some((user) => user.userId === receiver.userId) &&
+            onlineUsers.push({
+              userId: receiver.userId,
+              socketId: receiver.socketId,
+            });
+        }, 1000);
         clearInterval(intervalId);
       }
     }, 1000);
   });
+  socket.on(
+    "sendNotificationPickForm",
+    ({ senderName, receiverName, text }) => {
+      // const receiver = getUser(receiverName);
+      // if (!receiver) {
+      const intervalId = setInterval(() => {
+        const receiver = getUser(receiverName);
+        if (receiver) {
+          io.to(receiver.socketId).emit("getNotification", {
+            senderName,
+            receiverName,
+            text,
+          });
+          setInterval(() => {
+            !onlineUsers.some((user) => user.userId === receiver.userId) &&
+              onlineUsers.push({
+                userId: receiver.userId,
+                socketId: receiver.socketId,
+              });
+          }, 1000);
+          clearInterval(intervalId);
+        }
+      }, 1000);
+    }
+  );
   socket.on("sendEmergencyForm", ({ data }) => {
     io.emit("getEmergencyForm", {
       data: data,

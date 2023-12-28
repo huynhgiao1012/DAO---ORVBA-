@@ -64,7 +64,6 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     garageId,
   } = req.body;
   const accountId = req.user;
-  const customer = await Customer.findOne({ accountId: accountId.id });
   const manager = await Manager.findOne({ garageId: garageId });
   const orderForm = await OrderForm.create({
     customerName,
@@ -73,7 +72,7 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     address,
     date,
     time,
-    customerId: customer._id,
+    customerId: accountId.id,
     garageId: garageId,
     imgAf: "None",
     imgBf: "None",
@@ -81,17 +80,17 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     type: "maintenance",
     price,
     note,
-    status: FORM_STATUS.BOOKED,
+    status: FORM_STATUS.AWAIT,
     carSpares: [],
   });
   const socketIo = io("http://localhost:3000");
   socketIo.emit("sendNotification", {
-    senderName: customer._id,
+    senderName: accountId.id,
     receiverName: manager.accountId,
     text: `NEW MAINTENANCE BOOKING - ${customerName} has booked your service`,
   });
   await Notification.create({
-    from: customer._id,
+    from: accountId.id,
     to: manager.accountId,
     text: `NEW MAINTENANCE BOOKING - ${customerName} has booked your service`,
   });

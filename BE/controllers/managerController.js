@@ -11,6 +11,7 @@ const { ROLES, FORM_STATUS, GROUP } = require("../constant");
 const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
 const SubService = require("../models/subService");
+const Notification = require("../models/notification");
 const Garage = require("../models/garage");
 const { io } = require("socket.io-client");
 
@@ -451,11 +452,22 @@ exports.formConfirm = catchAsync(async (req, res) => {
     id,
     {
       managerId: manager._id,
-      status: FORM_STATUS.PROCESS,
+      status: FORM_STATUS.BOOKED,
     },
     { new: true }
   );
   if (orderForm) {
+    await Notification.create({
+      from: accountId.id,
+      to: orderForm.customerId,
+      text: `FORM'S STATUS - Your booking has been accepted ! Nice to see you soon at the garage`,
+    });
+    const socketIo = io("http://localhost:3000");
+    socketIo.emit("sendNotificationPickForm", {
+      senderName: accountId.id,
+      receiverName: orderForm.customerId,
+      text: `FORM'S STATUS - Your booking has been accepted ! Nice to see you soon at the garage`,
+    });
     res.status(200).json({
       success: true,
       message: "Successfull",
