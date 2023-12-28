@@ -25,6 +25,9 @@ import {
   saveStorage,
 } from '../common/LocalStorage';
 import {KEY_TOKEN} from '../utils/constants';
+import {decode} from 'base-64';
+global.atob = decode;
+import {jwtDecode} from 'jwt-decode';
 
 const loginValidationSchema = yup.object().shape({
   email: yup.string().email('Please enter valid email').required('Required'),
@@ -36,9 +39,13 @@ const loginValidationSchema = yup.object().shape({
       'Must Contain 8 Characters, Uppercase, Lowercase, Number and Special Case Character',
     ),
 });
-export default function LoginScreen() {
+export default function LoginScreen({route}) {
   const navigation = useNavigation();
   const [user, setUser] = useState('');
+  const [user2, setUser2] = useState({
+    email: '',
+    password: '',
+  });
   const [loginQuery, {isLoading}] = useLoginMutation();
   const Login = data => {
     clearStorage(KEY_TOKEN);
@@ -47,8 +54,8 @@ export default function LoginScreen() {
       .then(payload => {
         if (payload.success === true) {
           saveStorage(KEY_TOKEN, payload.token);
-          // const decode = jwt_decode(payload.token);
-          // setUser(decode.id);
+          const decode = jwtDecode(payload.token);
+          route.params.socket?.emit('newUser', decode.id);
           if (payload.role === 'customer') {
             navigation.navigate('Home');
           } else if (payload.role === 'mechanic') {
@@ -94,6 +101,9 @@ export default function LoginScreen() {
         }
       });
   };
+  useEffect(() => {
+    setUser2({email: '', password: ''});
+  }, []);
   return (
     <LinearGradient
       style={{flex: 1}}
@@ -147,7 +157,7 @@ export default function LoginScreen() {
           <Formik
             validationSchema={loginValidationSchema}
             onSubmit={values => Login(values)}
-            initialValues={{email: '', password: ''}}>
+            initialValues={{...user2}}>
             {({errors, handleChange, handleBlur, handleSubmit, touched}) => {
               return (
                 <View>

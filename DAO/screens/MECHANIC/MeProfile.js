@@ -245,7 +245,7 @@ export default function MeProfile({route}) {
               color: themeColors.primaryColor4,
               marginLeft: 10,
             }}>
-            Group - Emergency
+            Group - {point.group}
           </Text>
         </View>
       </View>

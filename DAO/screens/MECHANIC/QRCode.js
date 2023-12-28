@@ -1,4 +1,4 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {crc16ccitt} from 'crc';
 import QRCode from 'react-native-qrcode-svg';
@@ -179,6 +179,7 @@ export default function QRCodePages({route}) {
               borderColor: themeColors.primaryColor,
               padding: 10,
               alignSelf: 'center',
+              borderRadius: 10,
             }}>
             <QRCode value={QR} size={250} />
           </View>
@@ -212,10 +213,29 @@ export default function QRCodePages({route}) {
               {info.bankName}
             </Text>
           </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MeMainHome')}
+            style={{
+              backgroundColor: themeColors.primaryColor,
+              alignSelf: 'center',
+              paddingVertical: 10,
+              paddingHorizontal: 30,
+              borderRadius: 10,
+            }}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: themeColors.white,
+                fontSize: 17,
+                textAlign: 'center',
+              }}>
+              DONE
+            </Text>
+          </TouchableOpacity>
           <View style={{position: 'absolute', bottom: 0, left: 0}}>
             <Image
               source={require('../../assets/pay.jpg')}
-              style={{width: 500, height: 240, opacity: 0.3}}
+              style={{width: 500, height: 200, opacity: 0.3}}
             />
           </View>
         </View>

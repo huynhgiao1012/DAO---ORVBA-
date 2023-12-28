@@ -34,6 +34,11 @@ export const notiApi = createApi({
         url: `/getUnreadNotification`,
       }),
     }),
+    getReadNotification: builder.mutation({
+      query: () => ({
+        url: `/getReadNotification`,
+      }),
+    }),
     updateNoti: builder.mutation({
       query: ({id}) => ({
         url: `/updateNoti/${id}`,
@@ -53,4 +58,5 @@ export const {
   useGetUnreadNotiMutation,
   useUpdateNotiMutation,
   useDeleteNotiMutation,
+  useGetReadNotificationMutation,
 } = notiApi;

@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../screens/Login';
@@ -27,7 +27,10 @@ import QRCode from '../screens/MECHANIC/QRCode';
 import ViewFormDetail from '../screens/ViewFormDetail';
 
 const Stack = createStackNavigator();
-export default function Navigation() {
+export default function Navigation({socket}) {
+  useEffect(() => {
+    // console.log(socket);
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
@@ -39,6 +42,7 @@ export default function Navigation() {
         <Stack.Screen
           name="Login"
           options={{headerShown: false}}
+          initialParams={{socket: socket}}
           component={Login}
         />
         <Stack.Screen
@@ -69,6 +73,7 @@ export default function Navigation() {
         <Stack.Screen
           name="Home"
           options={{headerShown: false}}
+          initialParams={{socket: socket}}
           component={Home}
         />
         <Stack.Screen
