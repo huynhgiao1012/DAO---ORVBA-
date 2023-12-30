@@ -37,6 +37,22 @@ const Navbar = ({ socket }) => {
   });
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const convertTime12to24 = (time12h) => {
+    const hours = time12h.getHours();
+    const minutes = time12h.getMinutes();
+
+    // Convert the hour to the 24-hour format
+    let convertedHours = hours;
+    if (hours > 12) {
+      convertedHours -= 12;
+    }
+
+    // Set the hour to the 24-hour format
+    time12h.setHours(convertedHours);
+
+    // Log the converted time
+    console.log(time12h.toLocaleTimeString());
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setNotifications([]);
@@ -235,13 +251,16 @@ const Navbar = ({ socket }) => {
                             }}
                           >
                             {moment(
-                              new Date(val.createdAt)
-                                .toLocaleString()
-                                .split(" ")[0] +
+                              new Date(val.createAt)
+                                .toLocaleString("en-GB")
+                                .split(", ")[0]
+                                .split("/")
+                                .reverse()
+                                .join("-") +
                                 " " +
-                                new Date(val.createdAt)
-                                  .toLocaleString()
-                                  .split(" ")[1]
+                                new Date(val.createAt)
+                                  .toLocaleString("en-GB")
+                                  .split(", ")[1]
                             ).fromNow()}
                           </h6>
                         </div>

@@ -173,11 +173,17 @@ const Datatable = () => {
       flex: 1,
       headerAlign: "center",
       renderCell: (params) => {
-        console.log(new Date(params.row.createdAt).toLocaleString().split(" "));
         return moment(
-          new Date(params.row.createdAt).toLocaleString().split(" ")[0] +
+          new Date(params.row.createdAt)
+            .toLocaleString("en-GB")
+            .split(", ")[0]
+            .split("/")
+            .reverse()
+            .join("-") +
             " " +
-            new Date(params.row.createdAt).toLocaleString().split(" ")[1]
+            new Date(params.row.createdAt)
+              .toLocaleString("en-GB")
+              .split(", ")[1]
         ).fromNow();
       },
     },
