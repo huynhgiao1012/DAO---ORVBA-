@@ -127,16 +127,16 @@ export default function NotiScreen() {
                         fontStyle: 'italic',
                       }}>
                       {moment(
-                        new Date(val.createAt)
-                          .toLocaleString()
-                          .split(', ')[1]
+                        new Date(val.createdAt)
+                          .toLocaleString('en-GB')
+                          .split(', ')[0]
                           .split('/')
                           .reverse()
                           .join('-') +
                           ' ' +
-                          new Date(val.createAt)
-                            .toLocaleString()
-                            .split(', ')[0],
+                          new Date(val.createdAt)
+                            .toLocaleString('en-GB')
+                            .split(', ')[1],
                       ).fromNow()}
                     </Text>
                   </View>

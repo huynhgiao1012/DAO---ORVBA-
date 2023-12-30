@@ -19,7 +19,9 @@ const Home = ({route}) => {
   const [unRead, setUnread] = useState([]);
   const [getUnreadNoti] = useGetUnreadNotiMutation();
   const [notifications, setNotifications] = useState([]);
-  useEffect(() => {
+  const [status, setStatus] = useState('home');
+
+  const loadNoti = () => {
     setUnread([]);
     setNotifications([]);
     if (socket) {
@@ -39,11 +41,24 @@ const Home = ({route}) => {
           navigation.navigate('Login');
         }
       });
-  }, []);
+  };
+  useEffect(() => {
+    setUnread([]);
+    loadNoti();
+  }, [status]);
   return (
     <Tab.Navigator
       initialRouteName="MainHome"
       screenOptions={({route, navigation}) => {
+        if (navigation.getState().index === 0) {
+          setStatus('home');
+        } else if (navigation.getState().index === 1) {
+          setStatus('form');
+        } else if (navigation.getState().index === 2) {
+          setStatus('noti');
+        } else {
+          setStatus('info');
+        }
         return {
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
@@ -60,29 +75,30 @@ const Home = ({route}) => {
                     size={size}
                     color={color}
                   />
-                  {!navigation.isFocused() && (
-                    <View
-                      style={{
-                        backgroundColor: 'red',
-                        borderRadius: 20,
-                        width: 20,
-                        height: 20,
-                        position: 'absolute',
-                        top: -8,
-                        right: -13,
-                      }}>
-                      <Text
+                  {(unRead.length > 0 || notifications.length > 0) &&
+                    !navigation.isFocused() && (
+                      <View
                         style={{
-                          alignSelf: 'center',
-                          color: themeColors.white,
-                          fontWeight: '600',
+                          backgroundColor: 'red',
+                          borderRadius: 20,
+                          width: 20,
+                          height: 20,
+                          position: 'absolute',
+                          top: -8,
+                          right: -13,
                         }}>
-                        {unRead.length >= notifications.length
-                          ? unRead.length
-                          : notifications.length}
-                      </Text>
-                    </View>
-                  )}
+                        <Text
+                          style={{
+                            alignSelf: 'center',
+                            color: themeColors.white,
+                            fontWeight: '600',
+                          }}>
+                          {unRead.length >= notifications.length
+                            ? unRead.length
+                            : notifications.length}
+                        </Text>
+                      </View>
+                    )}
                 </View>
               );
             } else if (rn === 'Profile') {
