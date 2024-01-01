@@ -463,7 +463,7 @@ exports.formConfirm = catchAsync(async (req, res) => {
       text: `FORM'S STATUS - Your booking has been accepted ! Nice to see you soon at the garage`,
     });
     const socketIo = io("http://localhost:3000");
-    socketIo.emit("sendNotificationPickForm", {
+    socketIo.emit("sendNotification", {
       senderName: accountId.id,
       receiverName: orderForm.customerId,
       text: `FORM'S STATUS - Your booking has been accepted ! Nice to see you soon at the garage`,

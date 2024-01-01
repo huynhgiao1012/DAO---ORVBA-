@@ -1,8 +1,9 @@
-const { FORM_STATUS } = require("../constant");
+const { FORM_STATUS, GROUP } = require("../constant");
 const catchAsync = require("../middleware/async");
 const orderForm = require("../models/orderForm");
 const ApiError = require("../utils/ApiError");
 const payment = require("../models/payment");
+const customer = require("../models/customer");
 const stripe = require("stripe")(
   "sk_test_51NKv7XIatF4AkN7lpqCvr5HT3Cg3mUK6pnjQryIDAXO6ffg5DiSx4dHjX2rhUmpDKqLh7llrpHUYEVmnq6tLJlKF00F3N2HMc8"
 );
@@ -48,10 +49,10 @@ exports.updateDoneForm = catchAsync(async (req, res) => {
 });
 exports.getAllFormByCustomer = catchAsync(async (req, res) => {
   const id = req.user.id;
+  const Customer = await customer.findOne({ accountId: id });
   const data = await orderForm
-    .find({ customerId: id })
-    .populate("garageId", "name email phone _id")
-    .populate("serviceId", "type price description _id");
+    .find({ customerId: Customer._id })
+    .populate("garageId", "name email phone _id");
   if (!data) {
     throw new ApiError(400, "Form is unavailable");
   }
