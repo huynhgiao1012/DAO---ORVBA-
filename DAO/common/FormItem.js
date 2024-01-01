@@ -16,7 +16,6 @@ export default function FormItem({data}) {
     currency: 'VND',
   });
   useEffect(() => {
-    console.log(data);
     setData(dataForm => ({
       ...dataForm,
       ...data,
@@ -38,11 +37,11 @@ export default function FormItem({data}) {
             fontWeight: 'bold',
             color: themeColors.white,
             backgroundColor: themeColors.primaryColor2,
-            padding: 5,
+            padding: 8,
             borderRadius: 10,
             fontStyle: 'italic',
           }}>
-          {dataForm.type}
+          {dataForm.status}
         </Text>
         <Text
           style={{

@@ -27,6 +27,7 @@ const Home = ({route}) => {
     if (socket) {
       socket.on('getNotification', data => {
         if (data) {
+          setNotifications([]);
           setNotifications(prev => [...prev, data]);
         }
       });
@@ -44,6 +45,7 @@ const Home = ({route}) => {
   };
   useEffect(() => {
     setUnread([]);
+    setNotifications([]);
     loadNoti();
   }, [status]);
   return (

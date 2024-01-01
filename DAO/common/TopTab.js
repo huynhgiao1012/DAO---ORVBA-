@@ -18,7 +18,7 @@ export default function TopTab() {
         },
         tabBarLabelStyle: {fontWeight: '700'},
       }}>
-      <Tab.Screen name="All" component={AllForm} />
+      {/* <Tab.Screen name="All" component={AllForm} /> */}
       <Tab.Screen name="Emergency" component={Emergency} />
       <Tab.Screen name="Maintenance" component={Maintenance} />
     </Tab.Navigator>

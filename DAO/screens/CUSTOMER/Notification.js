@@ -49,7 +49,7 @@ export default function NotiScreen() {
           .then(payload => {
             setUnread([]);
             if (payload) {
-              setUnread(prev => [...prev, ...payload.data]);
+              setUnread(prev => [...prev, ...payload.data].reverse());
             }
           });
       });

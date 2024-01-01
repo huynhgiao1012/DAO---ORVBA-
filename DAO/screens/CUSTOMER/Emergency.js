@@ -4,13 +4,62 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {themeColors} from '../../common/theme';
 import FormItem from '../../common/FormItem';
+import {useGetAllFormCustomerMutation} from '../../services/OrderForm';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Emergency() {
+  const navigation = useNavigation();
   const [active, setActive] = useState(0);
+  const [getAllForm, {isLoading}] = useGetAllFormCustomerMutation();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    setData([]);
+    getAllForm()
+      .unwrap()
+      .then(payload => {
+        const arr = [];
+        if (active === 0) {
+          payload.data.map(val => {
+            if (val.type === 'emergency') {
+              arr.push(val);
+            }
+          });
+          setData(prev => [...prev, ...arr]);
+        } else if (active === 1) {
+          payload.data.map(val => {
+            if (val.type === 'emergency' && val.status === 'await') {
+              arr.push(val);
+            }
+          });
+          setData(prev => [...prev, ...arr]);
+        } else if (active === 2) {
+          payload.data.map(val => {
+            if (val.type === 'emergency' && val.status === 'process') {
+              arr.push(val);
+            }
+          });
+          setData(prev => [...prev, ...arr]);
+        } else if (active === 3) {
+          payload.data.map(val => {
+            if (val.type === 'emergency' && val.status === 'done') {
+              arr.push(val);
+            }
+          });
+          setData(prev => [...prev, ...arr]);
+        }
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
+  }, [active]);
   const handleFilter = num => {
     setActive(num);
   };
@@ -76,7 +125,33 @@ export default function Emergency() {
           <Text style={styles.btn_text}>Paid</Text>
         </TouchableOpacity>
       </View>
-      <FormItem />
+      {isLoading && (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#f8f8f8aa',
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
+              }}>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      )}
+      {data.length > 0 ? (
+        data.map((val, index) => {
+          return <FormItem data={val} key={index} />;
+        })
+      ) : (
+        <Text>Not Available</Text>
+      )}
     </ScrollView>
   );
 }
