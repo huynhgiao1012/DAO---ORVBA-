@@ -292,7 +292,7 @@ const Datatable = () => {
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <div className="cellAction">
+          <div className="action">
             <div className="viewButton" onClick={() => handleView(params.row)}>
               <CalendarViewMonthIcon fontSize="small" />
             </div>
@@ -322,7 +322,7 @@ const Datatable = () => {
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <div className="cellAction">
+          <div className="newAction">
             <div
               className="viewSubButton"
               onClick={() => handleViewSub(params.row.id)}
