@@ -160,7 +160,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
         ":" +
         (currentDay.getSeconds() + 1),
       managerId: manager._id,
-      customerId: customer._id,
+      customerId: accountInfo._id,
       garageId: manager.garageId,
       imgAf: "None",
       imgBf: "None",

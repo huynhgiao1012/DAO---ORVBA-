@@ -51,7 +51,7 @@ exports.getAllFormByCustomer = catchAsync(async (req, res) => {
   const id = req.user.id;
   const Customer = await customer.findOne({ accountId: id });
   const data = await orderForm
-    .find({ customerId: Customer._id })
+    .find({ customerId: id })
     .populate("garageId", "name email phone _id");
   if (!data) {
     throw new ApiError(400, "Form is unavailable");
