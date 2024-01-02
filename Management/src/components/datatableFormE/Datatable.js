@@ -8,6 +8,7 @@ import {
   useCreateEmergencyFormMutation,
   useGetAllServiceMaMutation,
   useCheckAccountMutation,
+  useDeleteFormMutation,
 } from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm, Select } from "antd";
 import Box from "@mui/material/Box";
@@ -35,6 +36,7 @@ const Datatable = () => {
   const [getAllForm] = useGetEmergencyFormMutation();
   const [getService] = useGetAllServiceMaMutation();
   const [createForm] = useCreateEmergencyFormMutation();
+  const [deleteForm] = useDeleteFormMutation();
   const [checkAccount] = useCheckAccountMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [regis, setRegis] = useState(false);
@@ -106,14 +108,14 @@ const Datatable = () => {
     console.log(e);
   };
   const handleDelete = async (id) => {
-    // await deleteMechanic({ id: id })
-    //   .unwrap()
-    //   .then((payload) => {
-    //     if (payload.success) {
-    //       <Alert severity="success">{payload.message}</Alert>;
-    //       loadData();
-    //     }
-    //   });
+    await deleteForm({ id: id })
+      .unwrap()
+      .then((payload) => {
+        if (payload.success) {
+          <Alert severity="success">{payload.message}</Alert>;
+          loadData();
+        }
+      });
   };
   // const handleEdit = (id) => {
   //   handleOpen(id);

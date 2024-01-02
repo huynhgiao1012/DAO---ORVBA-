@@ -3,14 +3,19 @@ import { DataGrid } from "@mui/x-data-grid";
 import { formColumn } from "../../datatablesource";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useGetAllFormMutation } from "../../services/Manager";
+import {
+  useGetAllFormMutation,
+  useDeleteFormMutation,
+} from "../../services/Manager";
 import { Col, Form, Input, Row, Drawer, Popconfirm } from "antd";
+import Alert from "@mui/material/Alert";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 
 const Datatable = () => {
   const [data, setData] = useState([]);
   const [getAllForm] = useGetAllFormMutation();
+  const [deleteForm] = useDeleteFormMutation();
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -68,15 +73,16 @@ const Datatable = () => {
   const cancelConfirm = (e) => {
     console.log(e);
   };
+
   const handleDelete = async (id) => {
-    // await deleteMechanic({ id: id })
-    //   .unwrap()
-    //   .then((payload) => {
-    //     if (payload.success) {
-    //       <Alert severity="success">{payload.message}</Alert>;
-    //       loadData();
-    //     }
-    //   });
+    await deleteForm({ id: id })
+      .unwrap()
+      .then((payload) => {
+        if (payload.success) {
+          <Alert severity="success">{payload.message}</Alert>;
+          loadData();
+        }
+      });
   };
   // const handleEdit = (id) => {
   //   handleOpen(id);
