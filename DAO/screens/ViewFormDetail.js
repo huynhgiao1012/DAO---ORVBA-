@@ -6,19 +6,47 @@ import {useGetUserDetailMutation} from '../services/User';
 import {useNavigation} from '@react-navigation/native';
 import Header2 from '../common/Header2';
 import {useGetGarageDetailMutation} from '../services/Garage';
+import {useGetFormDetailMutation} from '../services/OrderForm';
+useGetFormDetailMutation;
 export default function ViewFormDetail({route}) {
-  const {item} = route.params;
+  const {id} = route.params;
   const navigation = useNavigation();
+  const [getFormDetail] = useGetFormDetailMutation();
   const [getUserDetail] = useGetUserDetailMutation();
   const [getGarageDetail] = useGetGarageDetailMutation();
   const [data, setData] = useState({
     _id: '',
-    email: '',
-    isActive: false,
-    name: '',
+    address: '',
+    automaker: '',
+    carSpares: [],
+    createdAt: '',
+    customerId: {
+      _id: '',
+      email: '',
+      name: '',
+      phone: '',
+    },
+    customerName: '',
+    date: '',
+    garageId: {
+      _id: '',
+      email: '',
+      name: '',
+      phone: '',
+    },
+    imgAf: 'None',
+    imgBf: 'None',
+    isFeedback: false,
+    isPaid: false,
+    managerId: '',
+    note: 'None',
+    payType: 'cash',
     phone: '',
-    role: '',
-    img: '',
+    price: 0,
+    service: '',
+    status: '',
+    time: '',
+    type: '',
   });
   const [data2, setData2] = useState({
     _id: '',
@@ -32,23 +60,10 @@ export default function ViewFormDetail({route}) {
     img: '',
   });
   useEffect(() => {
-    getUserDetail()
-      .unwrap()
-      .then(payload =>
-        setData(data => ({
-          ...data,
-          ...payload.data,
-        })),
-      )
-      .catch(error => {
-        if (error.status === 401) {
-          navigation.navigate('Login');
-        }
-      });
-    getGarageDetail({id: item.garageId})
+    getFormDetail({id})
       .unwrap()
       .then(payload => {
-        setData2(data => ({
+        setData(data => ({
           ...data,
           ...payload.data,
         }));
@@ -58,6 +73,32 @@ export default function ViewFormDetail({route}) {
           navigation.navigate('Login');
         }
       });
+    // getUserDetail()
+    //   .unwrap()
+    //   .then(payload =>
+    //     setData(data => ({
+    //       ...data,
+    //       ...payload.data,
+    //     })),
+    //   )
+    //   .catch(error => {
+    //     if (error.status === 401) {
+    //       navigation.navigate('Login');
+    //     }
+    //   });
+    // getGarageDetail({id: item.garageId})
+    //   .unwrap()
+    //   .then(payload => {
+    //     setData2(data => ({
+    //       ...data,
+    //       ...payload.data,
+    //     }));
+    //   })
+    //   .catch(error => {
+    //     if (error.status === 401) {
+    //       navigation.navigate('Login');
+    //     }
+    //   });
   }, []);
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
@@ -73,20 +114,19 @@ export default function ViewFormDetail({route}) {
           marginBottom: 15,
           width: '100%',
         }}>
-        {/* Customer detail */}
         <Text style={styles.title}>Customer's Information</Text>
         <View style={styles.part}>
           <View style={styles.info}>
             <Icon name="dot-circle" color={themeColors.primaryColor2} />
-            <Text style={styles.value}>{item.customerName}</Text>
+            <Text style={styles.value}>{data.customerName}</Text>
           </View>
           <View style={styles.info}>
             <Icon name="dot-circle" color={themeColors.primaryColor2} />
-            <Text style={styles.value}>{item.phone}</Text>
+            <Text style={styles.value}>{data.phone}</Text>
           </View>
           <View style={styles.info}>
             <Icon name="dot-circle" color={themeColors.primaryColor2} />
-            <Text style={styles.value}>{item.address}</Text>
+            <Text style={styles.value}>{data.address}</Text>
           </View>
         </View>
         <Text style={styles.title}>Garage's Information</Text>
@@ -109,12 +149,12 @@ export default function ViewFormDetail({route}) {
             }}>
             <View style={styles.info}>
               <Text style={[styles.value, {color: themeColors.black}]}>
-                {data2.name}
+                {data.garageId.name}
               </Text>
             </View>
             <View style={styles.info}>
               <Text style={[styles.value, {color: themeColors.black}]}>
-                {data2.phone}
+                {data.garageId.phone}
               </Text>
             </View>
           </View>
@@ -127,9 +167,9 @@ export default function ViewFormDetail({route}) {
                 borderRadius: 10,
                 marginBottom: 10,
               }}>
-              <Text style={styles.value2}>{data2.email}</Text>
+              <Text style={styles.value2}>{data.garageId.email}</Text>
             </View>
-            <View
+            {/* <View
               style={{
                 width: '100%',
                 backgroundColor: themeColors.primaryColor5,
@@ -139,47 +179,51 @@ export default function ViewFormDetail({route}) {
               <Text style={styles.value2}>
                 {data2.openTime} - {data2.closeTime}
               </Text>
-            </View>
+            </View> */}
           </View>
         </View>
-        <Text style={styles.title}>Mechanic's Information</Text>
-        <View
-          style={[
-            styles.part,
-            {
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            },
-          ]}>
-          <View style={{width: '50%'}}>
-            <View style={styles.info}>
-              <Icon
-                name="plus-circle"
-                color={themeColors.primaryColor6}
-                size={16}
-              />
-              <Text style={styles.value2}>{data.name}</Text>
-            </View>
-            <View style={styles.info}>
-              <Icon
-                name="plus-circle"
-                color={themeColors.primaryColor6}
-                size={16}
-              />
-              <Text style={styles.value2}>{data.phone}</Text>
+        {data.mechanicId && (
+          <View>
+            <Text style={styles.title}>Mechanic's Information</Text>
+            <View
+              style={[
+                styles.part,
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                },
+              ]}>
+              <View style={{width: '50%'}}>
+                <View style={styles.info}>
+                  <Icon
+                    name="plus-circle"
+                    color={themeColors.primaryColor6}
+                    size={16}
+                  />
+                  <Text style={styles.value2}>{data.name}</Text>
+                </View>
+                <View style={styles.info}>
+                  <Icon
+                    name="plus-circle"
+                    color={themeColors.primaryColor6}
+                    size={16}
+                  />
+                  <Text style={styles.value2}>{data.phone}</Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                  backgroundColor: themeColors.primaryColor5,
+                  padding: 6,
+                  borderRadius: 10,
+                }}>
+                <Text style={styles.value2}>{data.email}</Text>
+              </View>
             </View>
           </View>
-          <View
-            style={{
-              width: '50%',
-              backgroundColor: themeColors.primaryColor5,
-              padding: 6,
-              borderRadius: 10,
-            }}>
-            <Text style={styles.value2}>{data.email}</Text>
-          </View>
-        </View>
+        )}
       </View>
       <View
         style={{
@@ -201,41 +245,61 @@ export default function ViewFormDetail({route}) {
           }}>
           <View style={{width: '45%'}}>
             <Text style={styles.label}>Before repairing</Text>
-            <Image
-              source={{uri: item.imgBf}}
-              style={{width: '100%', height: 150, borderRadius: 20}}
-            />
+            {data.imgBf !== 'None' ? (
+              <Image
+                source={{uri: data.imgBf}}
+                style={{width: '100%', height: 150, borderRadius: 20}}
+              />
+            ) : (
+              <View
+                style={{
+                  backgroundColor: themeColors.primaryColor5,
+                  width: '100%',
+                  height: 150,
+                  borderRadius: 20,
+                }}></View>
+            )}
           </View>
           <View style={{width: '45%'}}>
             <Text style={styles.label}>After repairing</Text>
-            <Image
-              source={{uri: item.imgAf}}
-              style={{width: '100%', height: 150, borderRadius: 20}}
-            />
+            {data.imgAf !== 'None' ? (
+              <Image
+                source={{uri: data.imgAf}}
+                style={{width: '100%', height: 150, borderRadius: 20}}
+              />
+            ) : (
+              <View
+                style={{
+                  backgroundColor: themeColors.primaryColor5,
+                  width: '100%',
+                  height: 150,
+                  borderRadius: 20,
+                }}></View>
+            )}
           </View>
         </View>
         <View style={styles.content}>
           <Text style={styles.title2}>Automaker</Text>
-          <Text style={styles.input}>{item.automaker}</Text>
+          <Text style={styles.input}>{data.automaker}</Text>
         </View>
         <View style={styles.content}>
           <Text style={styles.title2}>Date</Text>
           <Text style={styles.input}>
-            {item.date.split('-').reverse().join('-')}
+            {data.date.split('-').reverse().join('-')}
           </Text>
         </View>
         <View style={styles.content}>
           <Text style={styles.title2}>Time</Text>
-          <Text style={styles.input}>{item.time}</Text>
+          <Text style={styles.input}>{data.time}</Text>
         </View>
         <View style={styles.content}>
           <Text style={styles.title2}>Service</Text>
-          <Text style={styles.input}>{item.service}</Text>
+          <Text style={styles.input}>{data.service}</Text>
         </View>
         <View style={styles.content}>
           <Text style={styles.title2}>CarSpares</Text>
-          {item.carSpares.length > 0 ? (
-            item.carSpares.map((val, index) => {
+          {data.carSpares.length > 0 ? (
+            data.carSpares.map((val, index) => {
               return (
                 <Text
                   key={index}
@@ -258,7 +322,7 @@ export default function ViewFormDetail({route}) {
         </View>
         <View style={styles.content}>
           <Text style={styles.title2}>Note</Text>
-          <Text style={styles.input}>{item.note}</Text>
+          <Text style={styles.input}>{data.note}</Text>
         </View>
         <View
           style={{
@@ -285,7 +349,7 @@ export default function ViewFormDetail({route}) {
             {new Intl.NumberFormat('vi-VN', {
               style: 'currency',
               currency: 'VND',
-            }).format(item.price)}
+            }).format(data.price)}
           </Text>
         </View>
       </View>

@@ -1,8 +1,10 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {themeColors} from './theme';
+import {useNavigation} from '@react-navigation/native';
 
 export default function FormItem({data}) {
+  const navigation = useNavigation();
   const [dataForm, setData] = useState({
     _id: '',
     date: '',
@@ -23,6 +25,7 @@ export default function FormItem({data}) {
   }, []);
   return (
     <TouchableOpacity
+      onPress={() => navigation.navigate('ViewFormDetail', {id: dataForm._id})}
       style={{padding: 15, borderBottomWidth: 2, borderBottomColor: '#e8e8e8'}}>
       <View
         style={{
