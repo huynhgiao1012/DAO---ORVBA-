@@ -17,11 +17,14 @@ import {
   useGetCustomerDetailMutation,
   useGetCustomerPointMutation,
 } from '../../services/Customer';
+import {useGetFormNotFeedMutation} from '../../services/OrderForm';
 
 export default function Profile({route}) {
   const navigation = useNavigation();
   const [getUserDetail, {isLoading}] = useGetCustomerDetailMutation();
   const [getCustomerPoint] = useGetCustomerPointMutation();
+  const [getFormNotFeed] = useGetFormNotFeedMutation();
+  const [feedback, setFeed] = useState([]);
   const [data, setData] = useState({
     _id: '',
     email: '',
@@ -37,6 +40,7 @@ export default function Profile({route}) {
     point: 0,
   });
   useEffect(() => {
+    setFeed([]);
     getUserDetail()
       .unwrap()
       .then(payload =>
@@ -54,9 +58,16 @@ export default function Profile({route}) {
           ...payload.data,
         })),
       )
+      .catch(error => console.log(error));
+    getFormNotFeed()
+      .unwrap()
+      .then(payload => {
+        setFeed(prev => [...prev, ...payload.data]);
+      })
       .catch(error => console.log(error));
   }, [route]);
   useEffect(() => {
+    setFeed([]);
     getUserDetail()
       .unwrap()
       .then(payload =>
@@ -74,6 +85,12 @@ export default function Profile({route}) {
           ...payload.data,
         })),
       )
+      .catch(error => console.log(error));
+    getFormNotFeed()
+      .unwrap()
+      .then(payload => {
+        setFeed(prev => [...prev, ...payload.data]);
+      })
       .catch(error => console.log(error));
   }, []);
   return (
@@ -256,10 +273,17 @@ export default function Profile({route}) {
         <TouchableOpacity
           style={styles.line}
           onPress={() => navigation.navigate('LoyalCustomer')}>
-          <View style={{width: 30}}>
-            <Icon2 name="award" size={20} color={themeColors.primaryColor7} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <View style={{width: 30}}>
+              <Icon2 name="award" size={20} color={themeColors.primaryColor7} />
+            </View>
+            <Text style={styles.line_text}>Loyal Customer</Text>
           </View>
-          <Text style={styles.line_text}>Loyal Customer</Text>
           <View style={{width: 30}}>
             <Icon
               name="chevron-right"
@@ -271,11 +295,47 @@ export default function Profile({route}) {
         <TouchableOpacity
           style={styles.line}
           onPress={() => navigation.navigate('MyFeedback')}>
-          <View style={{width: 30}}>
-            <Icon name="star-o" size={20} color={themeColors.primaryColor7} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <View style={{width: 30}}>
+              <Icon name="star-o" size={20} color={themeColors.primaryColor7} />
+            </View>
+            <Text style={styles.line_text}>My Feedbacks</Text>
           </View>
-          <Text style={styles.line_text}>My Feedbacks</Text>
-          <View style={{width: 30}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginRight: 18,
+            }}>
+            {console.log(feedback.length)}
+            {feedback.length > 0 && (
+              <View
+                style={{
+                  backgroundColor: 'red',
+                  width: 35,
+                  height: 35,
+                  borderRadius: 50,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 15,
+                }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    color: themeColors.white,
+                  }}>
+                  {feedback.length}
+                </Text>
+              </View>
+            )}
             <Icon
               name="chevron-right"
               size={15}
@@ -286,14 +346,22 @@ export default function Profile({route}) {
         <TouchableOpacity
           style={styles.line}
           onPress={() => navigation.navigate('HelpCenter')}>
-          <View style={{width: 30}}>
-            <Icon
-              name="question-circle-o"
-              size={20}
-              color={themeColors.primaryColor7}
-            />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <View style={{width: 30}}>
+              <Icon
+                name="question-circle-o"
+                size={20}
+                color={themeColors.primaryColor7}
+              />
+            </View>
+            <Text style={styles.line_text}>Help Center</Text>
           </View>
-          <Text style={styles.line_text}>Help Center</Text>
+
           <View style={{width: 30}}>
             <Icon
               name="chevron-right"
@@ -329,7 +397,7 @@ const styles = StyleSheet.create({
   },
   line: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
     borderBottomWidth: 1,
@@ -339,6 +407,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: themeColors.primaryColor7,
-    width: 300,
   },
 });

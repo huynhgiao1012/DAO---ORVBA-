@@ -46,6 +46,11 @@ export const formApi = createApi({
         url: `/getFormDetail/${id}`,
       }),
     }),
+    getFormNotFeed: builder.mutation({
+      query: () => ({
+        url: `/getFormNotFeed`,
+      }),
+    }),
     deleteForm: builder.mutation({
       query: ({id}) => ({
         url: `/${id}`,
@@ -76,4 +81,5 @@ export const {
   useDeleteFormMutation,
   useCreatePaymentIntentMutation,
   usePaymentMutation,
+  useGetFormNotFeedMutation,
 } = formApi;
