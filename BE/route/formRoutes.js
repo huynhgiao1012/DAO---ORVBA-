@@ -22,6 +22,12 @@ router.get(
   formController.getAllFormAdmin
 );
 router.get(
+  "/getFormNotFeed",
+  jwtAuth,
+  authorize("customer"),
+  formController.getFormNotFeed
+);
+router.get(
   "/getAllForm/:id",
   jwtAuth,
   authorize("admin"),
