@@ -19,13 +19,13 @@ import React from 'react';
 import {useEffect, useState} from 'react';
 import GetLocation from 'react-native-get-location';
 import {useDistanceMatrixMutation} from '../../services/Map';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   useGetGarageDetailMutation,
   useGetCorGarageMutation,
 } from '../../services/Garage';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
+import ListItem from '../../common/ListItem2';
 
 // subscribe for more videos like this :)
 export default function ListScreen2() {
@@ -38,8 +38,6 @@ export default function ListScreen2() {
   const [cor, setCor] = useState([]);
   const [getCorCompany, {isLoading}] = useGetCorGarageMutation();
   const [getCompanyDetail] = useGetGarageDetailMutation();
-  const [totalRatings, setTotalRating] = useState(0);
-  const [rating, setRating] = useState(0);
   const [region, setRegion] = useState({
     latitude: 10.5369728,
     longitude: 106.6734779,
@@ -305,115 +303,7 @@ export default function ListScreen2() {
             ))
           }
           data={markers.length === 0 ? [] : markers}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('GarageDetail', {
-                  id: item.id,
-                  distance: item.distance,
-                })
-              }
-              key={item.id}>
-              <View
-                style={{
-                  paddingHorizontal: 20,
-                  paddingBottom: 10,
-                  borderBottomWidth: 1,
-                  borderBottomColor: themeColors.gray,
-                  marginVertical: 10,
-                }}>
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: '900',
-                      fontSize: 20,
-                      color: themeColors.primaryColor7,
-                    }}>
-                    {item.title}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View style={styles.rating}>
-                      <Rating
-                        ratingCount={rating}
-                        type="star"
-                        readonly={true}
-                        startingValue={rating || 0}
-                        imageSize={14}
-                      />
-                      <Text style={styles.ratingTxt}>
-                        {rating || 0} ({totalRatings || 0} Ratings)
-                      </Text>
-                    </View>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        color: themeColors.primaryColor4,
-                        fontWeight: 'bold',
-                      }}>
-                      {item.distance}
-                    </Text>
-                  </View>
-                  <View style={styles.content}>
-                    <Icon name="map-marker" size={24} color="red" />
-                    <Text style={[styles.content_text, {fontStyle: 'italic'}]}>
-                      {item.address}
-                    </Text>
-                  </View>
-                  <View style={styles.content}>
-                    <Icon
-                      name="clock-o"
-                      size={18}
-                      color={themeColors.primaryColor7}
-                    />
-                    <Text style={styles.content_text}>
-                      {item.openTime} - {item.closeTime}
-                    </Text>
-                  </View>
-                  <View style={styles.content}>
-                    <Icon
-                      name="envelope"
-                      size={16}
-                      color={themeColors.primaryColor7}
-                    />
-                    <Text style={styles.content_text}>{item.email}</Text>
-                  </View>
-                  <View style={styles.content}>
-                    <Icon
-                      name="phone"
-                      size={20}
-                      color={themeColors.primaryColor7}
-                    />
-                    <Text style={styles.content_text}>{item.phoneNo}</Text>
-                  </View>
-                </View>
-                <View style={{alignSelf: 'flex-end'}}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('Booking', {id: item.id})
-                    }
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: themeColors.primaryColor4,
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      borderRadius: 10,
-                      marginVertical: 5,
-                    }}>
-                    <Text
-                      style={[styles.content_text, {color: themeColors.white}]}>
-                      BOOKING SERVICE
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
+          renderItem={({item, index}) => <ListItem item={item} key={index} />}
         />
       )}
     </View>

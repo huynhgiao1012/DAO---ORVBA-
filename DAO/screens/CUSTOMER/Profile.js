@@ -66,33 +66,6 @@ export default function Profile({route}) {
       })
       .catch(error => console.log(error));
   }, [route]);
-  useEffect(() => {
-    setFeed([]);
-    getUserDetail()
-      .unwrap()
-      .then(payload =>
-        setData(data => ({
-          ...data,
-          ...payload.data,
-        })),
-      )
-      .catch(error => console.log(error));
-    getCustomerPoint()
-      .unwrap()
-      .then(payload =>
-        setPoint(data => ({
-          ...data,
-          ...payload.data,
-        })),
-      )
-      .catch(error => console.log(error));
-    getFormNotFeed()
-      .unwrap()
-      .then(payload => {
-        setFeed(prev => [...prev, ...payload.data]);
-      })
-      .catch(error => console.log(error));
-  }, []);
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
       {isLoading && (

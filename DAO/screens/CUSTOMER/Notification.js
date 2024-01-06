@@ -33,7 +33,6 @@ export default function NotiScreen() {
       .unwrap()
       .then(payload => {
         if (payload) {
-          console.log(payload);
           setUnread(prev => [...prev, ...payload.data].reverse());
         }
       });

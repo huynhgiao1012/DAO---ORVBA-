@@ -6,21 +6,28 @@ import {
   Modal,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-// import {Rating} from 'react-native-ratings';
+import {Rating} from 'react-native-ratings';
 import Header2 from '../../common/Header2';
 import {themeColors} from '../../common/theme';
 import {useGetGarageDetailMutation} from '../../services/Garage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import {List} from 'react-native-paper';
+import {useGetAllFbMutation} from '../../services/Feedback';
+import {useGetCompanyServiceMutation} from '../../services/Service';
 
 export default function GarageDetail({route}) {
   const {id, distance} = route.params;
   const [totalRatings, setTotalRating] = useState(0);
   const [rating, setRating] = useState(0);
+  const [getAllFb] = useGetAllFbMutation();
+  const [feedback, setFb] = useState([]);
+  const [service, setService] = useState([]);
   const [getDetail, {isLoading}] = useGetGarageDetailMutation();
+  const [getCompanyService] = useGetCompanyServiceMutation();
   const arr = [1, 2, 3, 4, 5];
   const [expanded, setExpanded] = useState(true);
   const handlePress = () => setExpanded(!expanded);
@@ -36,6 +43,8 @@ export default function GarageDetail({route}) {
     img: '',
   });
   useEffect(() => {
+    setFb([]);
+    setService([]);
     getDetail({id})
       .unwrap()
       .then(payload => {
@@ -43,6 +52,22 @@ export default function GarageDetail({route}) {
           ...data,
           ...payload.data,
         }));
+      })
+      .catch(error => {
+        return error;
+      });
+    getAllFb({id})
+      .unwrap()
+      .then(payload => {
+        setFb(data => [...data, ...payload.data]);
+      })
+      .catch(error => {
+        return error;
+      });
+    getCompanyService({id})
+      .unwrap()
+      .then(payload => {
+        setService(data => [...data, ...payload.data]);
       })
       .catch(error => {
         return error;
@@ -72,12 +97,12 @@ export default function GarageDetail({route}) {
         </Modal>
       )}
       <ScrollView>
-        <View>
+        {/* <View>
           <Image
             source={{
               uri:
                 data.img.length > 0
-                  ? data.img
+                  ? data.img[0]
                   : 'https://static.vecteezy.com/system/resources/thumbnails/011/299/215/small/simple-loading-or-buffering-icon-design-png.png',
             }}
             indicator={() => (
@@ -88,7 +113,7 @@ export default function GarageDetail({route}) {
               height: 200,
             }}
           />
-        </View>
+        </View> */}
         <View
           style={{
             marginHorizontal: 20,
@@ -299,6 +324,28 @@ export default function GarageDetail({route}) {
               Services
             </Text>
           </View>
+          {service.length > 0 &&
+            service.map((val, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    marginVertical: 10,
+                    backgroundColor: themeColors.primaryColor5,
+                    padding: 10,
+                    borderRadius: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: themeColors.primaryColor7,
+                      fontWeight: '700',
+                      fontSize: 16,
+                    }}>
+                    {val.serviceName}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           {/* feedback */}
           <View
             style={{
@@ -317,64 +364,69 @@ export default function GarageDetail({route}) {
               Feedback
             </Text>
           </View>
-          <View style={{paddingHorizontal: 10, marginBottom: 50}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 10,
-              }}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: themeColors.primaryColor7,
-                  fontStyle: 'italic',
-                  fontWeight: '700',
-                }}>
-                Name
-              </Text>
-              <Rating />
-            </View>
-            <Text
-              style={{
-                fontSize: 14,
-                color: themeColors.black,
-                width: '100%',
-                textAlign: 'justify',
-              }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              pellentesque orci quis nisl condimentum, ac egestas eros
-              imperdiet. Aliquam consequat vitae libero vitae hendrerit.
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 10,
-              }}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: themeColors.primaryColor7,
-                  fontStyle: 'italic',
-                  fontWeight: '700',
-                }}>
-                Name
-              </Text>
-              <Rating />
-            </View>
-            <Text
-              style={{
-                fontSize: 14,
-                color: themeColors.black,
-                width: '100%',
-                textAlign: 'justify',
-              }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              pellentesque orci quis nisl condimentum, ac egestas eros
-              imperdiet. Aliquam consequat vitae libero vitae hendrerit.
-            </Text>
-          </View>
+          {feedback.length > 0 ? (
+            feedback.map((val, index) => {
+              return (
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    backgroundColor: '#f8f8f8',
+                    paddingVertical: 15,
+                    marginTop: 10,
+                    borderRadius: 5,
+                    marginBottom: 20,
+                  }}
+                  key={index}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: 8,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: themeColors.primaryColor7,
+                        fontStyle: 'italic',
+                        fontWeight: '700',
+                      }}>
+                      {val.customerId.name}
+                    </Text>
+                    <Rating
+                      tintColor="#f8f8f8"
+                      ratingCount={val.rating}
+                      type="star"
+                      readonly={true}
+                      startingValue={val.rating || 0}
+                      imageSize={16}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: themeColors.black,
+                      width: '100%',
+                      textAlign: 'justify',
+                    }}>
+                    {val.review}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: themeColors.black,
+                      width: '100%',
+                      textAlign: 'right',
+                      fontStyle: 'italic',
+                    }}>
+                    {new Date(val.createdAt).toLocaleString('en-GB')}
+                  </Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text>No Feedbacks</Text>
+          )}
         </View>
       </ScrollView>
     </View>

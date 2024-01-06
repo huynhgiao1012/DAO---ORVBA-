@@ -21,7 +21,6 @@ export default function Maintenance() {
     getAllForm()
       .unwrap()
       .then(payload => {
-        console.log(payload.data);
         const arr = [];
         if (active === 0) {
           payload.data.map(val => {

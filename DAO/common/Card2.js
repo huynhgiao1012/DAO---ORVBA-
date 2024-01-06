@@ -16,28 +16,26 @@ import {
   OUTER_CARD_HEIGHT,
   OUTER_CARD_WIDTH,
 } from '../utils/constants';
-// import {useGetAllFbMutation} from '../services/Feedback';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {themeColors} from './theme';
+import {useGetAllFbMutation} from '../services/Feedback';
 const Card2 = ({item}) => {
-  //   const [getAllFb] = useGetAllFbMutation();
+  const [getAllFb] = useGetAllFbMutation();
   const [totalRatings, setTotalRating] = useState(0);
   const [rating, setRating] = useState(0);
   useEffect(() => {
-    // getAllFb({id: item.id})
-    //   .unwrap()
-    //   .then(payload => {
-    //     console.log(payload.data.length);
-    //     if (payload.data.length > 0) {
-    //       setTotalRating(payload.data.length);
-    //       let num = 0;
-    //       payload.data.map(val => {
-    //         num = val.rating + num;
-    //       });
-    //       setRating(num / payload.data.length);
-    //     }
-    //   });
-    console.log(item);
+    getAllFb({id: item.id})
+      .unwrap()
+      .then(payload => {
+        if (payload.data.length > 0) {
+          setTotalRating(payload.data.length);
+          let num = 0;
+          payload.data.map(val => {
+            num = val.rating + num;
+          });
+          setRating(num / payload.data.length);
+        }
+      });
   }, []);
   const openDialScreen = num => {
     if (Platform.OS === 'ios') {
