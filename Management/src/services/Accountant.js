@@ -23,6 +23,11 @@ export const accountantApi = createApi({
         url: "/getAllCarSpares",
       }),
     }),
+    getUnPaidForms: builder.mutation({
+      query: () => ({
+        url: "/getUnPaidForms",
+      }),
+    }),
     addCarSpares: builder.mutation({
       query: (payload) => ({
         url: `/addCarSpares`,
@@ -43,6 +48,15 @@ export const accountantApi = createApi({
         },
       }),
     }),
+    updateDone: builder.mutation({
+      query: ({ id }) => ({
+        url: `/updateDone/${id}`,
+        method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }),
+    }),
   }),
 });
 
@@ -52,4 +66,6 @@ export const {
   useGetAllCarSparesMutation,
   useAddCarSparesMutation,
   useAddSubCarSparesMutation,
+  useGetUnPaidFormsMutation,
+  useUpdateDoneMutation,
 } = accountantApi;

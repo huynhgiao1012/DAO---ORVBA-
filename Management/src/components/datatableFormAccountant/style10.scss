@@ -1,5 +1,5 @@
 .datatable {
-  padding: 20px;
+  height: 550px;
   .addButton {
     padding: 2px 5px;
     border-radius: 5px;
@@ -50,25 +50,49 @@
     height: 50px;
     border-radius: 50%;
   }
-  .ActionCol {
+
+  .cellWithStatus {
+    padding: 5px;
+    border-radius: 5px;
+
+    &.available {
+      background-color: rgba(0, 128, 0, 0.05);
+      color: green;
+    }
+
+    &.unavailable {
+      background-color: rgba(255, 0, 0, 0.05);
+      color: crimson;
+    }
+  }
+
+  .cellAction {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     .viewButton {
       padding: 2px 8px;
       border-radius: 5px;
-      color: white;
-      background-color: #196462;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-    .deleteButton {
-      padding: 2px 8px;
-      border-radius: 5px;
+      border: none;
       color: white;
       background-color: #34acaf;
       cursor: pointer;
-      margin-right: 10px;
+    }
+
+    .deleteButton {
+      padding: 2px 8px;
+      border-radius: 5px;
+      margin: 0px 10px;
+      color: white;
+      border: 1px dotted rgba(220, 20, 60, 0.6);
+      cursor: pointer;
+    }
+    .editButton {
+      padding: 2px 8px;
+      border-radius: 5px;
+      color: #34acaf;
+      border: 1px dotted rgba(20, 180, 220, 0.508);
+      cursor: pointer;
     }
   }
 }
