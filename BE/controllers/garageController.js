@@ -6,6 +6,7 @@ const ApiError = require("../utils/ApiError");
 var generator = require("generate-password");
 const EmailService = require("../utils/EmailService");
 const { ROLES } = require("../constant");
+const service = require("../models/service");
 // _id.valueOf() --> lấy id từ object id
 
 // admin adds garage's information to system

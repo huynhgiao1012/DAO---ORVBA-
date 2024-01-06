@@ -119,11 +119,15 @@ exports.getFormDetail = catchAsync(async (req, res) => {
 });
 exports.getFormNotFeed = catchAsync(async (req, res) => {
   const id = req.user.id;
-  const data = await orderForm.find({
-    isFeedback: false,
-    isPaid: true,
-    customerId: id,
-  });
+  const data = await orderForm
+    .find({
+      isFeedback: false,
+      isPaid: true,
+      customerId: id,
+    })
+    .populate("garageId", "name email phone _id")
+    .populate("mechanicId", "name email phone _id");
+
   if (!data) {
     throw new ApiError(400, "Form is unavailable");
   }

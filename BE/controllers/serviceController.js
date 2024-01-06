@@ -1,6 +1,7 @@
 const catchAsync = require("../middleware/async");
 const orderForm = require("../models/orderForm");
 const Service = require("../models/service");
+const SubService = require("../models/subService");
 const ApiError = require("../utils/ApiError");
 const customer = require("../models/customer");
 const { io } = require("socket.io-client");
@@ -65,9 +66,12 @@ exports.updateService = catchAsync(async (req, res) => {
     serviceInfor: service,
   });
 });
+
+// ===================================================== //
+
 exports.getAllService = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const data = await Service.find({ accountId: id });
+  const data = await Service.find({ garageId: id });
   if (!data) {
     throw new ApiError(400, "Service is not available");
   }
@@ -76,43 +80,14 @@ exports.getAllService = catchAsync(async (req, res) => {
     data,
   });
 });
-exports.getService = catchAsync(async (req, res) => {
+exports.getSubService = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const serviceDetail = await Service.findById({ _id: id });
+  const subService = await SubService.findById({ id });
   if (!serviceDetail) {
     throw new ApiError(400, "This service is not available");
   }
   res.status(200).json({
     success: true,
-    serviceDetail,
-  });
-});
-exports.getService = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const serviceDetail = await Service.findById({ _id: id });
-  if (!serviceDetail) {
-    throw new ApiError(400, "This service is not available");
-  }
-  res.status(200).json({
-    success: true,
-    serviceDetail,
-  });
-});
-exports.bookingService = catchAsync(async (req, res) => {
-  const { customerId, garageId, serviceId, address, date, price, note } =
-    req.body;
-  const booking = await orderForm.create({
-    customerId: customerId,
-    garageId: garageId,
-    serviceId: serviceId,
-    address: address,
-    date: date,
-    price: price,
-    note: note,
-  });
-
-  res.status(200).json({
-    success: true,
-    booking,
+    subService,
   });
 });

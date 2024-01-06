@@ -20,7 +20,6 @@ const FeedbackSchema = new Schema(
     },
     review: {
       type: String,
-      required: true,
     },
     createAt: {
       type: Date,

@@ -1,23 +1,26 @@
 const catchAsync = require("../middleware/async");
 const Feedback = require("../models/feedback");
+const OrderForm = require("../models/orderForm");
 const Customer = require("../models/customer");
 const ApiError = require("../utils/ApiError");
 
 exports.createFeedback = catchAsync(async (req, res) => {
-  const accountId = req.user;
-  const formId = req.params;
-  const customer = await Customer.findOne({ accountId: accountId.id });
-  const { garageId, rating, review } = req.body;
-  const fb = await Feedback.create({
-    customerId: customer._id,
+  const { customerId, garageId, formID, rating, review } = req.body;
+  const feedback = await Feedback.create({
+    customerId: customerId,
     garageId: garageId,
-    formId: formId.id,
+    formID: formID,
     rating: rating,
     review: review,
   });
+  await OrderForm.findByIdAndUpdate(
+    formID,
+    { isFeedback: true },
+    { new: true }
+  );
   res.status(200).json({
     success: true,
-    fb,
+    feedback,
   });
 });
 // exports.deleteFeedback = catchAsync(async (req, res) => {
@@ -37,7 +40,7 @@ exports.getAllFeedback = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = await Feedback.find({ garageId: id }).populate(
     "customerId",
-    "name _id"
+    "name phone _id"
   );
   if (!data) {
     throw new ApiError(400, "Feedback is unavailable");

@@ -10,10 +10,10 @@ router.get(
   serviceController.getAllService
 );
 router.get(
-  "/getServiceDetail/:id",
+  "/getSubService/:id",
   jwtAuth,
   authorize("manager", "customer", "admin"),
-  serviceController.getService
+  serviceController.getSubService
 );
 router.post(
   "/create",
@@ -27,12 +27,7 @@ router.post(
   authorize("admin"),
   serviceController.addService
 );
-router.post(
-  "/bookingService",
-  jwtAuth,
-  authorize("customer"),
-  serviceController.bookingService
-);
+
 router.delete(
   "/:id",
   jwtAuth,

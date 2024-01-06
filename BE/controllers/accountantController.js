@@ -13,6 +13,9 @@ const SubService = require("../models/subService");
 const Garage = require("../models/garage");
 const CarSpares = require("../models/carSpares");
 const SubCarSpares = require("../models/subCarSpares");
+const Notification = require("../models/notification");
+const { io } = require("socket.io-client");
+const feedback = require("../models/feedback");
 
 exports.updateDone = catchAsync(async (req, res) => {
   const id = req.params;
@@ -27,10 +30,28 @@ exports.updateDone = catchAsync(async (req, res) => {
     { new: true }
   );
   if (orderForm) {
+    await Notification.create({
+      from: accountantId.id,
+      to: orderForm.customerId,
+      text: `FORM'S STATUS - Your booking has been done ! Thank you for using our services ! `,
+    });
+    // await feedback.create({
+    //   customerId: orderForm.customerId,
+    //   garageId: orderForm.garageId,
+    //   formID: orderForm._id,
+    //   rating: 0,
+    //   review: "None",
+    // });
+    const socketIo = io("http://localhost:3000");
+    socketIo.emit("sendNotification", {
+      senderName: accountantId.id,
+      receiverName: orderForm.customerId,
+      text: `FORM'S STATUS - Your booking has been done ! Thank you for using our services ! `,
+    });
     res.status(200).json({
       success: true,
-      message: "Successfully",
-      orderForm,
+      message: "Successfull",
+      orderForm: orderForm,
     });
   } else {
     res.status(400).json({
@@ -46,6 +67,7 @@ exports.getUnPaidForms = catchAsync(async (req, res) => {
   const orderForm = await OrderForm.find({
     garageId: accountant.garageId,
     isPaid: false,
+    status: FORM_STATUS.HOLDING,
   });
   if (orderForm) {
     res.status(200).json({
