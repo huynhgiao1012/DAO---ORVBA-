@@ -1,4 +1,4 @@
-import "./datatable.scss";
+import "./datatable2.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { garageColumn, banksData } from "../../datatablesource";
 import { useNavigate } from "react-router-dom";

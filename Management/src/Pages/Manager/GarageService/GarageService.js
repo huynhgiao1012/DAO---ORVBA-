@@ -1,7 +1,7 @@
 import "./list.scss";
-import Sidebar from "../../components/sidebarMa/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
-import Datatable from "../../components/datatableSer/Datatable";
+import Sidebar from "../../../components/sidebarMa/Sidebar";
+import Navbar from "../../../components/navbar/Navbar";
+import Datatable from "../../../components/datatableSer/Datatable";
 const GarageService = ({ socket }) => {
   return (
     <div className="list">

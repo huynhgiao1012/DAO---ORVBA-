@@ -1,4 +1,4 @@
-import "./style.scss";
+import "./style11.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { mechanicColumns, userRows } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";

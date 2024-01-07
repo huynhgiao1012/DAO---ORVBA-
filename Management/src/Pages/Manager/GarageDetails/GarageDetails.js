@@ -1,6 +1,6 @@
 import "./list.scss";
-import Sidebar from "../../components/sidebarMa/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
+import Sidebar from "../../../components/sidebarMa/Sidebar";
+import Navbar from "../../../components/navbar/Navbar";
 import { Col, Form, Input, Row, Card, Button, Drawer, Upload } from "antd";
 import {
   useGetGarageDetailMutation,
@@ -8,11 +8,11 @@ import {
   useGetAllFormMutation,
   useGetAllServiceMaMutation,
   useUpdateGarageMutation,
-} from "../../services/Manager";
-import Text from "../../components/text";
+} from "../../../services/Manager";
+import Text from "../../../components/text";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IP } from "../../Utils/constants";
+import { IP } from "../../../Utils/constants";
 import { Carousel, Skeleton } from "antd";
 const contentStyle = {
   height: "160px",
@@ -418,7 +418,10 @@ const GarageDetails = ({ socket }) => {
                         textAlign: "center",
                       }}
                     >
-                      {totalRe}
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(totalRe)}
                     </Card>
                   </Col>
                 </Row>

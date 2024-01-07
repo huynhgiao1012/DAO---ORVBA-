@@ -330,7 +330,7 @@ const Datatable = () => {
               View
             </div>
             <div
-              className="viewSubButton"
+              className="viewAddButton"
               onClick={() => handleAddSub(params.row.id)}
             >
               Add

@@ -1,17 +1,16 @@
 import "./style7.scss";
-import Sidebar from "../../components/sidebarMa/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
+import Sidebar from "../../../components/sidebarMa/Sidebar";
+import Navbar from "../../../components/navbar/Navbar";
 import {
   useGetUserDetailMutation,
   useUpdateInfoMutation,
-} from "../../services/User";
+} from "../../../services/User";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import avt from "../../Image/baoduong.jpg";
 import { Button, Col, Row, Form, Input, Upload, Skeleton } from "antd";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { IP } from "../../Utils/constants";
+import { IP } from "../../../Utils/constants";
 
 const MyProfile = ({ socket }) => {
   const navigate = useNavigate();

@@ -1,9 +1,9 @@
 import "./list.scss";
-import Sidebar from "../../components/sidebarMa/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
-import Datatable from "../../components/datatableForm/Datatable";
-import Datatable2 from "../../components/datatableFormE/Datatable";
-import Datatable3 from "../../components/datatableFormM/Datatable";
+import Sidebar from "../../../components/sidebarMa/Sidebar";
+import Navbar from "../../../components/navbar/Navbar";
+import Datatable from "../../../components/datatableForm/Datatable";
+import Datatable2 from "../../../components/datatableFormE/Datatable";
+import Datatable3 from "../../../components/datatableFormM/Datatable";
 import { Tabs } from "antd";
 const GarageForms = ({ socket }) => {
   const onChange = (key) => {

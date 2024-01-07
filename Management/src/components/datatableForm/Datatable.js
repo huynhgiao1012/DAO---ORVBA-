@@ -195,8 +195,7 @@ const Datatable = () => {
           return (
             <div
               style={{
-                backgroundColor: "#34acaf",
-                color: "white",
+                color: "green",
                 borderRadius: 10,
                 paddingTop: 5,
                 paddingLeft: 5,
@@ -210,8 +209,7 @@ const Datatable = () => {
           return (
             <div
               style={{
-                backgroundColor: "#196462",
-                color: "white",
+                color: "red",
                 borderRadius: 10,
                 paddingTop: 5,
                 paddingLeft: 5,
@@ -234,8 +232,7 @@ const Datatable = () => {
           return (
             <div
               style={{
-                backgroundColor: "#34acaf",
-                color: "white",
+                color: "green",
                 borderRadius: 10,
                 paddingTop: 5,
                 paddingLeft: 5,
@@ -249,8 +246,7 @@ const Datatable = () => {
           return (
             <div
               style={{
-                backgroundColor: "#196462",
-                color: "white",
+                color: "red",
                 borderRadius: 10,
                 paddingTop: 5,
                 paddingLeft: 5,

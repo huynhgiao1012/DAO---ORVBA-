@@ -48,12 +48,12 @@
   height: 50px;
   border-radius: 50%;
 }
-.datatable .ActionCol {
+.datatable .action {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
-.datatable .ActionCol .viewButton {
+.datatable .action .viewButton {
   padding: 2px 8px;
   border-radius: 5px;
   color: white;
@@ -61,7 +61,28 @@
   cursor: pointer;
   margin-right: 10px;
 }
-.datatable .ActionCol .deleteButton {
+.datatable .action .editButton {
+  padding: 2px 8px;
+  border-radius: 5px;
+  color: white;
+  background-color: #34acaf;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.datatable .newAction {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.datatable .newAction .viewSubButton {
+  padding: 2px 8px;
+  border-radius: 5px;
+  color: white;
+  background-color: #196462;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.datatable .newAction .viewAddButton {
   padding: 2px 8px;
   border-radius: 5px;
   color: white;

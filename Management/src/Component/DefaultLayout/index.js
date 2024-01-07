@@ -2,23 +2,21 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useTranslation, withTranslation } from "react-i18next";
 import Home from "../../Pages/home/Home";
-import Mechanic from "../../Pages/Mechanic/Mechanic";
-import Accountant from "../../Pages/Accountant/Accountant";
-import GarageService from "../../Pages/GarageService/GarageService";
-import GarageDetails from "../../Pages/GarageDetails/GarageDetails";
-import GarageCustomer from "../../Pages/GarageCustomer/GarageCustomer";
-import GarageForms from "../../Pages/GarageForms/GarageForms";
+import Mechanic from "../../Pages/Manager/Mechanic/Mechanic";
+import Accountant from "../../Pages/Manager/Accountant/Accountant";
+import GarageService from "../../Pages/Manager/GarageService/GarageService";
+import GarageDetails from "../../Pages/Manager/GarageDetails/GarageDetails";
+import GarageCustomer from "../../Pages/Manager/GarageCustomer/GarageCustomer";
+import GarageForms from "../../Pages/Manager/GarageForms/GarageForms";
 import AdminProfile from "../../Pages/Admin/AdminProfile";
 import AccountMana from "../../Pages/Admin/AccountMana";
 import GarageMana from "../../Pages/Admin/GarageMana";
-import MyProfile from "../../Pages/MyProfile/MyProfile";
+import MyProfile from "../../Pages/Manager/MyProfile/MyProfile";
 import AccountantProfile from "../../Pages/AccountantPages/Profile/index";
 import CarSpare from "../../Pages/AccountantPages/CarSpare/index";
 import OrderForm from "../../Pages/AccountantPages/OrderForm/index";
 // import ManagerHome from "../../Pages/mHome/index";
 // import Login from "../../Pages/Login/index";
-import List from "../../Pages/list/List";
-import ListService from "../../Pages/ListService/List";
 import { Routes, Route } from "react-router-dom";
 import "../../style/dark.scss";
 import { useContext } from "react";
@@ -41,9 +39,6 @@ const DefaultLayoutComponent = ({ socket }) => {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/home" element={<Home />} />
         <Route exact path="/mHome" element={<MyProfile />} />
-        <Route path="users">
-          <Route index element={<List />} />
-        </Route>
         <Route path="mechanic">
           <Route index element={<Mechanic socket={socket} />} />
         </Route>
@@ -61,9 +56,6 @@ const DefaultLayoutComponent = ({ socket }) => {
         </Route>
         <Route path="garaForms">
           <Route index element={<GarageForms socket={socket} />} />
-        </Route>
-        <Route path="services">
-          <Route index element={<ListService socket={socket} />} />
         </Route>
         <Route path="myProfile">
           <Route index element={<MyProfile socket={socket} />} />
