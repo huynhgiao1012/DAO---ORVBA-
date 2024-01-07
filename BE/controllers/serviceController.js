@@ -82,8 +82,8 @@ exports.getAllService = catchAsync(async (req, res) => {
 });
 exports.getSubService = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const subService = await SubService.findById({ id });
-  if (!serviceDetail) {
+  const subService = await SubService.find({ serviceId: id });
+  if (!subService) {
     throw new ApiError(400, "This service is not available");
   }
   res.status(200).json({
