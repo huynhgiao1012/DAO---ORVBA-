@@ -1,26 +1,18 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  LogBox,
-} from 'react-native';
+import {FlatList, Image, View, Dimensions} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {themeColors} from './theme';
 
-const Carousel = () => {
+const Carousel = ({data}) => {
   const flatlistRef = useRef();
   // Get Dimesnions
   const screenWidth = Dimensions.get('window').width;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [img, setImg] = useState([]);
 
   // Auto Scroll
 
   useEffect(() => {
     let interval = setInterval(() => {
-      if (activeIndex === carouselData.length - 1) {
+      if (activeIndex === img.length - 1) {
         flatlistRef.current.scrollToIndex({
           index: 0,
           animation: true,
@@ -36,33 +28,30 @@ const Carousel = () => {
     return () => clearInterval(interval);
   });
 
+  useEffect(() => {
+    setImg([]);
+    const arr = data.map((val, index) => {
+      const obj = {
+        id: index,
+        image: val,
+      };
+
+      return obj;
+    });
+    setImg(prev => [...prev, ...arr]);
+  }, []);
   const getItemLayout = (data, index) => ({
     length: screenWidth,
     offset: screenWidth * index, // for first image - 300 * 0 = 0pixels, 300 * 1 = 300, 300*2 = 600
     index: index,
   });
-  // Data for carousel
-  const carouselData = [
-    {
-      id: '01',
-      image: require('../assets/img1.png'),
-    },
-    {
-      id: '02',
-      image: require('../assets/maintain.png'),
-    },
-    {
-      id: '03',
-      image: require('../assets/tow.png'),
-    },
-  ];
 
   //  Display Images // UI
   const renderItem = ({item, index}) => {
     return (
       <View key={index}>
         <Image
-          source={item.image}
+          source={{uri: item.image}}
           style={{height: 200, width: screenWidth - 20}}
         />
       </View>
@@ -81,46 +70,46 @@ const Carousel = () => {
   };
 
   // Render Dot Indicators
-  const renderDotIndicators = () => {
-    return carouselData.map((dot, index) => {
-      // if the active index === index
+  // const renderDotIndicators = () => {
+  //   return carouselData.map((dot, index) => {
+  //     // if the active index === index
 
-      if (activeIndex === index) {
-        return (
-          <View
-            key={index}
-            style={{
-              backgroundColor: themeColors.primaryColor,
-              height: 10,
-              width: 10,
-              borderRadius: 5,
-              marginHorizontal: 6,
-            }}></View>
-        );
-      } else {
-        return (
-          <View
-            key={index}
-            style={{
-              backgroundColor: themeColors.primaryColor5,
-              height: 10,
-              width: 10,
-              borderRadius: 5,
-              marginHorizontal: 6,
-            }}></View>
-        );
-      }
-    });
-  };
+  //     if (activeIndex === index) {
+  //       return (
+  //         <View
+  //           key={index}
+  //           style={{
+  //             backgroundColor: themeColors.primaryColor,
+  //             height: 10,
+  //             width: 10,
+  //             borderRadius: 5,
+  //             marginHorizontal: 6,
+  //           }}></View>
+  //       );
+  //     } else {
+  //       return (
+  //         <View
+  //           key={index}
+  //           style={{
+  //             backgroundColor: themeColors.primaryColor5,
+  //             height: 10,
+  //             width: 10,
+  //             borderRadius: 5,
+  //             marginHorizontal: 6,
+  //           }}></View>
+  //       );
+  //     }
+  //   });
+  // };
 
   return (
     <View
       style={{
         marginHorizontal: 20,
-        marginVertical: 15,
+        marginTop: 15,
       }}>
       <FlatList
-        data={carouselData}
+        data={img}
         ref={flatlistRef}
         getItemLayout={getItemLayout}
         renderItem={renderItem}
@@ -130,14 +119,14 @@ const Carousel = () => {
         onScroll={event => handleScroll(event)}
       />
 
-      <View
+      {/* <View
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
           marginVertical: 10,
         }}>
         {renderDotIndicators()}
-      </View>
+      </View> */}
     </View>
   );
 };

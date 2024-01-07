@@ -6,6 +6,7 @@ import {
   Animated,
   ScrollView,
   ScrollViewBase,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -42,15 +43,17 @@ export default function NotiScreen() {
     setStatus('old');
     updateNoti({id: id})
       .unwrap()
-      .then(() => {
-        getUnreadNoti()
-          .unwrap()
-          .then(payload => {
-            setUnread([]);
-            if (payload) {
-              setUnread(prev => [...prev, ...payload.data].reverse());
-            }
-          });
+      .then(payload => {
+        if (payload.success) {
+          getUnreadNoti()
+            .unwrap()
+            .then(payload => {
+              setUnread([]);
+              if (payload) {
+                setUnread(prev => [...prev, ...payload.data].reverse());
+              }
+            });
+        }
       });
   };
   const rightSwipe = (dragX, id) => {
@@ -77,6 +80,7 @@ export default function NotiScreen() {
       .unwrap()
       .then(payload => {
         if (payload.success === true) {
+          Alert.alert(payload.message);
           getUnreadNoti()
             .unwrap()
             .then(payload => {

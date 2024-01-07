@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Image,
+  Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Rating} from 'react-native-ratings';
@@ -17,18 +18,24 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import {List} from 'react-native-paper';
 import {useGetAllFbMutation} from '../../services/Feedback';
-import {useGetCompanyServiceMutation} from '../../services/Service';
+import {
+  useGetCompanyServiceMutation,
+  useGetSubServiceMutation,
+} from '../../services/Service';
+import Carousel from '../../common/Carousel';
 
 export default function GarageDetail({route}) {
   const {id, distance} = route.params;
   const [totalRatings, setTotalRating] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [getAllFb] = useGetAllFbMutation();
   const [feedback, setFb] = useState([]);
   const [service, setService] = useState([]);
+  const [subSer, setSubSer] = useState([]);
   const [getDetail, {isLoading}] = useGetGarageDetailMutation();
   const [getCompanyService] = useGetCompanyServiceMutation();
-  const arr = [1, 2, 3, 4, 5];
+  const [getSubService] = useGetSubServiceMutation();
   const [expanded, setExpanded] = useState(true);
   const handlePress = () => setExpanded(!expanded);
   const [data, setData] = useState({
@@ -60,6 +67,14 @@ export default function GarageDetail({route}) {
       .unwrap()
       .then(payload => {
         setFb(data => [...data, ...payload.data]);
+        if (payload.data.length > 0) {
+          setTotalRating(payload.data.length);
+          let num = 0;
+          payload.data.map(val => {
+            num = val.rating + num;
+          });
+          setRating(num / payload.data.length);
+        }
       })
       .catch(error => {
         return error;
@@ -73,6 +88,18 @@ export default function GarageDetail({route}) {
         return error;
       });
   }, []);
+  const handleModal = id => {
+    setSubSer([]);
+    getSubService({id: id})
+      .unwrap()
+      .then(payload => {
+        setSubSer(data => [...data, ...payload.subService]);
+      })
+      .catch(error => {
+        return error;
+      });
+    setModalVisible(true);
+  };
   return (
     <View style={{backgroundColor: themeColors.white, flex: 1}}>
       <Header2 name="Garage Detail" />
@@ -97,31 +124,16 @@ export default function GarageDetail({route}) {
         </Modal>
       )}
       <ScrollView>
-        {/* <View>
-          <Image
-            source={{
-              uri:
-                data.img.length > 0
-                  ? data.img[0]
-                  : 'https://static.vecteezy.com/system/resources/thumbnails/011/299/215/small/simple-loading-or-buffering-icon-design-png.png',
-            }}
-            indicator={() => (
-              <ActivityIndicator size={40} color={themeColors.primaryColor} />
-            )}
-            style={{
-              width: '100%',
-              height: 200,
-            }}
-          />
-        </View> */}
+        {data.img.length > 0 && !data.img.includes('None') ? (
+          <Carousel data={data.img} />
+        ) : (
+          <View></View>
+        )}
         <View
           style={{
-            marginHorizontal: 20,
+            margin: 20,
           }}>
-          <View
-            style={{
-              paddingVertical: 10,
-            }}>
+          <View>
             <Text
               style={{
                 color: themeColors.primaryColor,
@@ -328,6 +340,7 @@ export default function GarageDetail({route}) {
             service.map((val, index) => {
               return (
                 <TouchableOpacity
+                  onPress={() => handleModal(val._id)}
                   key={index}
                   style={{
                     marginVertical: 10,
@@ -429,6 +442,104 @@ export default function GarageDetail({route}) {
           )}
         </View>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text
+              style={{
+                color: themeColors.primaryColor,
+                fontWeight: 'bold',
+                fontSize: 18,
+                marginVertical: 10,
+                textAlign: 'center',
+              }}>
+              List Of Sub-Services
+            </Text>
+            <View
+              style={{
+                height: 240,
+              }}>
+              <ScrollView>
+                {subSer.length > 0 ? (
+                  subSer.map((val, index) => {
+                    return (
+                      <View
+                        key={index}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          paddingHorizontal: 10,
+                          marginBottom: 10,
+                          borderBottomColor: themeColors.primaryColor5,
+                          borderBottomWidth: 1,
+                        }}>
+                        <Text
+                          style={{
+                            color: themeColors.black,
+                            width: '8%',
+                            borderRightWidth: 2,
+                            borderRightColor: themeColors.primaryColor5,
+                            borderStyle: 'dotted',
+                            paddingVertical: 8,
+                          }}>
+                          {index + 1}
+                        </Text>
+                        <Text
+                          style={{
+                            color: themeColors.black,
+                            width: '60%',
+                            borderRightWidth: 2,
+                            borderRightColor: themeColors.primaryColor5,
+                            borderStyle: 'dotted',
+                            paddingVertical: 8,
+                            fontStyle: 'italic',
+                          }}>
+                          {val.subName}
+                        </Text>
+                        <Text
+                          style={{
+                            color: themeColors.black,
+                            width: '25%',
+                            fontWeight: 'bold',
+                          }}>
+                          {new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                          }).format(val.subPrice)}
+                        </Text>
+                      </View>
+                    );
+                  })
+                ) : (
+                  <Text
+                    style={{
+                      color: themeColors.black,
+                      width: '100%',
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      marginTop: 100,
+                    }}>
+                    This service does not have any sub-services
+                  </Text>
+                )}
+              </ScrollView>
+            </View>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -443,5 +554,50 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
     color: themeColors.primaryColor8,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000aa',
+  },
+  modalView: {
+    width: '90%',
+    height: 320,
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderBottomLeftRadius: 20,
+    borderTopRightRadius: 18,
+    padding: 10,
+    elevation: 2,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: themeColors.primaryColor2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  modalText: {
+    marginBottom: 15,
+    color: themeColors.primaryColor7,
   },
 });

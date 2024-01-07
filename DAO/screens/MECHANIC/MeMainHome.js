@@ -233,112 +233,137 @@ export default function MeMainHome() {
           }}>
           TODAY'S ORDER FORMS
         </Text>
-        <FlatList
-          style={{height: 400, paddingHorizontal: 10}}
-          data={forms.reverse()}
-          renderItem={({item}) => {
-            const date = new Date().toISOString().slice(0, 10);
-            if (item.date === date) {
-              return (
-                <View
-                  style={{
-                    paddingVertical: 20,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderBottomColor: themeColors.primaryColor5,
-                    borderBottomWidth: 2,
-                    borderStyle: 'dotted',
-                  }}>
-                  <View style={{width: '75%'}}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                      }}>
-                      <Icon2
-                        name="clock-rotate-left"
-                        size={18}
-                        color={themeColors.primaryColor}
-                      />
+        {forms.length > 0 ? (
+          <FlatList
+            style={{height: 400, paddingHorizontal: 10}}
+            data={forms.reverse()}
+            renderItem={({item}) => {
+              const date = new Date().toISOString().slice(0, 10);
+              if (item.date === date) {
+                return (
+                  <View
+                    style={{
+                      paddingVertical: 20,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      borderBottomColor: themeColors.primaryColor5,
+                      borderBottomWidth: 2,
+                      borderStyle: 'dotted',
+                    }}>
+                    <View style={{width: '75%'}}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
+                          alignItems: 'center',
+                        }}>
+                        <Icon2
+                          name="clock-rotate-left"
+                          size={18}
+                          color={themeColors.primaryColor}
+                        />
+                        <Text
+                          style={{
+                            color: themeColors.primaryColor,
+                            fontWeight: '500',
+                            fontSize: 12,
+                            marginLeft: 8,
+                          }}>
+                          {moment(item.date + ' ' + item.time).fromNow()}
+                        </Text>
+                      </View>
                       <Text
                         style={{
-                          color: themeColors.primaryColor,
-                          fontWeight: '500',
-                          fontSize: 12,
-                          marginLeft: 8,
+                          color: themeColors.black,
+                          fontWeight: '700',
+                          fontSize: 18,
                         }}>
-                        {moment(item.date + ' ' + item.time).fromNow()}
+                        Customer's information
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: themeColors.primaryColor7,
+                        }}>
+                        Name: {item.customerName}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: themeColors.primaryColor7,
+                        }}>
+                        Phone: {item.phone}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: themeColors.primaryColor7,
+                        }}>
+                        Address:{' '}
+                        {item.address === 'Updating'
+                          ? 'Updating'
+                          : item.address}
                       </Text>
                     </View>
-                    <Text
-                      style={{
-                        color: themeColors.black,
-                        fontWeight: '700',
-                        fontSize: 18,
-                      }}>
-                      Customer's information
-                    </Text>
-                    <Text
-                      style={{fontSize: 14, color: themeColors.primaryColor7}}>
-                      Name: {item.customerName}
-                    </Text>
-                    <Text
-                      style={{fontSize: 14, color: themeColors.primaryColor7}}>
-                      Phone: {item.phone}
-                    </Text>
-                    <Text
-                      style={{fontSize: 14, color: themeColors.primaryColor7}}>
-                      Address:{' '}
-                      {item.address === 'Updating' ? 'Updating' : item.address}
-                    </Text>
-                  </View>
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => pickForm(item._id)}
-                      style={{
-                        backgroundColor: themeColors.primaryColor,
-                        paddingVertical: 10,
-                        borderRadius: 10,
-                        paddingHorizontal: 10,
-                        marginBottom: 10,
-                      }}>
-                      <Text
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => pickForm(item._id)}
                         style={{
-                          fontWeight: '700',
-                          color: themeColors.white,
-                          fontSize: 14,
-                          textAlign: 'center',
+                          backgroundColor: themeColors.primaryColor,
+                          paddingVertical: 10,
+                          borderRadius: 10,
+                          paddingHorizontal: 10,
+                          marginBottom: 10,
                         }}>
-                        PICK
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => openDialScreen(item.phone)}
-                      style={{
-                        backgroundColor: themeColors.primaryColor2,
-                        paddingVertical: 10,
-                        borderRadius: 10,
-                        paddingHorizontal: 10,
-                      }}>
-                      <Text
+                        <Text
+                          style={{
+                            fontWeight: '700',
+                            color: themeColors.white,
+                            fontSize: 14,
+                            textAlign: 'center',
+                          }}>
+                          PICK
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => openDialScreen(item.phone)}
                         style={{
-                          fontWeight: '700',
-                          color: themeColors.white,
-                          fontSize: 14,
-                          textAlign: 'center',
+                          backgroundColor: themeColors.primaryColor2,
+                          paddingVertical: 10,
+                          borderRadius: 10,
+                          paddingHorizontal: 10,
                         }}>
-                        CALL
-                      </Text>
-                    </TouchableOpacity>
+                        <Text
+                          style={{
+                            fontWeight: '700',
+                            color: themeColors.white,
+                            fontSize: 14,
+                            textAlign: 'center',
+                          }}>
+                          CALL
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              );
-            }
-          }}
-          keyExtractor={item => item._id}
-        />
+                );
+              }
+            }}
+            keyExtractor={item => item._id}
+          />
+        ) : (
+          <Text
+            style={{
+              color: themeColors.gray,
+              fontWeight: '700',
+              fontStyle: 'italic',
+              marginVertical: 20,
+              textAlign: 'center',
+              fontSize: 17,
+            }}>
+            There are no orders yet
+          </Text>
+        )}
       </View>
     </View>
   );
