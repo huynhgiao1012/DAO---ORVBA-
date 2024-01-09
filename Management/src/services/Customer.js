@@ -6,7 +6,7 @@ import { IP, KEY_TOKEN } from "../Utils/constants";
 export const customerApi = createApi({
   reducerPath: "customerApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/customer`,
+    baseUrl: `https://dao-applicationservice.onrender.com/api/v1/customer`,
     prepareHeaders: async (headers, query) => {
       const Token = localStorage.getItem("token");
       if (Token) {

@@ -6,7 +6,7 @@ import { IP, KEY_TOKEN } from "../Utils/constants";
 export const formApi = createApi({
   reducerPath: "formApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/form`,
+    baseUrl: `https://dao-applicationservice.onrender.com/api/v1/form`,
     prepareHeaders: async (headers, query) => {
       const Token = localStorage.getItem("token");
 

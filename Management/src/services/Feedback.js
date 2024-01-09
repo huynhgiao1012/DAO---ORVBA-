@@ -6,7 +6,7 @@ import { IP, KEY_TOKEN } from "../Utils/constants";
 export const fbApi = createApi({
   reducerPath: "fbApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/feedback`,
+    baseUrl: `https://dao-applicationservice.onrender.com/api/v1/feedback`,
     prepareHeaders: async (headers, query) => {
       const Token = localStorage.getItem("token");
       if (Token) {

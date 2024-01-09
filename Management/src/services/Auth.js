@@ -3,7 +3,9 @@ import { IP } from "../Utils/constants";
 // Define a service using a base URL and expected endpoints
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `http://${IP}:3000/api/v1/auth` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: `https://dao-applicationservice.onrender.com/api/v1/auth`,
+  }),
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     register: builder.mutation({
