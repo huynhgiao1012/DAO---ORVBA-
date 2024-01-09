@@ -21,6 +21,7 @@ import { Routes, Route } from "react-router-dom";
 import "../../style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
+import GarageFeedback from "../../Pages/Manager/GarageFeedback/GarageFeedback";
 const DefaultLayoutComponent = ({ socket }) => {
   const { i18n } = useTranslation();
   const { darkMode } = useContext(DarkModeContext);
@@ -53,6 +54,9 @@ const DefaultLayoutComponent = ({ socket }) => {
         </Route>
         <Route path="garaCustomer">
           <Route index element={<GarageCustomer socket={socket} />} />
+        </Route>
+        <Route path="garaFeedback">
+          <Route index element={<GarageFeedback socket={socket} />} />
         </Route>
         <Route path="garaForms">
           <Route index element={<GarageForms socket={socket} />} />

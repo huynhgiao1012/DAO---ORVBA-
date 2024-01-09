@@ -48,6 +48,11 @@ export const managerApi = createApi({
         url: "/getAllForm",
       }),
     }),
+    getAllFeedback: builder.mutation({
+      query: () => ({
+        url: "/getAllFeedback",
+      }),
+    }),
     getMaintenanceForm: builder.mutation({
       query: () => ({
         url: "/getMaintenanceForm",
@@ -231,4 +236,5 @@ export const {
   useGetNewMaintenanceFormMutation,
   useCheckAccountMutation,
   useDeleteFormMutation,
+  useGetAllFeedbackMutation,
 } = managerApi;

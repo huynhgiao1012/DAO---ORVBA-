@@ -48,6 +48,7 @@ const Datatable = () => {
         payload.orderForm.map((val, index) => {
           newArr.push({
             id: val._id,
+            customerName: val.customerName,
             phone: val.phone,
             service: val.service,
             type: val.type,
@@ -84,10 +85,6 @@ const Datatable = () => {
         }
       });
   };
-  // const handleEdit = (id) => {
-  //   handleOpen(id);
-  //   setIsEdit(true);
-  // };
   const handleView = (data) => {
     handleOpen(data);
     setIsEdit(false);
@@ -134,56 +131,68 @@ const Datatable = () => {
       //   });
     }
   };
-  // const handleChange = (SelectChangeEvent) => {
-  //   // settab(SelectChangeEvent.target.value);
-  //   // var newArr = [];
-  //   // getAllUser()
-  //   //   .unwrap()
-  //   //   .then((payload) => {
-  //   //     if (payload.success === true) {
-  //   //       payload.data.map((val) => {
-  //   //         newArr.push({
-  //   //           id: val._id,
-  //   //           username: val.name,
-  //   //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-  //   //           status: val.isActive ? "active" : "inactive",
-  //   //           email: val.email,
-  //   //           phone: val.phone,
-  //   //           role: val.role,
-  //   //           dbId: val._id,
-  //   //         });
-  //   //       });
-  //   //     }
-  //   //     if (SelectChangeEvent.target.value === 20) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "customer") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 30) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "company") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 40) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "admin") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else {
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...newArr]);
-  //   //     }
-  //   //   });
-  // };
+  const onSearch = (value) => {
+    if (value.length === 0 && data.length === 0) {
+      getAllForm()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.orderForm.map((val, index) => {
+            newArr.push({
+              id: val._id,
+              customerName: val.customerName,
+              phone: val.phone,
+              service: val.service,
+              type: val.type,
+              status: val.status,
+              date: val.date,
+              time: val.time,
+              isPaid: val.isPaid,
+              isFeedback: val.isFeedback,
+            });
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    } else {
+      getAllForm()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.orderForm.map((val, index) => {
+            if (
+              val.phone.includes(value) ||
+              val.customerName.toUpperCase().includes(value.toUpperCase())
+            ) {
+              newArr.push({
+                id: val._id,
+                customerName: val.customerName,
+                phone: val.phone,
+                service: val.service,
+                type: val.type,
+                status: val.status,
+                date: val.date,
+                time: val.time,
+                isPaid: val.isPaid,
+                isFeedback: val.isFeedback,
+              });
+            }
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    }
+  };
   const actionColumn = [
     {
       field: "isPaid",
@@ -294,6 +303,22 @@ const Datatable = () => {
   ];
   return (
     <div className="datatable">
+      <input
+        type="search"
+        name="search-form"
+        id="search-form"
+        className="search-input"
+        placeholder="Search by phone/name"
+        onChange={(e) => onSearch(e.target.value)}
+        style={{
+          width: 400,
+          padding: "5px 15px",
+          border: "1px solid #D8E5E5",
+          marginBottom: 10,
+          fontSize: 16,
+          fontWeight: 600,
+        }}
+      />
       <DataGrid
         className="datagrid"
         rows={data}

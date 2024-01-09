@@ -41,7 +41,6 @@ const style = {
 };
 const Datatable = () => {
   const [data, setData] = useState([]);
-
   const [getAllAccountant] = useGetAllAccountantMutation();
   const [createAccountant] = useCreateAccountantAccountMutation();
   const [isEdit, setIsEdit] = useState(false);
@@ -105,10 +104,6 @@ const Datatable = () => {
     //     }
     //   });
   };
-  // const handleEdit = (id) => {
-  //   handleOpen(id);
-  //   setIsEdit(true);
-  // };
   const handleView = (data) => {
     handleOpen(data);
     setIsEdit(false);
@@ -134,6 +129,57 @@ const Datatable = () => {
         })
         .catch((error) => {
           console.log(error);
+        });
+    }
+  };
+  const onSearch = (value) => {
+    if (value.length === 0 && data.length === 0) {
+      getAllAccountant()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.accountant.map((val, index) => {
+            newArr.push({
+              id: val._id,
+              name: val.accountId.name,
+              img: val.accountId.img,
+              email: val.accountId.email,
+              phone: val.accountId.phone,
+            });
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    } else {
+      getAllAccountant()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.accountant.map((val, index) => {
+            if (
+              val.accountId.name.toUpperCase().includes(value.toUpperCase())
+            ) {
+              newArr.push({
+                id: val._id,
+                name: val.accountId.name,
+                img: val.accountId.img,
+                email: val.accountId.email,
+                phone: val.accountId.phone,
+              });
+            }
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
         });
     }
   };
@@ -187,6 +233,14 @@ const Datatable = () => {
             Add new accountant
           </p>
         </div>
+        <input
+          type="search"
+          name="search-form"
+          id="search-form"
+          className="search-input"
+          placeholder="Search by name"
+          onChange={(e) => onSearch(e.target.value)}
+        />
       </div>
       {/* <Table
         columns={mechanicColumns.concat(actionColumn)}

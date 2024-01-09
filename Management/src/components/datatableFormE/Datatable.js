@@ -70,6 +70,7 @@ const Datatable = () => {
     getAllForm()
       .unwrap()
       .then((payload) => {
+        console.log("payload", payload.orderForm);
         var newArr = [];
         payload.orderForm.map((val, index) => {
           newArr.push({ id: val._id, ...val });
@@ -371,22 +372,77 @@ const Datatable = () => {
       setName("");
     }
   };
-
+  const onSearch = (value) => {
+    if (value.length === 0 && data.length === 0) {
+      getAllForm()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.orderForm.map((val, index) => {
+            newArr.push({ id: val._id, ...val });
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    } else {
+      getAllForm()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.orderForm.map((val, index) => {
+            if (val.phone.includes(value)) {
+              newArr.push({ id: val._id, ...val });
+            }
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    }
+  };
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        <div className="addButton" onClick={handleCreate}>
-          <p
-            style={{
-              fontSize: 16,
-              color: "white",
-              height: 15,
-              textAlign: "center",
-              fontWeight: "bold",
-            }}
-          >
-            Create Emergency Form
-          </p>
+        <h5 style={{ color: "#196462", fontWeight: "bold" }}>
+          List of emergency form (in processing)
+        </h5>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div className="addButton" onClick={handleCreate}>
+            <p
+              style={{
+                fontSize: 16,
+                color: "white",
+                height: 15,
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Create Emergency Form
+            </p>
+          </div>
+          <input
+            type="search"
+            name="search-form"
+            id="search-form"
+            className="search-input"
+            placeholder="Search by phone"
+            onChange={(e) => onSearch(e.target.value)}
+          />
         </div>
       </div>
       <DataGrid

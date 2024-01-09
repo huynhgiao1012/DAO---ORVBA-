@@ -3,6 +3,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import CarRepairIcon from "@mui/icons-material/CarRepair";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import FeedbackIcon from "@mui/icons-material/Feedback";
 import { NavLink, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useEffect, useState } from "react";
@@ -138,16 +139,16 @@ const Sidebar = () => {
               </div> */}
             </li>
           </NavLink>
-          {/* <NavLink
-            to="/garaCustomer"
+          <NavLink
+            to="/garaFeedback"
             style={{ textDecoration: "none" }}
             className={({ isActive }) => (isActive ? "active" : "none")}
           >
             <li>
-              <ListAltIcon className="icon" />
-              <span>Customer</span>
+              <FeedbackIcon className="icon" />
+              <span>Feedbacks</span>
             </li>
-          </NavLink> */}
+          </NavLink>
         </ul>
       </div>
       <div className="bottom">

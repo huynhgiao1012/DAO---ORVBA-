@@ -2,6 +2,13 @@
   height: 600px;
   padding: 20px;
 }
+.datatable .addButton {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background-color: #34acaf;
+  cursor: pointer;
+  border: none;
+}
 .datatable .datatableTitle {
   width: 100%;
   font-size: 24px;
@@ -11,26 +18,15 @@
   align-items: center;
   justify-content: space-between;
 }
-.datatable .datatableTitle .addButton {
-  padding: 2px 5px;
-  border-radius: 5px;
-  background-color: #34acaf;
-  cursor: pointer;
-  border: none;
-}
-.datatable .datatableTitle .search-input {
-  background-color: white;
-  color: black;
-  width: 400px;
-  padding: 5px 15px;
+.datatable .datatableTitle .link {
+  text-decoration: none;
+  color: green;
   font-size: 16px;
-  font-weight: 600;
-  font-style: italic;
-  border: 1px solid #34acaf;
-  border-radius: 8px;
-}
-.datatable .datatableTitle .search-input:focus {
-  border: "None";
+  font-weight: 400;
+  border: 1px solid green;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .datatable .datagrid .MuiDataGrid-columnHeader {
   background-color: #999999;
@@ -65,24 +61,31 @@
   background-color: rgba(255, 0, 0, 0.05);
   color: crimson;
 }
-.datatable .mechanicAction {
+.datatable .cellAction {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
-.datatable .mechanicAction .viewButton {
+.datatable .cellAction .viewButton {
   padding: 2px 8px;
   border-radius: 5px;
   border: none;
-  margin-right: 8px;
   color: white;
   background-color: #34acaf;
   cursor: pointer;
 }
-.datatable .mechanicAction .deleteButton {
+.datatable .cellAction .deleteButton {
   padding: 2px 8px;
   border-radius: 5px;
+  margin: 0px 10px;
   color: red;
   border: 1px dotted rgba(220, 20, 60, 0.6);
   cursor: pointer;
-}/*# sourceMappingURL=style11.css.map */
+}
+.datatable .cellAction .editButton {
+  padding: 2px 8px;
+  border-radius: 5px;
+  color: #34acaf;
+  border: 1px dotted rgba(20, 180, 220, 0.508);
+  cursor: pointer;
+}/*# sourceMappingURL=style12.css.map */

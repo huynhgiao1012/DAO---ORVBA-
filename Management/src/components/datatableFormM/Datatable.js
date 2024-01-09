@@ -118,11 +118,6 @@ const Datatable = () => {
     handleOpen(data);
     setIsEdit(false);
   };
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
-  const handleCreate = () => {
-    setIsModalOpen(true);
-    setIsEdit(false);
-  };
   const onSubmit = async (values) => {
     console.log(values);
     if (isEdit) {
@@ -165,7 +160,43 @@ const Datatable = () => {
       //   });
     }
   };
-
+  const onSearch = (value) => {
+    if (value.length === 0 && data.length === 0) {
+      getAllForm()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.orderForm.map((val, index) => {
+            newArr.push({ id: val._id, ...val });
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    } else {
+      getAllForm()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.orderForm.map((val, index) => {
+            if (val.phone.includes(value)) {
+              newArr.push({ id: val._id, ...val });
+            }
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    }
+  };
   const actionColumn = [
     {
       field: "created",
@@ -269,24 +300,16 @@ const Datatable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        {/* <div className="addButton" onClick={handleCreate}>
-          <p
-            style={{
-              fontSize: 16,
-              color: "white",
-              height: 15,
-              textAlign: "center",
-              fontWeight: "bold",
-            }}
-          >
-            Create Emergency Form
-          </p>
-        </div> */}
-        <Search
-          placeholder="input search text"
-          onSearch={onSearch}
-          enterButton
-          style={{ backgroundColor: "#3cbcc4" }}
+        <h5 style={{ color: "#196462", fontWeight: "bold" }}>
+          List of maintenance form (in processing)
+        </h5>
+        <input
+          type="search"
+          name="search-form"
+          id="search-form"
+          className="search-input"
+          placeholder="Search by phone"
+          onChange={(e) => onSearch(e.target.value)}
         />
       </div>
       <DataGrid

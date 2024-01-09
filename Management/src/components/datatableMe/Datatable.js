@@ -1,7 +1,7 @@
 import "./style11.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { mechanicColumns, userRows } from "../../datatablesource";
-import { Link, useNavigate } from "react-router-dom";
+import { mechanicColumns } from "../../datatablesource";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   useGetAllMechanicMutation,
@@ -14,7 +14,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Alert from "@mui/material/Alert";
-// import { useCreateCompanyMutation } from "../../services/Company";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,6 +25,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+const { Search } = Input;
 const Datatable = () => {
   const [data, setData] = useState([]);
   const [getAllMechanic] = useGetAllMechanicMutation();
@@ -152,65 +152,72 @@ const Datatable = () => {
         });
     }
   };
-  // const handleChange = (SelectChangeEvent) => {
-  //   // settab(SelectChangeEvent.target.value);
-  //   // var newArr = [];
-  //   // getAllUser()
-  //   //   .unwrap()
-  //   //   .then((payload) => {
-  //   //     if (payload.success === true) {
-  //   //       payload.data.map((val) => {
-  //   //         newArr.push({
-  //   //           id: val._id,
-  //   //           username: val.name,
-  //   //           img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-  //   //           status: val.isActive ? "active" : "inactive",
-  //   //           email: val.email,
-  //   //           phone: val.phone,
-  //   //           role: val.role,
-  //   //           dbId: val._id,
-  //   //         });
-  //   //       });
-  //   //     }
-  //   //     if (SelectChangeEvent.target.value === 20) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "customer") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 30) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "company") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else if (SelectChangeEvent.target.value === 40) {
-  //   //       const arr = newArr.filter((val) => {
-  //   //         if (val.role === "admin") {
-  //   //           return val;
-  //   //         }
-  //   //       });
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...arr]);
-  //   //     } else {
-  //   //       setData([]);
-  //   //       setData((prev) => [...prev, ...newArr]);
-  //   //     }
-  //   //   });
-  // };
+  const onSearch = (value) => {
+    if (value.length === 0 && data.length === 0) {
+      getAllMechanic()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.mechanic.map((val, index) => {
+            newArr.push({
+              id: val._id,
+              name: val.accountId.name,
+              img: val.accountId.img,
+              status: val.isAvailable ? "available" : "unavailable",
+              email: val.accountId.email,
+              phone: val.accountId.phone,
+              point: val.mePoint,
+              group: val.group,
+            });
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    } else {
+      getAllMechanic()
+        .unwrap()
+        .then((payload) => {
+          setData([]);
+          var newArr = [];
+          payload.mechanic.map((val, index) => {
+            if (
+              val.accountId.name.toUpperCase().includes(value.toUpperCase())
+            ) {
+              newArr.push({
+                id: val._id,
+                name: val.accountId.name,
+                img: val.accountId.img,
+                status: val.isAvailable ? "available" : "unavailable",
+                email: val.accountId.email,
+                phone: val.accountId.phone,
+                point: val.mePoint,
+                group: val.group,
+              });
+            }
+          });
+          setData((prev) => [...prev, ...newArr]);
+        })
+        .catch((error) => {
+          if (error.status === 401) {
+            logOut();
+          }
+        });
+    }
+  };
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 500,
+      flex: 1,
       headerAlign: "center",
       renderCell: (params) => {
         return (
-          <div className="cellAction">
+          <div className="mechanicAction">
             <div className="viewButton" onClick={() => handleView(params.row)}>
               View
             </div>
@@ -224,12 +231,6 @@ const Datatable = () => {
             >
               <div className="deleteButton">Delete</div>
             </Popconfirm>
-            {/* <div
-              className="editButton"
-              onClick={() => handleEdit(params.row._id)}
-            >
-              Edit
-            </div> */}
           </div>
         );
       },
@@ -252,6 +253,14 @@ const Datatable = () => {
             Add new mechanic
           </p>
         </div>
+        <input
+          type="search"
+          name="search-form"
+          id="search-form"
+          className="search-input"
+          placeholder="Search by name"
+          onChange={(e) => onSearch(e.target.value)}
+        />
       </div>
       <DataGrid
         className="datagrid"

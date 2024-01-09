@@ -1,3 +1,4 @@
+import Rating from "@mui/material/Rating";
 export const userColumns = [
   { field: "id", headerName: "ID", headerAlign: "center", flex: 1 },
   {
@@ -204,6 +205,12 @@ export const serviceColumns2 = [
 export const formColumn = [
   { field: "id", headerName: "ID", flex: 1, headerAlign: "center" },
   {
+    field: "customerName",
+    headerName: "Customer's Name",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
     field: "phone",
     headerName: "Phone",
     flex: 1,
@@ -232,10 +239,82 @@ export const formColumn = [
     headerName: "Date",
     flex: 1,
     headerAlign: "center",
+    renderCell: (params) => {
+      return <div>{params.row.date.split("-").reverse().join("-")}</div>;
+    },
   },
   {
     field: "time",
     headerName: "Time",
+    flex: 1,
+    headerAlign: "center",
+  },
+];
+export const feedbackColumn = [
+  { field: "id", headerName: "ID", flex: 1, headerAlign: "center" },
+  {
+    field: "customerName",
+    headerName: "Customer's Name",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    field: "phone",
+    headerName: "Customer's Phone",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    field: "service",
+    headerName: "Service",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    field: "price",
+    headerName: "Price",
+    flex: 1,
+    headerAlign: "center",
+    renderCell: (params) => {
+      return (
+        <div>
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(params.row.price)}
+        </div>
+      );
+    },
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    flex: 1,
+    headerAlign: "center",
+    renderCell: (params) => {
+      return <div>{params.row.date.split("-").reverse().join("-")}</div>;
+    },
+  },
+  {
+    field: "rating",
+    headerName: "Rating",
+    flex: 1,
+    headerAlign: "center",
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.rating > 0 ? (
+            <Rating name="read-only" value={params.row.rating} readOnly />
+          ) : (
+            0
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    field: "review",
+    headerName: "Review",
     flex: 1,
     headerAlign: "center",
   },
