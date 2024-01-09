@@ -10,6 +10,7 @@ const EmailService = require("../utils/EmailService");
 const { ROLES, FORM_STATUS, GROUP } = require("../constant");
 const OrderForm = require("../models/orderForm");
 const Service = require("../models/service");
+const Feedback = require("../models/feedback");
 const SubService = require("../models/subService");
 const Notification = require("../models/notification");
 const Garage = require("../models/garage");
@@ -399,6 +400,22 @@ exports.getAllForm = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,
     orderForm,
+  });
+});
+exports.getAllFeedback = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const feedback = await Feedback.find({
+    garageId: manager.garageId,
+  })
+    .populate("customerId", "name email phone _id")
+    .populate("formID");
+  if (!feedback) {
+    throw new ApiError(400, "Not available");
+  }
+  res.status(200).json({
+    success: true,
+    feedback,
   });
 });
 exports.updateIsVip = catchAsync(async (req, res) => {
