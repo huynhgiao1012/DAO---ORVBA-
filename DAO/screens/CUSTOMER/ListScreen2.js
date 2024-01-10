@@ -25,7 +25,7 @@ import {
 } from '../../services/Garage';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../../common/theme';
-import ListItem from '../../common/ListItem2';
+import ListItem from '../../common/ListItem';
 
 // subscribe for more videos like this :)
 export default function ListScreen2() {

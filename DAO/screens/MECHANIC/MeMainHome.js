@@ -60,7 +60,7 @@ export default function MeMainHome() {
   };
   useEffect(() => {
     setForms([]);
-    const socketIo = io('http://localhost:3000');
+    const socketIo = io('https://dao-applicationservice.onrender.com');
     socketIo.on('getEmergencyForm', data => {
       if (data) {
         getForms()

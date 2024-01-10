@@ -7,7 +7,7 @@ import {getLocalStorageByKey} from '../common/LocalStorage';
 export const serviceApi = createApi({
   reducerPath: 'serviceApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/service`,
+    baseUrl: `https://dao-applicationservice.onrender.com/api/v1/service`,
     prepareHeaders: async (headers, query) => {
       const Token = await getLocalStorageByKey(KEY_TOKEN);
       if (Token) {

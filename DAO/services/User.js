@@ -7,7 +7,7 @@ import {clearStorage, getLocalStorageByKey} from '../common/LocalStorage';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${IP}:3000/api/v1/user`,
+    baseUrl: `https://dao-applicationservice.onrender.com/api/v1/user`,
     prepareHeaders: async (headers, query) => {
       const Token = await getLocalStorageByKey(KEY_TOKEN);
       if (Token) {
