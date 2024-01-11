@@ -34,6 +34,11 @@ export const fbApi = createApi({
         url: `/getAllFeedbacks/${id}`,
       }),
     }),
+    getAllFeedbackByCus: builder.mutation({
+      query: () => ({
+        url: `/getAllFeedbackByCus`,
+      }),
+    }),
     deleteFb: builder.mutation({
       query: ({id}) => ({
         url: `/${id}`,
@@ -46,4 +51,5 @@ export const {
   useCreateFeedbackMutation,
   useDeleteFbMutation,
   useGetAllFbMutation,
+  useGetAllFeedbackByCusMutation,
 } = fbApi;

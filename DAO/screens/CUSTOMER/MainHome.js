@@ -52,29 +52,15 @@ export default function MainHome() {
   return (
     <ScrollView style={{backgroundColor: themeColors.white}}>
       <View style={{flex: 1}}>
-        <View
+        <Text
           style={{
-            backgroundColor: themeColors.white,
-            padding: 15,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
+            fontSize: 20,
+            fontWeight: '700',
+            color: themeColors.primaryColor,
+            padding: 20,
           }}>
-          <Image
-            source={require('../../assets/gif1.gif')}
-            style={{width: 60, height: 80}}
-          />
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: '700',
-              color: themeColors.primaryColor,
-              paddingLeft: 10,
-              width: 300,
-            }}>
-            WELCOME HOME, {name.toUpperCase()} !
-          </Text>
-        </View>
+          WELCOME HOME, {name.toUpperCase()} !
+        </Text>
         <View style={{width: '100%', height: 200, alignSelf: 'center'}}>
           <Image
             source={require('../../assets/towing.gif')}
@@ -142,7 +128,7 @@ export default function MainHome() {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.box, {backgroundColor: themeColors.primaryColor7}]}
+            style={[styles.box, {backgroundColor: themeColors.primaryColor4}]}
             onPress={() => navigation.navigate('MaintenanceService')}>
             <Text style={styles.textBox}>Maintenance</Text>
             <Icon2
@@ -152,57 +138,17 @@ export default function MainHome() {
             />
           </TouchableOpacity>
         </View>
-        {/* <LinearGradient
-          colors={[
-            themeColors.white,
-            themeColors.white,
-            themeColors.white,
-            themeColors.primaryColor5,
-            themeColors.primaryColor5,
-            themeColors.white,
-            themeColors.white,
-            themeColors.white,
-          ]}
+        <Text
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 20,
-            backgroundColor: themeColors.primaryColor7,
+            color: themeColors.primaryColor7,
+            fontWeight: '800',
+            fontSize: 22,
+            marginHorizontal: 20,
+            marginTop: 10,
           }}>
-          <TouchableOpacity
-            style={styles.box}
-            onPress={() => navigation.navigate('EmergencyService')}>
-            <Image
-              source={require('../../assets/tow.png')}
-              style={{width: '100%', height: '80%'}}
-            />
-            <Text style={styles.textBox}>Emergency</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.box}
-            onPress={() => navigation.navigate('MaintenanceService')}>
-            <Image
-              source={require('../../assets/maintain.png')}
-              style={{width: '100%', height: '80%'}}
-            />
-            <Text style={styles.textBox}>Maintaining</Text>
-          </TouchableOpacity>
-        </LinearGradient> */}
+          More Information
+        </Text>
         <Card />
-        {/* <View
-          style={{
-            backgroundColor: themeColors.white,
-            flex: 1,
-            padding: 10,
-            alignSelf: 'center',
-            backgroundColor: themeColors.primaryColor5,
-            width: '90%',
-            marginBottom: 20,
-          }}>
-          <Text style={{textAlign: 'center', fontSize: 16, fontWeight: '800'}}>
-            About App
-          </Text>
-        </View> */}
       </View>
     </ScrollView>
   );

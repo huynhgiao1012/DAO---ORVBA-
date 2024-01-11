@@ -21,10 +21,10 @@ import HelpCenter from '../screens/CUSTOMER/HelpCenter';
 import LoyalCustomer from '../screens/CUSTOMER/LoyalCustomer';
 import MeHome from '../screens/MECHANIC/MeHome';
 import UpdateForm from '../screens/MECHANIC/UpdateForm';
-import Step1 from '../screens/MECHANIC/MeForm1';
-import Step2 from '../screens/MECHANIC/UpdateBefore';
 import QRCode from '../screens/MECHANIC/QRCode';
 import ViewFormDetail from '../screens/ViewFormDetail';
+import MaintenanceProcess from '../screens/CUSTOMER/MaintenanceProcess';
+import Reasons from '../screens/CUSTOMER/Reasons';
 
 const Stack = createStackNavigator();
 export default function Navigation({socket}) {
@@ -140,6 +140,16 @@ export default function Navigation({socket}) {
           name="ViewFormDetail"
           options={{headerShown: false}}
           component={ViewFormDetail}
+        />
+        <Stack.Screen
+          name="MaintenanceProcess"
+          options={{headerShown: false}}
+          component={MaintenanceProcess}
+        />
+        <Stack.Screen
+          name="Reasons"
+          options={{headerShown: false}}
+          component={Reasons}
         />
       </Stack.Navigator>
     </NavigationContainer>

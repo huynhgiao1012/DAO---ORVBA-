@@ -1,48 +1,64 @@
-import {View, Text, TextInput} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import React, {useState} from 'react';
 import Header2 from '../../common/Header2';
 import {themeColors} from '../../common/theme';
-
 export default function HelpCenter() {
   return (
     <View style={{backgroundColor: themeColors.white, flex: 1}}>
       <Header2 name="Help Center" />
       <View style={{padding: 20}}>
+        <Image
+          source={require('../../assets/support.gif')}
+          style={{width: '100%', height: 300}}
+        />
         <Text
           style={{
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: 'bold',
             color: themeColors.primaryColor4,
-            marginVertical: 10,
+            marginVertical: 8,
+            textAlign: 'center',
           }}>
           DO YOU NEED ANY SUPPORT ?
         </Text>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: '600',
             color: themeColors.gray60,
             fontStyle: 'italic',
-            textAlign: 'justify',
+            textAlign: 'center',
           }}>
-          Please provide the information you need assistance by filling out the
-          following form
+          If you have any questions related to our application or our services,
+          please contact us via:
         </Text>
-        <TextInput
+        <Text
           style={{
-            borderWidth: 1,
-            borderColor: themeColors.primaryColor6,
-            marginVertical: 15,
-            paddingHorizontal: 10,
-            borderRadius: 10,
-            color: themeColors.primaryColor7,
-            fontWeight: '700',
             fontSize: 16,
-            backgroundColor: themeColors.white,
-          }}
-          numberOfLines={5}
-          maxLength={200}
-        />
+            fontWeight: '600',
+            color: themeColors.primaryColor7,
+            textAlign: 'center',
+            marginVertical: 8,
+          }}>
+          Email: ITITIU19012@student.hcmiu.edu.vn
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: '600',
+            color: themeColors.gray,
+            fontStyle: 'italic',
+            textAlign: 'center',
+          }}>
+          Thank you a lot for using our application.
+        </Text>
       </View>
     </View>
   );

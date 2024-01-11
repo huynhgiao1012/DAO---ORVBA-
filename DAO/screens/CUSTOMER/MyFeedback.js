@@ -19,13 +19,18 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import {useGetFormNotFeedMutation} from '../../services/OrderForm';
 import {useNavigation} from '@react-navigation/native';
-import {useCreateFeedbackMutation} from '../../services/Feedback';
+import {
+  useCreateFeedbackMutation,
+  useGetAllFeedbackByCusMutation,
+} from '../../services/Feedback';
+import {Rating} from 'react-native-ratings';
 
 export default function MyFeedback() {
   const navigation = useNavigation();
   const [active, setActive] = useState(0);
   const [createFeedback] = useCreateFeedbackMutation();
   const [getFormNotFeed] = useGetFormNotFeedMutation();
+  const [getAllFeedbackByCus] = useGetAllFeedbackByCusMutation();
   const starRatingOptions = [1, 2, 3, 4, 5];
   const animatedButtonScale = new Animated.Value(0.8);
   const [starRating, setStarRating] = useState(0);
@@ -36,14 +41,24 @@ export default function MyFeedback() {
     formID: '',
   });
   const [feedback, setFeed] = useState([]);
+  const [feedback2, setFeed2] = useState([]);
   const [text, setText] = useState('');
   const loadData = () => {
     setFeed([]);
+    setFeed2([]);
     if (active === 0) {
       getFormNotFeed()
         .unwrap()
         .then(payload => {
           setFeed(prev => [...prev, ...payload.data]);
+        })
+        .catch(error => console.log(error));
+    } else {
+      getAllFeedbackByCus()
+        .unwrap()
+        .then(payload => {
+          console.log(payload.data);
+          setFeed2(prev => [...prev, ...payload.data]);
         })
         .catch(error => console.log(error));
     }
@@ -148,149 +163,247 @@ export default function MyFeedback() {
           <Text style={styles.btn_text}>Rated</Text>
         </TouchableOpacity>
       </View>
-      {feedback.length > 0 &&
-        feedback.map((val, index) => {
-          return (
-            <View
-              style={{
-                padding: 15,
-                backgroundColor: themeColors.white,
-                borderBottomColor: '#f8f8f8',
-                borderBottomWidth: 4,
-              }}>
+      {active === 0
+        ? feedback.length > 0 &&
+          feedback.map((val, index) => {
+            return (
               <View
+                key={index}
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 8,
+                  padding: 15,
+                  backgroundColor: themeColors.white,
+                  borderBottomColor: '#f8f8f8',
+                  borderBottomWidth: 4,
                 }}>
-                <Text
+                <View
                   style={{
-                    color: themeColors.primaryColor,
-                    fontWeight: 700,
-                    fontSize: 16,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 8,
                   }}>
-                  {val.garageId.name}
-                </Text>
-                <Text
-                  style={{
-                    color: themeColors.black,
-                    fontSize: 16,
-                    fontWeight: 500,
-                  }}>
-                  {val.date.split('-').reverse().join('/')}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  marginVertical: 8,
-                }}>
-                <Image
-                  source={{uri: val.imgAf}}
-                  style={{width: '30%', height: 100, borderRadius: 20}}
-                />
-                <View style={{marginLeft: 10, width: '68%'}}>
                   <Text
                     style={{
-                      color: themeColors.primaryColor7,
-                      fontSize: 16,
+                      color: themeColors.primaryColor,
                       fontWeight: 700,
+                      fontSize: 16,
                     }}>
-                    {val.service}
+                    {val.garageId.name}
                   </Text>
                   <Text
                     style={{
-                      color: themeColors.primaryColor6,
-                      fontSize: 12,
-                      padding: 5,
+                      color: themeColors.black,
+                      fontSize: 16,
+                      fontWeight: 500,
                     }}>
-                    - {val.carSpares}
+                    {val.date.split('-').reverse().join('/')}
                   </Text>
-                  <View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    marginVertical: 8,
+                  }}>
+                  <Image
+                    source={{uri: val.imgAf}}
+                    style={{width: '30%', height: 100, borderRadius: 20}}
+                  />
+                  <View style={{marginLeft: 10, width: '68%'}}>
+                    <Text
+                      style={{
+                        color: themeColors.primaryColor7,
+                        fontSize: 16,
+                        fontWeight: 700,
+                      }}>
+                      {val.service}
+                    </Text>
                     <Text
                       style={{
                         color: themeColors.primaryColor6,
                         fontSize: 12,
                         padding: 5,
                       }}>
-                      - Mechanic's name: {val.mechanicId.name}
+                      - {val.carSpares}
+                    </Text>
+                    <View>
+                      <Text
+                        style={{
+                          color: themeColors.primaryColor6,
+                          fontSize: 12,
+                          padding: 5,
+                        }}>
+                        - Mechanic's name: {val.mechanicId.name}
+                      </Text>
+                    </View>
+                    <Text
+                      style={{
+                        color: themeColors.primaryColor2,
+                        fontSize: 16,
+                        fontWeight: 700,
+                        fontStyle: 'italic',
+                        alignSelf: 'flex-end',
+                      }}>
+                      Total Price:
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      }).format(val.price)}
                     </Text>
                   </View>
-                  <Text
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <View
                     style={{
-                      color: themeColors.primaryColor2,
-                      fontSize: 16,
-                      fontWeight: 700,
-                      fontStyle: 'italic',
+                      borderColor: 'green',
+                      borderStyle: 'dotted',
+                      borderWidth: 2,
+                      padding: 7,
+                      width: '30%',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 5,
+                    }}>
+                    <Icon name="check-circle" color="green" size={22} />
+                    <Text
+                      style={{
+                        color: 'green',
+                        fontWeight: 'bold',
+                        marginHorizontal: 10,
+                      }}>
+                      DONE
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(true);
+                      setInfo(prev => ({...prev, ...val}));
+                    }}
+                    style={{
+                      backgroundColor: themeColors.primaryColor,
+                      padding: 8,
+                      marginVertical: 8,
+                      borderRadius: 5,
+                      width: '65%',
                       alignSelf: 'flex-end',
                     }}>
-                    Total Price:
-                    {new Intl.NumberFormat('vi-VN', {
-                      style: 'currency',
-                      currency: 'VND',
-                    }).format(val.price)}
-                  </Text>
+                    <Text
+                      style={{
+                        color: themeColors.white,
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                      }}>
+                      Write Feedback
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
+            );
+          })
+        : feedback2.length > 0 &&
+          feedback2.map((val, index) => {
+            return (
               <View
+                key={index}
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  padding: 15,
+                  backgroundColor: themeColors.white,
+                  borderBottomColor: '#f8f8f8',
+                  borderBottomWidth: 4,
                 }}>
                 <View
                   style={{
-                    borderColor: 'green',
-                    borderStyle: 'dotted',
-                    borderWidth: 2,
-                    padding: 7,
-                    width: '30%',
                     flexDirection: 'row',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
                     alignItems: 'center',
-                    borderRadius: 5,
-                  }}>
-                  <Icon name="check-circle" color="green" size={22} />
-                  <Text
-                    style={{
-                      color: 'green',
-                      fontWeight: 'bold',
-                      marginHorizontal: 10,
-                    }}>
-                    DONE
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(true);
-                    setInfo(prev => ({...prev, ...val}));
-                  }}
-                  style={{
-                    backgroundColor: themeColors.primaryColor,
-                    padding: 8,
                     marginVertical: 8,
-                    borderRadius: 5,
-                    width: '65%',
-                    alignSelf: 'flex-end',
                   }}>
-                  <Text
+                  <View
                     style={{
-                      color: themeColors.white,
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      textAlign: 'center',
+                      width: '60%',
+                      borderRightWidth: 2,
+                      borderRightColor: themeColors.primaryColor5,
+                      borderStyle: 'dotted',
+                      paddingRight: 10,
                     }}>
-                    Write Feedback
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: themeColors.black,
+                        fontWeight: 700,
+                        fontSize: 16,
+                        marginBottom: 10,
+                      }}>
+                      {val.garageId.name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: themeColors.white,
+                        fontSize: 16,
+                        fontWeight: 500,
+                        backgroundColor: themeColors.primaryColor,
+                        paddingHorizontal: 10,
+                        paddingVertical: 8,
+                        borderRadius: 8,
+                        textAlign: 'center',
+                      }}>
+                      {val.formID.service}
+                    </Text>
+                    <Text
+                      style={{
+                        color: themeColors.black,
+                        fontSize: 16,
+                        fontWeight: 700,
+                        fontStyle: 'italic',
+                        textAlign: 'right',
+                        marginVertical: 10,
+                      }}>
+                      Price:
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      }).format(val.formID.price)}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      padding: 10,
+                    }}>
+                    <Text
+                      style={{
+                        color: themeColors.black,
+                        fontSize: 16,
+                        fontWeight: '700',
+                        fontStyle: 'italic',
+                      }}>
+                      Your Feedback
+                    </Text>
+                    <Rating
+                      ratingCount={5}
+                      type="star"
+                      readonly={true}
+                      startingValue={val.rating}
+                      imageSize={14}
+                      style={{paddingVertical: 8, alignSelf: 'flex-start'}}
+                    />
+                    <Text style={{color: themeColors.black, fontSize: 12}}>
+                      {new Date(val.createdAt).toLocaleString()}
+                    </Text>
+                    <Text style={{color: themeColors.black, fontSize: 14}}>
+                      {val.review}
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          })}
       <Modal
         animationType="slide"
         transparent={true}
