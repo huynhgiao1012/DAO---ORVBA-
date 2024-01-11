@@ -136,6 +136,25 @@ exports.getFormNotFeed = catchAsync(async (req, res) => {
     data,
   });
 });
+exports.getFormFeed = catchAsync(async (req, res) => {
+  const id = req.user.id;
+  const data = await orderForm
+    .find({
+      isFeedback: true,
+      isPaid: true,
+      customerId: id,
+    })
+    .populate("garageId", "name email phone _id")
+    .populate("mechanicId", "name email phone _id");
+
+  if (!data) {
+    throw new ApiError(400, "Form is unavailable");
+  }
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
 exports.paymentIntent = catchAsync(async (req, res) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
