@@ -42,7 +42,7 @@ exports.updateDone = catchAsync(async (req, res) => {
     //   rating: 0,
     //   review: "None",
     // });
-    const socketIo = io("http://localhost:3000");
+    const socketIo = io("https://dao-applicationservice.onrender.com");
     socketIo.emit("sendNotification", {
       senderName: accountantId.id,
       receiverName: orderForm.customerId,

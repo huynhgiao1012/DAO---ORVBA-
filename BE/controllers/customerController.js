@@ -83,7 +83,7 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     status: FORM_STATUS.AWAIT,
     carSpares: [],
   });
-  const socketIo = io("http://localhost:3000");
+  const socketIo = io("https://dao-applicationservice.onrender.com");
   socketIo.emit("sendNotification", {
     senderName: accountId.id,
     receiverName: manager.accountId,

@@ -229,7 +229,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       price,
       note,
     });
-    const socketIo = io("http://localhost:3000");
+    const socketIo = io("https://dao-applicationservice.onrender.com");
     socketIo.emit("sendEmergencyForm", {
       data: orderForm,
     });
@@ -479,7 +479,7 @@ exports.formConfirm = catchAsync(async (req, res) => {
       to: orderForm.customerId,
       text: `FORM'S STATUS - Your booking has been accepted ! Nice to see you soon at the garage`,
     });
-    const socketIo = io("http://localhost:3000");
+    const socketIo = io("https://dao-applicationservice.onrender.com");
     socketIo.emit("sendNotification", {
       senderName: accountId.id,
       receiverName: orderForm.customerId,
