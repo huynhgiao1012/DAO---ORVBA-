@@ -9,7 +9,12 @@ router.get(
   authorize("manager", "customer"),
   feedbackController.getAllFeedback
 );
-
+router.get(
+  "/getAllFeedbackByCus",
+  jwtAuth,
+  authorize("customer"),
+  feedbackController.getAllFeedbackByCus
+);
 router.post(
   "/create",
   jwtAuth,

@@ -50,3 +50,16 @@ exports.getAllFeedback = catchAsync(async (req, res) => {
     data,
   });
 });
+exports.getAllFeedbackByCus = catchAsync(async (req, res) => {
+  const { id } = req.user;
+  const data = await Feedback.find({ customerId: id })
+    .populate("formID")
+    .populate("garageId", "name phone _id");
+  if (!data) {
+    throw new ApiError(400, "Feedback is unavailable");
+  }
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
