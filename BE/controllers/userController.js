@@ -1,9 +1,7 @@
 const catchAsync = require("../middleware/async");
 const User = require("../models/account");
-var generator = require("generate-password");
 const EmailService = require("../utils/EmailService");
 const bcrypt = require("bcryptjs");
-const Customer = require("../models/customer");
 const { ROLES } = require("../constant");
 const ApiError = require("../utils/ApiError");
 // admin delete users' account
@@ -117,5 +115,14 @@ exports.updatePassword = catchAsync(async (req, res) => {
   res.json({
     success: true,
     message: "Change successfully !",
+  });
+});
+
+exports.sendEmail = catchAsync(async (req, res) => {
+  const { text } = req.body;
+  const { email } = req.user;
+  await EmailService.sendMail(email, process.env.EMAIL, "HELP CENTER", text);
+  res.json({
+    success: true,
   });
 });
