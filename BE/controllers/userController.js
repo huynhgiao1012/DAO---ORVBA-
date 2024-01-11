@@ -117,12 +117,3 @@ exports.updatePassword = catchAsync(async (req, res) => {
     message: "Change successfully !",
   });
 });
-
-exports.sendEmail = catchAsync(async (req, res) => {
-  const { text } = req.body;
-  const { email } = req.user;
-  await EmailService.sendMail(email, process.env.EMAIL, "HELP CENTER", text);
-  res.json({
-    success: true,
-  });
-});

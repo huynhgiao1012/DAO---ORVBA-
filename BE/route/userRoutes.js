@@ -30,11 +30,6 @@ router.patch(
   authorize("admin", "customer", "manager", "mechanic", "accountant"),
   userController.updateUser
 );
-router.patch(
-  "/sendEmail",
-  jwtAuth,
-  authorize("customer", "mechanic"),
-  userController.sendEmail
-);
+
 // router.delete("/:id", jwtAuth, authorize("admin"), userController.deleteUser);
 module.exports = router;

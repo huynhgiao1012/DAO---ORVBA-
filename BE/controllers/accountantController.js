@@ -16,6 +16,7 @@ const SubCarSpares = require("../models/subCarSpares");
 const Notification = require("../models/notification");
 const { io } = require("socket.io-client");
 const feedback = require("../models/feedback");
+const customer = require("../models/customer");
 
 exports.updateDone = catchAsync(async (req, res) => {
   const id = req.params;
@@ -30,18 +31,16 @@ exports.updateDone = catchAsync(async (req, res) => {
     { new: true }
   );
   if (orderForm) {
+    const point = await customer.findOne({ accountId: orderForm.customerId });
     await Notification.create({
       from: accountantId.id,
       to: orderForm.customerId,
       text: `FORM'S STATUS - Your booking has been done ! Thank you for using our services ! `,
     });
-    // await feedback.create({
-    //   customerId: orderForm.customerId,
-    //   garageId: orderForm.garageId,
-    //   formID: orderForm._id,
-    //   rating: 0,
-    //   review: "None",
-    // });
+    await customer.findOneAndUpdate({
+      accountId: orderForm.customerId,
+      point: point.point + 10,
+    });
     const socketIo = io("https://dao-applicationservice.onrender.com");
     socketIo.emit("sendNotification", {
       senderName: accountantId.id,
