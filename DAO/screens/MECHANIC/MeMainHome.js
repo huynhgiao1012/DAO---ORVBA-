@@ -252,7 +252,7 @@ export default function MeMainHome() {
                       borderStyle: 'dotted',
                     }}>
                     <View style={{width: '75%'}}>
-                      <View
+                      {/* <View
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'flex-start',
@@ -272,7 +272,7 @@ export default function MeMainHome() {
                           }}>
                           {moment(item.date + ' ' + item.time).fromNow()}
                         </Text>
-                      </View>
+                      </View> */}
                       <Text
                         style={{
                           color: themeColors.black,
