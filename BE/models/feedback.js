@@ -8,7 +8,7 @@ const FeedbackSchema = new Schema(
     },
     garageId: {
       type: mongoose.Types.ObjectId,
-      ref: "Account",
+      ref: "Garage",
     },
     formID: {
       type: mongoose.Types.ObjectId,
