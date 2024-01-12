@@ -9,8 +9,10 @@ import React, {useState, useEffect} from 'react';
 import {themeColors} from '../../common/theme';
 import FormItem from '../../common/FormItem';
 import {useGetAllFormMutation} from '../../services/Customer';
+import {useNavigation} from '@react-navigation/native';
 
 export default function AllForm() {
+  const navigation = useNavigation();
   const [active, setActive] = useState(0);
   const [getAllForm] = useGetAllFormMutation();
   const [form, setForm] = useState([]);
@@ -26,7 +28,11 @@ export default function AllForm() {
       .then(payload => {
         setForm(prev => [...prev, ...payload.orderForm]);
       })
-      .catch(error => error);
+      .catch(error => {
+        if (error.data.message === 'Token is exprired') {
+          navigation.navigate('Login');
+        }
+      });
   }, []);
   useEffect(() => {
     setArr([]);
@@ -66,7 +72,11 @@ export default function AllForm() {
           setArr(prev => [...prev, ...arr]);
         }
       })
-      .catch(error => error);
+      .catch(error => {
+        if (error.data.message === 'Token is exprired') {
+          navigation.navigate('Login');
+        }
+      });
   }, [active]);
   return (
     <ScrollView style={{backgroundColor: themeColors.white}}>

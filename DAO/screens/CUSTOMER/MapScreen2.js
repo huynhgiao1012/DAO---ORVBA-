@@ -26,7 +26,6 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 // import StarRating from '../components/StarRating';
 import {useNavigation} from '@react-navigation/native';
 
-import {useTheme} from '@react-navigation/native';
 import {
   useGetCorGarageQuery,
   useGetGarageDetailMutation,

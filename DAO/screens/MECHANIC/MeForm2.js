@@ -22,7 +22,11 @@ export default function MeForm2({route}) {
       .then(payload => {
         setForms(prev => [...prev, ...payload.orderForm]);
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   };
   useEffect(() => {
     setForms([]);

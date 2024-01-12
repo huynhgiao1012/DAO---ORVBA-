@@ -59,7 +59,9 @@ export default function ListScreen() {
         setCor(prev => [...prev, ...payload.data]);
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   };
   useEffect(() => {
@@ -127,7 +129,6 @@ export default function ListScreen() {
       })
         .unwrap()
         .then(async payload => {
-          // console.log('payload', payload.rows[0].elements);
           const withIndex = await payload.rows[0].elements.map((val, index) => {
             while (index <= companyCoordinates.length) {
               const id = companyCoordinates[index].id;
@@ -171,7 +172,9 @@ export default function ListScreen() {
                   .unwrap()
                   .then(payload => (detail = payload.data))
                   .catch(error => {
-                    return error;
+                    if (error.status === 401) {
+                      navigation.navigate('Login');
+                    }
                   });
                 return {
                   id: detail._id,
@@ -195,7 +198,9 @@ export default function ListScreen() {
           }
         })
         .catch(error => {
-          return error;
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
         });
     } catch (error) {
       setLoading(false);

@@ -28,7 +28,6 @@ export default function QRCodePages({route}) {
         setData(prev => [...prev, ...payload.garage]);
       })
       .catch(error => {
-        console.log(error);
         if (error.data.message === 'Token is exprired') {
           navigation.navigate('Login');
         }

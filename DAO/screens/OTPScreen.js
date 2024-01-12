@@ -46,7 +46,6 @@ export default function OTPScreen({route}) {
     OTPverify(body)
       .unwrap()
       .then(payload => {
-        console.log(payload);
         if (payload.success === true) {
           Alert.alert(
             'Notification',
@@ -56,11 +55,6 @@ export default function OTPScreen({route}) {
         }
       })
       .catch(error => {
-        // if (error) {
-        //   Alert.alert('Notification', error.data.message.duplicate, [
-        //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-        //   ]);
-        // }
         Alert.alert('Notification', error.data.message, [
           {
             text: 'OK',

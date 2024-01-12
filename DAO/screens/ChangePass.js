@@ -35,6 +35,9 @@ export default function ChangePass() {
         navigation.goBack();
       })
       .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
         if (error) {
           Alert.alert('Change Password Failed', error.data.message, [
             {

@@ -69,7 +69,11 @@ export default function MeMainHome() {
             setForms([]);
             setForms(prev => [...prev, ...payload.orderForm]);
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            if (error.status === 401) {
+              navigation.navigate('Login');
+            }
+          });
       }
     });
   }, []);
@@ -94,7 +98,11 @@ export default function MeMainHome() {
       .then(payload => {
         setForms(prev => [...prev, ...payload.orderForm]);
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   }, []);
   const openDialScreen = num => {
     if (Platform.OS === 'ios') {
@@ -119,7 +127,11 @@ export default function MeMainHome() {
                   .then(payload => {
                     setForms(prev => [...prev, ...payload.orderForm]);
                   })
-                  .catch(error => console.log(error));
+                  .catch(error => {
+                    if (error.status === 401) {
+                      navigation.navigate('Login');
+                    }
+                  });
               },
             },
           ]);
@@ -131,7 +143,11 @@ export default function MeMainHome() {
           ]);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   };
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>

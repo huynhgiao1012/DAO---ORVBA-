@@ -60,7 +60,9 @@ const MapScreen = () => {
         setCor(prev => [...prev, ...payload.data]);
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   };
   useEffect(() => {

@@ -13,16 +13,11 @@ import {useNavigation} from '@react-navigation/native';
 import {useGetFormDetailMutation} from '../../services/OrderForm';
 import Header2 from '../../common/Header2';
 import {themeColors} from '../../common/theme';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/FontAwesome5';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import {useReverseGeoMutation} from '../../services/Map';
-import GetLocation from 'react-native-get-location';
-import {useUpdateBeforeMutation} from '../../services/Mechanic';
 import UpdateBeFore from './UpdateBefore';
 import UpdateAfter from './UpdateAfter';
 export default function UpdateForm({route}) {
   const {id} = route.params;
+  const navigation = useNavigation();
   const [getFormDetail] = useGetFormDetailMutation();
   const [detail, setDetail] = useState({
     _id: '',
@@ -57,7 +52,9 @@ export default function UpdateForm({route}) {
         setDetail(prev => ({...prev, ...payload.data}));
       })
       .catch(error => {
-        console.log(error);
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   }, []);
   return (

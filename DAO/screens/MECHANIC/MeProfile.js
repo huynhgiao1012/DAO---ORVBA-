@@ -46,7 +46,11 @@ export default function MeProfile({route}) {
           ...payload.data,
         })),
       )
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   }, [route]);
   useEffect(() => {
     getUserDetail()
@@ -57,7 +61,11 @@ export default function MeProfile({route}) {
           ...payload.data,
         }));
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
     getMePoint()
       .unwrap()
       .then(payload =>
@@ -66,8 +74,15 @@ export default function MeProfile({route}) {
           ...payload.data,
         })),
       )
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   }, []);
+  const handleLogout = () => {
+    navigation.navigate('Welcome');
+  };
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
       {isLoading && (
@@ -109,7 +124,9 @@ export default function MeProfile({route}) {
           }}>
           Profile
         </Text>
-        <Icon name="ellipsis-v" size={25} color={themeColors.primaryColor} />
+        <TouchableOpacity onPress={() => handleLogout()}>
+          <Icon name="power-off" size={25} color={themeColors.primaryColor} />
+        </TouchableOpacity>
       </View>
       {/* img + name + contact */}
       <View

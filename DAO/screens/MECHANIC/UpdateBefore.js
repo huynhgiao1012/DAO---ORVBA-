@@ -80,7 +80,9 @@ export default function UpdateBeFore({id}) {
         setDetail(prev => ({...prev, ...payload.data}));
       })
       .catch(error => {
-        console.log(error);
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   }, []);
   const openImagePicker = () => {
@@ -145,7 +147,9 @@ export default function UpdateBeFore({id}) {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
         });
     }
   };

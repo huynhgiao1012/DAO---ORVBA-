@@ -52,7 +52,11 @@ export default function MyFeedback() {
         .then(payload => {
           setFeed(prev => [...prev, ...payload.data]);
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
+        });
     } else {
       getAllFeedbackByCus()
         .unwrap()
@@ -60,7 +64,11 @@ export default function MyFeedback() {
           console.log(payload.data);
           setFeed2(prev => [...prev, ...payload.data]);
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
+        });
     }
   };
   useEffect(() => {
@@ -104,13 +112,6 @@ export default function MyFeedback() {
         },
       ]);
     }
-    console.log({
-      customerId: info.customerId,
-      garageId: info.garageId._id,
-      formID: info._id,
-      rating: starRating,
-      review: text,
-    });
     createFeedback({
       customerId: info.customerId,
       garageId: info.garageId._id,
@@ -120,10 +121,14 @@ export default function MyFeedback() {
     })
       .unwrap()
       .then(payload => {
-        console.log(payload);
         if (payload.success) {
           setModalVisible(false);
           loadData();
+        }
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
         }
       });
   };

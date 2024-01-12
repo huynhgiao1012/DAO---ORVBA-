@@ -118,7 +118,6 @@ export default function Booking({route}) {
     getAllFormTime({id: id, ...obj})
       .unwrap()
       .then(payload => {
-        console.log(payload);
         setTime(prev => [...prev, ...payload.time]);
       })
       .catch(error => {

@@ -11,8 +11,9 @@ import React, {useState, useEffect} from 'react';
 import {themeColors} from '../../common/theme';
 import FormItem from '../../common/FormItem';
 import {useGetAllFormCustomerMutation} from '../../services/OrderForm';
-
+import {useNavigation} from '@react-navigation/native';
 export default function Maintenance() {
+  const navigation = useNavigation();
   const [active, setActive] = useState(0);
   const [getAllForm, {isLoading}] = useGetAllFormCustomerMutation();
   const [data, setData] = useState([]);

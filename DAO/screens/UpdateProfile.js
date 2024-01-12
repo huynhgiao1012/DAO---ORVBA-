@@ -52,7 +52,11 @@ export default function UpdateProfile() {
           ...payload.data,
         })),
       )
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   }, []);
   const openImagePicker = () => {
     const options = {
@@ -116,7 +120,11 @@ export default function UpdateProfile() {
           }
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   };
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>

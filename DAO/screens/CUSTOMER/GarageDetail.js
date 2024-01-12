@@ -23,8 +23,10 @@ import {
   useGetSubServiceMutation,
 } from '../../services/Service';
 import Carousel from '../../common/Carousel';
+import {useNavigation} from '@react-navigation/native';
 
 export default function GarageDetail({route}) {
+  const navigation = useNavigation();
   const {id, distance} = route.params;
   const [totalRatings, setTotalRating] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -61,7 +63,9 @@ export default function GarageDetail({route}) {
         }));
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
     getAllFb({id})
       .unwrap()
@@ -77,7 +81,9 @@ export default function GarageDetail({route}) {
         }
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
     getCompanyService({id})
       .unwrap()
@@ -85,7 +91,9 @@ export default function GarageDetail({route}) {
         setService(data => [...data, ...payload.data]);
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   }, []);
   const handleModal = id => {
@@ -96,7 +104,9 @@ export default function GarageDetail({route}) {
         setSubSer(data => [...data, ...payload.subService]);
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
     setModalVisible(true);
   };

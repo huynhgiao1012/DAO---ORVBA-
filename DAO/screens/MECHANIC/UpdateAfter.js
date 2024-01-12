@@ -100,7 +100,9 @@ export default function UpdateAfter({id}) {
         setDetail(prev => ({...prev, ...payload.data}));
       })
       .catch(error => {
-        console.log(error);
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
     getCarSpares()
       .unwrap()
@@ -108,7 +110,9 @@ export default function UpdateAfter({id}) {
         setCarSpare(prev => [...prev, ...payload.carSpares]);
       })
       .catch(error => {
-        console.log(error);
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   }, []);
   const openImagePicker = () => {
@@ -197,7 +201,9 @@ export default function UpdateAfter({id}) {
           }
         })
         .catch(error => {
-          console.log(error);
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
         });
     }
   };
@@ -227,7 +233,9 @@ export default function UpdateAfter({id}) {
         }
       })
       .catch(error => {
-        console.log(error);
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
     setVisible(true);
   };

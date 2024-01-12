@@ -30,7 +30,11 @@ export default function MainHome() {
     getUserDetail()
       .unwrap()
       .then(payload => setName(payload.data.name))
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   }, []);
   const getCurrentLocation = () => {
     GetLocation.getCurrentPosition({

@@ -57,7 +57,9 @@ export default function ListScreen2() {
         setCor(prev => [...prev, ...payload.data]);
       })
       .catch(error => {
-        return error;
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   };
   useEffect(() => {
@@ -169,7 +171,9 @@ export default function ListScreen2() {
                   .unwrap()
                   .then(payload => (detail = payload.data))
                   .catch(error => {
-                    return error;
+                    if (error.status === 401) {
+                      navigation.navigate('Login');
+                    }
                   });
                 return {
                   id: detail._id,
@@ -189,11 +193,12 @@ export default function ListScreen2() {
               }),
             );
             setMarkers(newMarkers);
-            // console.log(markers);
           }
         })
         .catch(error => {
-          return error;
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
         });
     } catch (error) {
       setLoading(false);

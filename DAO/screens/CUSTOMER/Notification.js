@@ -36,6 +36,11 @@ export default function NotiScreen() {
         if (payload) {
           setUnread(prev => [...prev, ...payload.data].reverse());
         }
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
       });
   }, []);
 
@@ -53,6 +58,11 @@ export default function NotiScreen() {
                 setUnread(prev => [...prev, ...payload.data].reverse());
               }
             });
+        }
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
         }
       });
   };
@@ -89,6 +99,11 @@ export default function NotiScreen() {
                 setUnread(prev => [...prev, ...payload.data].reverse());
               }
             });
+        }
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
         }
       });
   };

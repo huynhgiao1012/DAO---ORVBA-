@@ -49,7 +49,11 @@ export default function Profile({route}) {
           ...payload.data,
         })),
       )
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
     getCustomerPoint()
       .unwrap()
       .then(payload =>
@@ -58,13 +62,21 @@ export default function Profile({route}) {
           ...payload.data,
         })),
       )
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
     getFormNotFeed()
       .unwrap()
       .then(payload => {
         setFeed(prev => [...prev, ...payload.data]);
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
   }, [route]);
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
@@ -107,9 +119,10 @@ export default function Profile({route}) {
           }}>
           Profile
         </Text>
-        <Icon name="ellipsis-v" size={25} color={themeColors.primaryColor} />
+        <TouchableOpacity>
+          <Icon name="ellipsis-v" size={25} color={themeColors.primaryColor} />
+        </TouchableOpacity>
       </View>
-
       <View
         style={{
           marginHorizontal: 10,
