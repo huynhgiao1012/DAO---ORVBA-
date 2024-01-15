@@ -153,13 +153,13 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       phone,
       service,
       address,
-      date: currentDay.toISOString().slice(0, 10),
-      time:
-        currentDay.getHours() +
-        ":" +
-        currentDay.getMinutes() +
-        ":" +
-        (currentDay.getSeconds() + 1),
+      date: currentDay
+        .toLocaleString("en-GB")
+        .split(", ")[0]
+        .split("/")
+        .reverse()
+        .join("-"),
+      time: currentDay.toLocaleString("en-GB").split(", ")[1],
       managerId: manager._id,
       customerId: accountInfo._id,
       garageId: manager.garageId,
@@ -211,13 +211,13 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       phone,
       service,
       address,
-      date: currentDay.toISOString().slice(0, 10),
-      time:
-        currentDay.getHours() +
-        ":" +
-        currentDay.getMinutes() +
-        ":" +
-        (currentDay.getSeconds() + 1),
+      date: currentDay
+        .toLocaleString("en-GB")
+        .split(", ")[0]
+        .split("/")
+        .reverse()
+        .join("-"),
+      time: currentDay.toLocaleString("en-GB").split(", ")[1],
       managerId: manager._id,
       customerId: account._id,
       garageId: manager.garageId,
@@ -228,6 +228,11 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       type: "emergency",
       price,
       note,
+    });
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      orderForm: orderForm,
     });
     const socketIo = io("https://dao-applicationservice.onrender.com");
     socketIo.emit("sendEmergencyForm", {
