@@ -54,8 +54,12 @@ export default function MeForm1({route}) {
           borderBottomWidth: 1,
           borderBottomColor: themeColors.primaryColor5,
           backgroundColor: themeColors.white,
-          margin: 10,
-          borderRadius: 10,
+          marginHorizontal: 10,
+          marginVertical: 20,
+          borderTopRightRadius: 8,
+          borderBottomRightRadius: 8,
+          borderLeftWidth: 7,
+          borderLeftColor: themeColors.primaryColor,
         },
         {
           elevation: 5,
@@ -70,7 +74,6 @@ export default function MeForm1({route}) {
           alignItems: 'center',
           backgroundColor: themeColors.primaryColor,
           padding: 10,
-          borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
         }}>
         <Text
@@ -93,7 +96,7 @@ export default function MeForm1({route}) {
           }).format(item.price)}
         </Text>
       </View>
-      <View style={{marginVertical: 10, paddingHorizontal: 10}}>
+      <View style={{marginVertical: 10, marginLeft: 20}}>
         <Text
           style={{
             fontSize: 14,
@@ -127,7 +130,7 @@ export default function MeForm1({route}) {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingHorizontal: 10,
+          paddingHorizontal: 20,
           paddingBottom: 10,
         }}>
         <TouchableOpacity
