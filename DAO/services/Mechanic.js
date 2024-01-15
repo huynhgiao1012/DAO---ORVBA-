@@ -80,6 +80,11 @@ export const mechanicApi = createApi({
         },
       }),
     }),
+    getAllService: builder.mutation({
+      query: () => ({
+        url: '/getAllService',
+      }),
+    }),
   }),
 });
 
@@ -96,4 +101,5 @@ export const {
   useUpdateAfterMutation,
   useGetPayInfoMutation,
   useGetHoldingFormsMutation,
+  useGetAllServiceMutation,
 } = mechanicApi;

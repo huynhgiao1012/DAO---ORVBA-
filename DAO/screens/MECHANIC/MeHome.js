@@ -8,6 +8,7 @@ import {themeColors} from '../../common/theme';
 import MeProfile from './MeProfile';
 import MeForm from './MeForm';
 import MeMainHome from './MeMainHome';
+import Services from './Services';
 
 const Tab = createBottomTabNavigator();
 const MeHome = () => {
@@ -65,6 +66,8 @@ const MeHome = () => {
               //     )}
               //   </View>
               // );
+            } else if (rn === 'Services') {
+              iconName = focused ? 'grid' : 'grid-outline';
             } else if (rn === 'MeProfile') {
               iconName = focused ? 'person' : 'person-outline';
             }
@@ -91,6 +94,11 @@ const MeHome = () => {
       <Tab.Screen
         name="MeForm"
         component={MeForm}
+        options={{headerShown: false, unmountOnBlur: true}}
+      />
+      <Tab.Screen
+        name="Services"
+        component={Services}
         options={{headerShown: false, unmountOnBlur: true}}
       />
       <Tab.Screen

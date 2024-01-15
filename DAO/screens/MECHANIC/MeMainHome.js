@@ -268,7 +268,7 @@ export default function MeMainHome() {
                       borderStyle: 'dotted',
                     }}>
                     <View style={{width: '75%'}}>
-                      {/* <View
+                      <View
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'flex-start',
@@ -286,9 +286,20 @@ export default function MeMainHome() {
                             fontSize: 12,
                             marginLeft: 8,
                           }}>
-                          {moment(item.date + ' ' + item.time).fromNow()}
+                          {moment(
+                            new Date(item.createdAt)
+                              .toLocaleString('en-GB')
+                              .split(', ')[0]
+                              .split('/')
+                              .reverse()
+                              .join('-') +
+                              ' ' +
+                              new Date(item.createdAt)
+                                .toLocaleString('en-GB')
+                                .split(', ')[1],
+                          ).fromNow()}
                         </Text>
-                      </View> */}
+                      </View>
                       <Text
                         style={{
                           color: themeColors.black,
