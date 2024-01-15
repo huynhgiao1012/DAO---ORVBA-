@@ -159,7 +159,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
         .split("/")
         .reverse()
         .join("-"),
-      time: new Date().toString().split(" ")[4],
+      time: currentDay.toLocaleString("en-GB").split(", ")[1],
       managerId: manager._id,
       customerId: accountInfo._id,
       garageId: manager.garageId,
@@ -171,7 +171,6 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
       price,
       note,
     });
-    console.log(new Date().toString().split(" ")[4]);
     const socketIo = io("http://localhost:3000");
     socketIo.emit("sendEmergencyForm", {
       data: orderForm,
