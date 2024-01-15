@@ -159,7 +159,7 @@ exports.createEmergencyForm = catchAsync(async (req, res) => {
         .split("/")
         .reverse()
         .join("-"),
-      time: currentDay.toLocaleString("en-GB").split(", ")[1],
+      time: currentDay.toString().split(" ")[4],
       managerId: manager._id,
       customerId: accountInfo._id,
       garageId: manager.garageId,
