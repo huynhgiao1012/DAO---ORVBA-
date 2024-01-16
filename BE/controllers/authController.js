@@ -186,10 +186,8 @@ exports.login = catchAsync(async (req, res) => {
 exports.resetPassword = catchAsync(async (req, res) => {
   const { userId, token } = req.query;
   const { newPassword } = req.body;
-  const tokenUser = await Token.findOne({ userId });
+  const tokenUser = await Token.findOne({ accountId: userId });
   const isValid = bcrypt.compareSync(token, tokenUser.token);
-  console.log(token);
-  console.log(isValid);
   if (!userId || !token || !tokenUser || !isValid) {
     throw new ApiError(400, "Invalid token and id");
   }
@@ -227,19 +225,19 @@ exports.forgetPassword = catchAsync(async (req, res) => {
   const tokenReset = crypto.randomBytes(32).toString("hex");
   const salt = bcrypt.genSaltSync();
   const hashToken = bcrypt.hashSync(tokenReset, salt);
-  const existToken = await Token.findOne({ userId: existEmail._id });
+  const existToken = await Token.findOne({ accountId: existEmail._id });
   if (existToken) {
     existToken.remove();
   }
   await Token.create({
-    userId: existEmail._id,
+    account: existEmail._id,
     token: hashToken,
   });
   const link = `${process.env.FRONT_END_URL}:5500/ResetPassword.html?token=${tokenReset}&userId=${existEmail._id}`;
   await EmailService.sendMail(
     process.env.EMAIL,
     email,
-    "[Reset password] - FROM DAO COMPANY",
+    "[Reset password] - FROM DAO SERVICES",
     `Here is the link to reset your password: ${link}`
   );
   res.status(200).json({
