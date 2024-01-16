@@ -13,37 +13,39 @@ import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {themeColors} from '../common/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import {useForgetPasswordMutation} from '../services/Auth';
+import {useForgetPasswordMutation} from '../services/Auth';
 
 const forgotPasswordValidationSchema = yup.object().shape({
   email: yup.string().required('Email is required'),
 });
 export default function ForgotPassword() {
   const navigation = useNavigation();
-  // const [forgetPassword] = useForgetPasswordMutation();
+  const [forgetPassword] = useForgetPasswordMutation();
   const forgetPass = val => {
-    // forgetPassword({...val})
-    //   .unwrap()
-    //   .then(payload => {
-    //     console.log(payload);
-    //     if (payload) {
-    //       Alert.alert('Notification', payload.message, [
-    //         {
-    //           text: 'OK',
-    //         },
-    //       ]);
-    //     }
-    //     navigation.navigate('Welcome');
-    //   })
-    //   .catch(error => {
-    //     if (error) {
-    //       Alert.alert('Change Password Failed', error.data.message, [
-    //         {
-    //           text: 'OK',
-    //         },
-    //       ]);
-    //     }
-    //   });
+    forgetPassword({email: val.email})
+      .unwrap()
+      .then(payload => {
+        console.log(payload);
+        if (payload) {
+          // Alert.alert('Notification', payload.message, [
+          //   {
+          //     text: 'OK',
+          //   },
+          // ]);
+          console.log(payload);
+        }
+        navigation.navigate('Welcome');
+      })
+      .catch(error => {
+        if (error) {
+          console.log(error);
+          // Alert.alert('Change Password Failed', error.data.message, [
+          //   {
+          //     text: 'OK',
+          //   },
+          // ]);
+        }
+      });
   };
   return (
     <View style={{flex: 1, backgroundColor: '#fffaf0'}}>

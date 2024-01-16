@@ -78,6 +78,9 @@ export default function Profile({route}) {
         }
       });
   }, [route]);
+  const handleLogout = () => {
+    navigation.navigate('Welcome');
+  };
   return (
     <View style={{flex: 1, backgroundColor: themeColors.white}}>
       {isLoading && (
@@ -119,8 +122,8 @@ export default function Profile({route}) {
           }}>
           Profile
         </Text>
-        <TouchableOpacity>
-          <Icon name="ellipsis-v" size={25} color={themeColors.primaryColor} />
+        <TouchableOpacity onPress={() => handleLogout()}>
+          <Icon name="power-off" size={25} color={themeColors.primaryColor} />
         </TouchableOpacity>
       </View>
       <View

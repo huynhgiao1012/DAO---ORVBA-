@@ -7,6 +7,8 @@ import {
   ScrollView,
   ScrollViewBase,
   Alert,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -23,7 +25,7 @@ import moment from 'moment';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 export default function NotiScreen() {
   const navigation = useNavigation();
-  const [getUnreadNoti] = useGetReadNotificationMutation();
+  const [getUnreadNoti, {isLoading}] = useGetReadNotificationMutation();
   const [updateNoti] = useUpdateNotiMutation();
   const [deleteNoti] = useDeleteNotiMutation();
   const [status, setStatus] = useState('new');
@@ -90,15 +92,21 @@ export default function NotiScreen() {
       .unwrap()
       .then(payload => {
         if (payload.success === true) {
-          Alert.alert(payload.message);
-          getUnreadNoti()
-            .unwrap()
-            .then(payload => {
-              setUnread([]);
-              if (payload) {
-                setUnread(prev => [...prev, ...payload.data].reverse());
-              }
-            });
+          Alert.alert('DELETE NOTIFICATION', payload.message, [
+            {
+              text: 'OK',
+              onPress: () => {
+                getUnreadNoti()
+                  .unwrap()
+                  .then(payload => {
+                    setUnread([]);
+                    if (payload) {
+                      setUnread(prev => [...prev, ...payload.data].reverse());
+                    }
+                  });
+              },
+            },
+          ]);
         }
       })
       .catch(error => {
@@ -114,7 +122,7 @@ export default function NotiScreen() {
         style={{
           paddingHorizontal: 20,
           paddingVertical: 10,
-          borderBottomWidth: 8,
+          borderBottomWidth: 2,
           borderBottomColor: '#e8e8e8',
         }}>
         <Text
@@ -127,6 +135,26 @@ export default function NotiScreen() {
           Notification
         </Text>
       </View>
+      {isLoading && (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#f8f8f8aa',
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
+              }}>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      )}
       <ScrollView>
         {unRead.map(val => {
           if (val.status === 'unread') {
@@ -139,7 +167,7 @@ export default function NotiScreen() {
                     <Text style={styles.text1}>{val.text}</Text>
                     <Text
                       style={{
-                        color: themeColors.primaryColor,
+                        color: themeColors.primaryColor7,
                         fontSize: 14,
                         fontWeight: '700',
                         fontStyle: 'italic',
@@ -171,10 +199,12 @@ export default function NotiScreen() {
                   <Text style={styles.text2}>{val.text}</Text>
                   <Text
                     style={{
-                      color: themeColors.black,
+                      color: themeColors.gray60,
                       fontSize: 14,
                       fontWeight: '500',
                       fontStyle: 'italic',
+                      textAlign: 'right',
+                      marginTop: 10,
                     }}>
                     {moment(
                       new Date(val.createAt)
@@ -202,7 +232,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     backgroundColor: 'white',
     justifyContent: 'center',
-    borderBottomColor: themeColors.primaryColor5,
+    borderBottomColor: '#e8e8e8',
     borderBottomWidth: 2,
     padding: 20,
   },
@@ -215,7 +245,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text1: {
-    color: themeColors.primaryColor7,
+    color: themeColors.primaryColor4,
     fontSize: 16,
     fontWeight: '800',
     width: '90%',
