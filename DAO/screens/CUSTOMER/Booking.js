@@ -38,7 +38,7 @@ const personalInfor = yup.object().shape({
     .matches(/^(84|0[3|5|7|8|9])+([0-9]{8})\b/, 'Must be a valid phone'),
   automaker: yup.string().required('Required'),
   service: yup.string().required('Required'),
-  note: yup.string().required('Required'),
+  note: yup.string(),
 });
 export default function Booking({route}) {
   const navigation = useNavigation();
@@ -293,56 +293,129 @@ export default function Booking({route}) {
                       />
                     </TouchableOpacity>
                   </View>
-                  {selectedDate.length > 0 && (
-                    <View>
-                      <View style={styles.titleText}>
-                        <Text style={styles.title}>Available Time</Text>
-                        {errors.time && touched.time && (
-                          <Text style={styles.errorText}> {errors.time} </Text>
-                        )}
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-evenly',
-                          flexWrap: 'wrap',
-                        }}>
-                        {time.map((val, index) => {
-                          return (
-                            <TouchableOpacity
-                              key={index}
-                              onPress={() => {
-                                setFieldValue('time', val);
-                                setActive(index);
-                              }}
-                              disabled={formTime.includes(val) ? true : false}
-                              style={
-                                formTime.includes(val)
-                                  ? styles.disabledBtn
-                                  : [
-                                      index === active
-                                        ? styles.buttonActive
-                                        : styles.button,
-                                    ]
-                              }>
-                              <Text
+                  {selectedDate.length > 0 &&
+                    (selectedDate !==
+                    new Date().toLocaleString('en-GB').split(', ')[0] ? (
+                      <View>
+                        <View style={styles.titleText}>
+                          <Text style={styles.title}>Available Time</Text>
+                          {errors.time && touched.time && (
+                            <Text style={styles.errorText}>
+                              {' '}
+                              {errors.time}{' '}
+                            </Text>
+                          )}
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly',
+                            flexWrap: 'wrap',
+                          }}>
+                          {time.map((val, index) => {
+                            return (
+                              <TouchableOpacity
+                                key={index}
+                                onPress={() => {
+                                  setFieldValue('time', val);
+                                  setActive(index);
+                                }}
+                                disabled={formTime.includes(val) ? true : false}
                                 style={
                                   formTime.includes(val)
-                                    ? styles.disabledText
+                                    ? styles.disabledBtn
                                     : [
                                         index === active
-                                          ? styles.textActive
-                                          : styles.text,
+                                          ? styles.buttonActive
+                                          : styles.button,
                                       ]
                                 }>
-                                {val}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })}
+                                <Text
+                                  style={
+                                    formTime.includes(val)
+                                      ? styles.disabledText
+                                      : [
+                                          index === active
+                                            ? styles.textActive
+                                            : styles.text,
+                                        ]
+                                  }>
+                                  {val}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </View>
                       </View>
-                    </View>
-                  )}
+                    ) : (
+                      <View>
+                        <View style={styles.titleText}>
+                          <Text style={styles.title}>Available Time</Text>
+                          {errors.time && touched.time && (
+                            <Text style={styles.errorText}>{errors.time}</Text>
+                          )}
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly',
+                            flexWrap: 'wrap',
+                          }}>
+                          {time.map((val, index) => {
+                            if (
+                              Number(
+                                new Date()
+                                  .toLocaleString('en-GB')
+                                  .split(', ')[1]
+                                  .split(':')[0],
+                              ) < Number(val.split(':')[0])
+                            ) {
+                              return (
+                                <TouchableOpacity
+                                  key={index}
+                                  onPress={() => {
+                                    setFieldValue('time', val);
+                                    setActive(index);
+                                  }}
+                                  disabled={
+                                    formTime.includes(val) ? true : false
+                                  }
+                                  style={
+                                    formTime.includes(val)
+                                      ? styles.disabledBtn
+                                      : [
+                                          index === active
+                                            ? styles.buttonActive
+                                            : styles.button,
+                                        ]
+                                  }>
+                                  <Text
+                                    style={
+                                      formTime.includes(val)
+                                        ? styles.disabledText
+                                        : [
+                                            index === active
+                                              ? styles.textActive
+                                              : styles.text,
+                                          ]
+                                    }>
+                                    {val}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            }
+                            return (
+                              <TouchableOpacity
+                                key={index}
+                                disabled={true}
+                                style={styles.disabledBtn}>
+                                <Text style={styles.disabledText}>{val}</Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </View>
+                      </View>
+                    ))}
                 </View>
                 <View
                   style={{

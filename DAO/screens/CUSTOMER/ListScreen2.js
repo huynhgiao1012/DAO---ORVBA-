@@ -296,7 +296,7 @@ export default function ListScreen2() {
             </View>
           </View>
         </Modal>
-      ) : (
+      ) : markers.length > 0 ? (
         <FlatList
           style={{marginBottom: 150}}
           ItemSeparatorComponent={
@@ -310,6 +310,17 @@ export default function ListScreen2() {
           data={markers.length === 0 ? [] : markers}
           renderItem={({item, index}) => <ListItem item={item} key={index} />}
         />
+      ) : (
+        <View>
+          <Text
+            style={{
+              color: themeColors.black,
+              textAlign: 'center',
+              marginVertical: 15,
+            }}>
+            No garage found in the selected range
+          </Text>
+        </View>
       )}
     </View>
   );

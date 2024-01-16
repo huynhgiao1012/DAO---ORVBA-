@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  Modal,
 } from 'react-native';
 import {Rating} from 'react-native-ratings';
 import React from 'react';
@@ -36,7 +37,7 @@ export default function ListScreen() {
   const [markers, setMarkers] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
   const [cor, setCor] = useState([]);
-  const [getCorCompany] = useGetCorGarageMutation();
+  const [getCorCompany, {isLoading}] = useGetCorGarageMutation();
   const [getCompanyDetail] = useGetGarageDetailMutation();
   const [totalRatings, setTotalRating] = useState(0);
   const [rating, setRating] = useState(0);
@@ -206,14 +207,6 @@ export default function ListScreen() {
       setLoading(false);
     }
   };
-  const openDialScreen = num => {
-    if (Platform.OS === 'ios') {
-      number = `telprompt:${num}`;
-    } else {
-      number = `tel:${num}`;
-    }
-    Linking.openURL(number);
-  };
   return (
     <View style={styles.container}>
       <View style={styles.boxHeader}>
@@ -279,18 +272,51 @@ export default function ListScreen() {
         }}>
         Nearby places in {distanceNum}km
       </Text>
-
-      <FlatList
-        style={{marginBottom: 150}}
-        ItemSeparatorComponent={
-          Platform.OS !== 'android' &&
-          (({highlighted}) => (
-            <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
-          ))
-        }
-        data={markers.length === 0 ? [] : markers}
-        renderItem={({item, index}) => <ListItem item={item} key={index} />}
-      />
+      {isLoading ? (
+        <Modal isVisible={true} transparent={true}>
+          <View
+            style={{
+              backgroundColor: '#f8f8f8aa',
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: '90%',
+                alignSelf: 'center',
+              }}>
+              <ActivityIndicator size={40} color={themeColors.primaryColor} />
+            </View>
+          </View>
+        </Modal>
+      ) : markers.length > 0 ? (
+        <FlatList
+          style={{marginBottom: 150}}
+          ItemSeparatorComponent={
+            Platform.OS !== 'android' &&
+            (({highlighted}) => (
+              <View
+                style={[styles.separator, highlighted && {marginLeft: 0}]}
+              />
+            ))
+          }
+          data={markers.length === 0 ? [] : markers}
+          renderItem={({item, index}) => <ListItem item={item} key={index} />}
+        />
+      ) : (
+        <View>
+          <Text
+            style={{
+              color: themeColors.black,
+              textAlign: 'center',
+              marginVertical: 15,
+            }}>
+            No garage found in the selected range
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {themeColors} from '../../common/theme';
@@ -22,15 +23,21 @@ useGetSubServiceMutation;
 export default function Services() {
   const navigation = useNavigation();
   const [services, setServices] = useState([]);
+  const [subSer, setSubSer] = useState([]);
   const [autoPart, setAutoPart] = useState([]);
+  const [subAuto, setSubAuto] = useState([]);
   const [getAllService] = useGetAllServiceMutation();
   const [getCarSparesMe] = useGetCarSparesMeMutation();
   const [getSubService] = useGetSubServiceMutation();
   const [getSubCarSpare] = useGetSubCarSpareMeMutation();
+  const [text, onChangeText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     setServices([]);
     setAutoPart([]);
+    setSubSer([]);
+    setSubAuto([]);
+    setModalVisible(false);
     getAllService()
       .unwrap()
       .then(payload => {
@@ -56,7 +63,7 @@ export default function Services() {
     getSubService({id: id})
       .unwrap()
       .then(payload => {
-        console.log(payload.subService);
+        setSubSer(prev => [...prev, ...payload.subService]);
       })
       .catch(error => {
         console.log(error);
@@ -64,8 +71,21 @@ export default function Services() {
           navigation.navigate('Login');
         }
       });
+    setModalVisible(true);
   };
-  const handleOpen2 = id => {};
+  const handleOpen2 = id => {
+    getSubCarSpare({id: id})
+      .unwrap()
+      .then(payload => {
+        setSubAuto(prev => [...prev, ...payload.carSpares]);
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
+    setModalVisible(true);
+  };
   return (
     <View style={{backgroundColor: themeColors.white, flex: 1}}>
       <View
@@ -103,11 +123,12 @@ export default function Services() {
                 return (
                   <TouchableOpacity
                     onPress={() => handleOpen1(val._id)}
+                    key={index}
                     style={{
                       padding: 15,
                       marginVertical: 10,
                       marginHorizontal: 20,
-                      backgroundColor: themeColors.primaryColor4,
+                      backgroundColor: themeColors.primaryColor6,
                       borderRadius: 8,
                     }}>
                     <Text
@@ -177,27 +198,190 @@ export default function Services() {
           </View>
         </ScrollView>
       </View>
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!modalVisible);
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+          setSubAuto([]);
+          setSubSer([]);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                paddingBottom: 10,
+                width: '100%',
+              }}>
+              <TextInput
+                onChangeText={text => {
+                  onChangeText(text);
+                }}
+                placeholder="Search"
+                placeholderTextColor={themeColors.gray}
+                value={text}
+                style={{
+                  height: 40,
+                  margin: 12,
+                  borderWidth: 1,
+                  padding: 10,
+                  width: '85%',
+                  borderRadius: 10,
+                  color: themeColors.primaryColor7,
+                  borderColor: themeColors.primaryColor5,
+                }}
+              />
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.textStyle}>Hide Modal</Text>
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  setSubAuto([]);
+                  setSubSer([]);
+                }}>
+                <Text style={styles.textStyle}>X</Text>
               </Pressable>
             </View>
+            <View
+              style={{
+                height: 280,
+                width: '100%',
+                marginVertical: 10,
+              }}>
+              <ScrollView>
+                <View>
+                  {subSer.length > 0 ? (
+                    subSer.map((val, index) => {
+                      if (
+                        val.subName.toUpperCase().includes(text.toUpperCase())
+                      ) {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => handleOpen2(val._id)}
+                            style={{
+                              borderRadius: 8,
+                              flexDirection: 'row',
+                              justifyContent: 'flex-start',
+                              alignItems: 'center',
+                              borderBottomColor: themeColors.primaryColor5,
+                              borderBottomWidth: 1,
+                            }}>
+                            <Text
+                              style={{
+                                color: themeColors.primaryColor7,
+                                fontWeight: '700',
+                                fontSize: 15,
+                                width: '15%',
+                                padding: 10,
+                              }}>
+                              {index + 1}
+                            </Text>
+                            <Text
+                              style={{
+                                color: themeColors.primaryColor7,
+                                fontWeight: '700',
+                                fontSize: 15,
+                                width: '60%',
+                                borderRightWidth: 2,
+                                borderLeftWidth: 2,
+                                borderRightColor: themeColors.primaryColor5,
+                                borderLeftColor: themeColors.primaryColor5,
+                                padding: 10,
+                              }}>
+                              {val.subName}
+                            </Text>
+                            <Text
+                              style={{
+                                color: themeColors.primaryColor7,
+                                fontWeight: '700',
+                                fontSize: 15,
+                                width: '30%',
+                                padding: 10,
+                              }}>
+                              {new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND',
+                              }).format(val.subPrice)}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }
+                    })
+                  ) : subAuto.length > 0 ? (
+                    subAuto.map((val, index) => {
+                      if (val.name.toUpperCase().includes(text.toUpperCase())) {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => handleOpen2(val._id)}
+                            style={{
+                              borderRadius: 8,
+                              flexDirection: 'row',
+                              justifyContent: 'flex-start',
+                              alignItems: 'center',
+                              borderBottomColor: themeColors.primaryColor5,
+                              borderBottomWidth: 1,
+                            }}>
+                            <Text
+                              style={{
+                                color: themeColors.primaryColor7,
+                                fontWeight: '700',
+                                fontSize: 15,
+                                width: '15%',
+                                padding: 10,
+                              }}>
+                              {index + 1}
+                            </Text>
+                            <Text
+                              style={{
+                                color: themeColors.primaryColor7,
+                                fontWeight: '700',
+                                fontSize: 15,
+                                width: '60%',
+                                borderRightWidth: 2,
+                                borderLeftWidth: 2,
+                                borderRightColor: themeColors.primaryColor5,
+                                borderLeftColor: themeColors.primaryColor5,
+                                padding: 10,
+                              }}>
+                              {val.name}
+                            </Text>
+                            <Text
+                              style={{
+                                color: themeColors.primaryColor7,
+                                fontWeight: '700',
+                                fontSize: 15,
+                                width: '30%',
+                                padding: 10,
+                              }}>
+                              {new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND',
+                              }).format(val.price)}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: '700',
+                        color: themeColors.black,
+                        textAlign: 'center',
+                      }}>
+                      Do not have any data
+                    </Text>
+                  )}
+                </View>
+              </ScrollView>
+            </View>
           </View>
-        </Modal>
-      </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -206,13 +390,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    width: '100%',
+    backgroundColor: '#000000aa',
+    paddingHorizontal: 15,
   },
   modalView: {
-    margin: 20,
+    width: '100%',
+    height: 400,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -221,23 +407,24 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 15,
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
+    paddingHorizontal: 15,
     elevation: 2,
+    borderRadius: 10,
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: themeColors.white,
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: themeColors.primaryColor,
   },
   textStyle: {
-    color: 'white',
+    color: themeColors.white,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 20,
   },
   modalText: {
     marginBottom: 15,

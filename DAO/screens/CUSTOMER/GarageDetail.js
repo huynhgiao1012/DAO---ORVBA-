@@ -54,6 +54,7 @@ export default function GarageDetail({route}) {
   useEffect(() => {
     setFb([]);
     setService([]);
+    console.log(distance);
     getDetail({id})
       .unwrap()
       .then(payload => {

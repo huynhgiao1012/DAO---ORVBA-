@@ -5,8 +5,10 @@ import {themeColors} from '../../common/theme';
 import MapScreen from './MapScreen';
 import ListScreen from './ListScreen';
 import MapScreen2 from './MapScreen2';
+import {useNavigation} from '@react-navigation/native';
 
 export default function EmergencyService() {
+  const navigation = useNavigation();
   const [isMap, setIsMap] = useState(true);
   const [distanceNum, setDistanceNum] = useState(0);
   const setMap = () => {
@@ -27,8 +29,8 @@ export default function EmergencyService() {
           paddingVertical: 10,
           backgroundColor: themeColors.white,
         }}>
-        <TouchableOpacity>
-          <Icon name="angle-left" size={35} color={themeColors.primaryColor} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="angle-left" size={38} color={themeColors.primaryColor} />
         </TouchableOpacity>
         <Text
           style={{

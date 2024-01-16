@@ -21,6 +21,7 @@ import GetLocation from 'react-native-get-location';
 import {
   useGetFormsMutation,
   usePickFormMutation,
+  useGetGarageStaffMutation,
 } from '../../services/Mechanic';
 import {useNavigation} from '@react-navigation/native';
 import {io} from 'socket.io-client';
@@ -31,8 +32,10 @@ export default function MeMainHome() {
   const [reverseGeo] = useReverseGeoMutation();
   const [address, setAddress] = useState('');
   const [getForms, {isLoading}] = useGetFormsMutation();
+  const [getGarageStaff] = useGetGarageStaffMutation();
   const [pickform] = usePickFormMutation();
   const [forms, setForms] = useState([]);
+  const [staff, setStaff] = useState([]);
   const [data, setData] = useState({
     _id: '',
     email: '',
@@ -79,6 +82,7 @@ export default function MeMainHome() {
   }, []);
   useEffect(() => {
     setForms([]);
+    setStaff([]);
     getCurrentLocation();
     getUserDetail()
       .unwrap()
@@ -97,6 +101,16 @@ export default function MeMainHome() {
       .unwrap()
       .then(payload => {
         setForms(prev => [...prev, ...payload.orderForm]);
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
+    getGarageStaff()
+      .unwrap()
+      .then(payload => {
+        setStaff(prev => [...prev, ...payload.data]);
       })
       .catch(error => {
         if (error.status === 401) {
@@ -239,16 +253,119 @@ export default function MeMainHome() {
             </View>
           </Modal>
         )}
+        <View
+          style={{
+            borderBottomWidth: 2,
+            borderStyle: 'dotted',
+            borderBottomColor: themeColors.primaryColor5,
+            paddingVertical: 15,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View>
+            <Text
+              style={{
+                color: themeColors.primaryColor7,
+                fontWeight: '700',
+                fontStyle: 'italic',
+                marginBottom: 10,
+              }}>
+              Manager's Information
+            </Text>
+            {staff.length > 0 &&
+              staff[0].manager.map((val, index) => {
+                return (
+                  <View>
+                    <Text style={{color: themeColors.primaryColor7}}>
+                      Name: {val.accountId.name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: themeColors.primaryColor7,
+                        marginVertical: 8,
+                      }}>
+                      Phone: {val.accountId.phone}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => openDialScreen(val.accountId.phone)}
+                      style={{
+                        backgroundColor: themeColors.primaryColor6,
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 10,
+                      }}>
+                      <Text
+                        style={{
+                          color: themeColors.white,
+                          fontWeight: '700',
+                          fontStyle: 'italic',
+                          textAlign: 'center',
+                        }}>
+                        Contact
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+          </View>
+          <View>
+            <Text
+              style={{
+                color: themeColors.primaryColor7,
+                marginBottom: 10,
+                fontWeight: '700',
+                fontStyle: 'italic',
+              }}>
+              Accountant's Information
+            </Text>
+            {staff.length > 0 &&
+              staff[1].accountant.map((val, index) => {
+                return (
+                  <View>
+                    <Text style={{color: themeColors.primaryColor7}}>
+                      Name: {val.accountId.name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: themeColors.primaryColor7,
+                        marginVertical: 8,
+                      }}>
+                      Phone: {val.accountId.phone}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => openDialScreen(val.accountId.phone)}
+                      style={{
+                        backgroundColor: themeColors.primaryColor4,
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 10,
+                      }}>
+                      <Text
+                        style={{
+                          color: themeColors.white,
+                          fontWeight: '700',
+                          fontStyle: 'italic',
+                          textAlign: 'center',
+                        }}>
+                        Contact
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+          </View>
+        </View>
         <Text
           style={{
             fontSize: 18,
             fontWeight: '700',
             color: themeColors.primaryColor7,
-            marginHorizontal: 10,
-            marginTop: 20,
+            marginVertical: 15,
           }}>
           TODAY'S ORDER FORMS
         </Text>
+
         {forms.length > 0 ? (
           <FlatList
             style={{height: 400, paddingHorizontal: 10}}
@@ -374,6 +491,21 @@ export default function MeMainHome() {
                     </View>
                   </View>
                 );
+              } else {
+                return (
+                  <Text
+                    style={{
+                      color: themeColors.white,
+                      fontWeight: '700',
+                      fontStyle: 'italic',
+                      marginVertical: 15,
+                      textAlign: 'center',
+                      fontSize: 15,
+                      backgroundColor: themeColors.gray,
+                    }}>
+                    There are no orders yet
+                  </Text>
+                );
               }
             }}
             keyExtractor={item => item._id}
@@ -381,12 +513,13 @@ export default function MeMainHome() {
         ) : (
           <Text
             style={{
-              color: themeColors.gray,
+              color: themeColors.white,
               fontWeight: '700',
               fontStyle: 'italic',
-              marginVertical: 20,
+              marginVertical: 15,
               textAlign: 'center',
-              fontSize: 17,
+              fontSize: 15,
+              backgroundColor: themeColors.gray,
             }}>
             There are no orders yet
           </Text>

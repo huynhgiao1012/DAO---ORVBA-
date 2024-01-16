@@ -19,7 +19,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {themeColors} from './theme';
 import {useGetAllFbMutation} from '../services/Feedback';
+import {useNavigation} from '@react-navigation/native';
+
 const Card2 = ({item}) => {
+  const navigation = useNavigation();
   const [getAllFb] = useGetAllFbMutation();
   const [totalRatings, setTotalRating] = useState(0);
   const [rating, setRating] = useState(0);
@@ -85,25 +88,57 @@ const Card2 = ({item}) => {
             {item?.openTime} - {item?.closeTime}
           </Text>
         </View>
-        <TouchableOpacity
-          onPress={() => openDialScreen(item?.phoneNo)}
+        <View
           style={{
-            borderRadius: 10,
-            paddingHorizontal: 3,
-            marginTop: 2,
-            backgroundColor: themeColors.primaryColor,
-            alignSelf: 'flex-end',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
           }}>
-          <Text
+          <TouchableOpacity
+            onPress={() => openDialScreen(item?.phoneNo)}
             style={{
-              fontSize: 14,
-              padding: 3,
-              color: themeColors.white,
-              fontWeight: '700',
+              borderRadius: 10,
+              paddingHorizontal: 8,
+              marginTop: 2,
+              backgroundColor: themeColors.primaryColor,
+              alignSelf: 'flex-end',
+              marginRight: 10,
             }}>
-            CALL NOW
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 14,
+                padding: 3,
+                color: themeColors.white,
+                fontWeight: '700',
+              }}>
+              CALL
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderRadius: 10,
+              paddingHorizontal: 8,
+              marginTop: 2,
+              backgroundColor: themeColors.primaryColor7,
+              alignSelf: 'flex-end',
+            }}
+            onPress={() =>
+              navigation.navigate('GarageDetail', {
+                id: item.id,
+                distance: item.distance,
+              })
+            }>
+            <Text
+              style={{
+                fontSize: 14,
+                padding: 3,
+                color: themeColors.white,
+                fontWeight: '700',
+              }}>
+              VIEW
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

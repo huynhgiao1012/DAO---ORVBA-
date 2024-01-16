@@ -69,7 +69,6 @@ const MapScreen = () => {
     requestPermission();
   }, []);
   useEffect(() => {
-    console.log('distanceNum', distanceNum);
     setMarkers([]);
     getCor();
     getCurrentLocation();
@@ -276,12 +275,7 @@ const MapScreen = () => {
     }
   };
   const renderCard = ({item}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('GarageDetail', {id: item.id})}>
-        <Card item={item} />
-      </TouchableOpacity>
-    );
+    return <Card item={item} />;
   };
 
   const renderMarker = (item, index) => (
@@ -317,8 +311,21 @@ const MapScreen = () => {
         {markers.map(renderMarker)}
       </MapView>
       {/* {console.log(markers)} */}
-      {!markers.length ? (
-        <View></View>
+      {markers.length === 0 ? (
+        <View style={styles.outerCard}>
+          <Text
+            style={{
+              color: themeColors.black,
+              backgroundColor: themeColors.white,
+              padding: 10,
+              textAlign: 'center',
+              width: '100%',
+              fontWeight: '700',
+              fontStyle: 'italic',
+            }}>
+            No garage found in the selected range
+          </Text>
+        </View>
       ) : (
         <View style={styles.outerCard}>
           <TouchableOpacity
