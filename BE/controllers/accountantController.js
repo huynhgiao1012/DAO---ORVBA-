@@ -32,6 +32,7 @@ exports.updateDone = catchAsync(async (req, res) => {
   );
   if (orderForm) {
     const point = await customer.findOne({ accountId: orderForm.customerId });
+    const point2 = await Mechanic.findOne({ accountId: orderForm.mechanicId });
     await Notification.create({
       from: accountantId.id,
       to: orderForm.customerId,
@@ -40,6 +41,10 @@ exports.updateDone = catchAsync(async (req, res) => {
     await customer.findOneAndUpdate({
       accountId: orderForm.customerId,
       point: point.point + 10,
+    });
+    await Mechanic.findOneAndUpdate({
+      accountId: orderForm.mechanicId,
+      point: point2.point + 10,
     });
     const socketIo = io("https://dao-applicationservice.onrender.com");
     socketIo.emit("sendNotification", {

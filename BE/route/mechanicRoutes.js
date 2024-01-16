@@ -65,6 +65,12 @@ router.get(
   mechanicController.getAllService
 );
 router.get(
+  "/getGarageStaff",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getGarageStaff
+);
+router.get(
   "/getSubCarSpareMe/:id",
   jwtAuth,
   authorize("mechanic"),

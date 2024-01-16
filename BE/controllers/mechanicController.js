@@ -247,6 +247,29 @@ exports.getAllService = catchAsync(async (req, res) => {
     });
   }
 });
+exports.getGarageStaff = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const mechanic = await Mechanic.findOne({ accountId: accountId.id });
+  const manager = await Manager.find({
+    garageId: mechanic.garageId,
+  }).populate("accountId");
+  const accountant = await Accountant.find({
+    garageId: mechanic.garageId,
+  }).populate("accountId");
+  const arr = [{ manager: [...manager] }, { accountant: [...accountant] }];
+  if (arr) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      data: arr,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
 exports.getSubCarSpare = catchAsync(async (req, res) => {
   const id = req.params;
   const subCarSpares = await SubCarSpares.find({

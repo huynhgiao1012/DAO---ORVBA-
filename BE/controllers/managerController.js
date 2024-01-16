@@ -338,6 +338,7 @@ exports.getEmergencyForm = catchAsync(async (req, res) => {
     orderForm,
   });
 });
+
 exports.getMaintenanceForm = catchAsync(async (req, res) => {
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
@@ -425,8 +426,20 @@ exports.getAllFeedback = catchAsync(async (req, res) => {
 });
 exports.updateIsVip = catchAsync(async (req, res) => {
   const { id } = req.params;
+  const accountantId = req.user;
   const customer = await Customer.findOneAndUpdate(id, {
     isVIP: true,
+  });
+  await Notification.create({
+    from: accountantId.id,
+    to: id,
+    text: `CONGRATULATIONS - You have upgraded to VIP`,
+  });
+  const socketIo = io("https://dao-applicationservice.onrender.com");
+  socketIo.emit("sendNotification", {
+    senderName: accountantId.id,
+    receiverName: id,
+    text: `CONGRATULATIONS - You have upgraded to VIP`,
   });
   if (!customer) {
     throw new ApiError(400, "Not available");
@@ -613,6 +626,43 @@ exports.deleteAccountant = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Delete successfully!",
+  });
+});
+
+exports.getNumForm = catchAsync(async (req, res) => {
+  const { phone } = req.body;
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const forms = await OrderForm.find({
+    garageId: manager.garageId,
+    phone: phone,
+    isPaid: true,
+  });
+  if (!forms) {
+    throw new ApiError(400, "Mechanic is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Successfully!",
+    data: forms,
+  });
+});
+exports.resetMePoint = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const mechanic = await Mechanic.findByIdAndUpdate(
+    {
+      id,
+    },
+    { point: 0 },
+    { new: true }
+  );
+  if (!mechanic) {
+    throw new ApiError(400, "Mechanic is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Successfully!",
+    data: mechanic,
   });
 });
 exports.deleteForm = catchAsync(async (req, res) => {

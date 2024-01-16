@@ -71,6 +71,18 @@ router.get(
   authorize("manager"),
   managerController.getAllForm
 );
+router.post(
+  "/getNumForm",
+  jwtAuth,
+  authorize("manager"),
+  managerController.getNumForm
+);
+router.post(
+  "/resetMePoint",
+  jwtAuth,
+  authorize("manager"),
+  managerController.resetMePoint
+);
 router.get(
   "/getAllFeedback",
   jwtAuth,
