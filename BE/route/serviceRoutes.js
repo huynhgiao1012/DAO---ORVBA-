@@ -12,7 +12,7 @@ router.get(
 router.get(
   "/getSubService/:id",
   jwtAuth,
-  authorize("manager", "customer", "admin"),
+  authorize("manager", "customer", "admin", "mechanic"),
   serviceController.getSubService
 );
 router.post(
