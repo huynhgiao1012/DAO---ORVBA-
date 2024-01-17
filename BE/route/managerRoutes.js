@@ -90,6 +90,12 @@ router.get(
   managerController.getAllFeedback
 );
 router.get(
+  "/getCustomer",
+  jwtAuth,
+  authorize("manager"),
+  managerController.getCustomer
+);
+router.get(
   "/getMaintenanceForm",
   jwtAuth,
   authorize("manager"),

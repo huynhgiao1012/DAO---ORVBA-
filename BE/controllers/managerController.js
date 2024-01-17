@@ -647,6 +647,32 @@ exports.getNumForm = catchAsync(async (req, res) => {
     data: forms,
   });
 });
+exports.getCustomer = catchAsync(async (req, res) => {
+  const accountId = req.user;
+  const manager = await Manager.findOne({ accountId: accountId.id });
+  const forms = await OrderForm.find({
+    garageId: manager.garageId,
+  }).populate("customerId");
+  const arr = [];
+  const array = [];
+  forms.map((val) => {
+    if (!arr.includes(val.customerId._id)) {
+      arr.push(val.customerId._id);
+      array.push(val.customerId);
+    } else {
+      arr.splice(arr.indexOf(val.customerId._id), 1);
+      arr.push(val.customerId._id);
+    }
+  });
+  if (!forms) {
+    throw new ApiError(400, "Mechanic is not available");
+  }
+  res.status(200).json({
+    success: true,
+    message: "Successfully!",
+    data: array,
+  });
+});
 exports.resetMePoint = catchAsync(async (req, res) => {
   const { id } = req.params;
   const mechanic = await Mechanic.findByIdAndUpdate(
