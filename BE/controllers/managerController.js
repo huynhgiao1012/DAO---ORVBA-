@@ -630,12 +630,12 @@ exports.deleteAccountant = catchAsync(async (req, res) => {
 });
 
 exports.getNumForm = catchAsync(async (req, res) => {
-  const { phone } = req.body;
+  const { id } = req.params;
   const accountId = req.user;
   const manager = await Manager.findOne({ accountId: accountId.id });
   const forms = await OrderForm.find({
     garageId: manager.garageId,
-    phone: phone,
+    customerId: id,
     isPaid: true,
   });
   if (!forms) {

@@ -71,8 +71,8 @@ router.get(
   authorize("manager"),
   managerController.getAllForm
 );
-router.post(
-  "/getNumForm",
+router.get(
+  "/getNumForm/:id",
   jwtAuth,
   authorize("manager"),
   managerController.getNumForm
