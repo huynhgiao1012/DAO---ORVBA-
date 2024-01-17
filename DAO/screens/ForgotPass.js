@@ -25,13 +25,12 @@ export default function ForgotPassword() {
     forgetPassword({email: val.email})
       .unwrap()
       .then(payload => {
-        console.log(payload);
         if (payload) {
-          // Alert.alert('Notification', payload.message, [
-          //   {
-          //     text: 'OK',
-          //   },
-          // ]);
+          Alert.alert('Notification', payload.message, [
+            {
+              text: 'OK',
+            },
+          ]);
           console.log(payload);
         }
         navigation.navigate('Welcome');
@@ -39,11 +38,11 @@ export default function ForgotPassword() {
       .catch(error => {
         if (error) {
           console.log(error);
-          // Alert.alert('Change Password Failed', error.data.message, [
-          //   {
-          //     text: 'OK',
-          //   },
-          // ]);
+          Alert.alert('Change Password Failed', error.data.message, [
+            {
+              text: 'OK',
+            },
+          ]);
         }
       });
   };
