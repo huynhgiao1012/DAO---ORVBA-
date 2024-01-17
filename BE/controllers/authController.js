@@ -230,7 +230,7 @@ exports.forgetPassword = catchAsync(async (req, res) => {
     existToken.remove();
   }
   await Token.create({
-    account: existEmail._id,
+    accountId: existEmail._id,
     token: hashToken,
   });
   const link = `${process.env.FRONT_END_URL}:5500/ResetPassword.html?token=${tokenReset}&userId=${existEmail._id}`;
