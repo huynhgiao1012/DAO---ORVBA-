@@ -233,7 +233,7 @@ exports.forgetPassword = catchAsync(async (req, res) => {
     accountId: existEmail._id,
     token: hashToken,
   });
-  const link = `http://127.0.0.1:5500/ResetPassword.html?token=${tokenReset}&userId=${existEmail._id}`;
+  const link = `https://dao-management.vercel.app/ResetPassword.html?token=${tokenReset}&userId=${existEmail._id}`;
   await EmailService.sendMail(
     process.env.EMAIL,
     email,
