@@ -233,7 +233,7 @@ exports.forgetPassword = catchAsync(async (req, res) => {
     accountId: existEmail._id,
     token: hashToken,
   });
-  const link = `${process.env.FRONT_END_URL}:5500/ResetPassword.html?token=${tokenReset}&userId=${existEmail._id}`;
+  const link = `https://dao-applicationservice.onrender.com/ResetPassword.html?token=${tokenReset}&userId=${existEmail._id}`;
   await EmailService.sendMail(
     process.env.EMAIL,
     email,
