@@ -427,9 +427,13 @@ exports.getAllFeedback = catchAsync(async (req, res) => {
 exports.updateIsVip = catchAsync(async (req, res) => {
   const { id } = req.params;
   const manager = req.user;
-  const customer = await Customer.findOneAndUpdate(id, {
-    isVIP: true,
-  });
+  const customer = await Customer.findOneAndUpdate(
+    { accountId: id },
+    {
+      isVIP: true,
+    },
+    { new: true }
+  );
   await Notification.create({
     from: manager.id,
     to: id,
