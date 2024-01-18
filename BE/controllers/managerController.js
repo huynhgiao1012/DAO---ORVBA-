@@ -426,18 +426,18 @@ exports.getAllFeedback = catchAsync(async (req, res) => {
 });
 exports.updateIsVip = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const accountantId = req.user;
+  const manager = req.user;
   const customer = await Customer.findOneAndUpdate(id, {
     isVIP: true,
   });
   await Notification.create({
-    from: accountantId.id,
+    from: manager.id,
     to: id,
     text: `CONGRATULATIONS - You have upgraded to VIP`,
   });
   const socketIo = io("https://dao-applicationservice.onrender.com");
   socketIo.emit("sendNotification", {
-    senderName: accountantId.id,
+    senderName: manager.id,
     receiverName: id,
     text: `CONGRATULATIONS - You have upgraded to VIP`,
   });
@@ -663,7 +663,10 @@ exports.getCustomer = catchAsync(async (req, res) => {
         customerId: val.customerId._id,
         isPaid: true,
       });
-      const obj = { ...val.customerId, numForm: forms.length };
+      const customer = await Customer.find({
+        accountId: val.customerId._id,
+      });
+      const obj = { ...val.customerId, ...customer, numForm: forms.length };
       array.push(obj);
       if (index === forms.length - 1) {
         res.status(200).json({
