@@ -14,6 +14,7 @@ const Garage = require("../models/garage");
 const Payment = require("../models/payment");
 const CarSpares = require("../models/carSpares");
 const SubCarSpares = require("../models/subCarSpares");
+const customer = require("../models/customer");
 exports.pickForm = catchAsync(async (req, res) => {
   const mechanicId = req.user;
   const id = req.params;
@@ -152,6 +153,24 @@ exports.getPickedForms = catchAsync(async (req, res) => {
       success: true,
       message: "Successfull",
       orderForm: orderForm,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Failed",
+    });
+  }
+});
+exports.getCustomer = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const customer = await customer.findOne({
+    accountId: id,
+  });
+  if (customer) {
+    res.status(200).json({
+      success: true,
+      message: "Successfull",
+      data: customer,
     });
   } else {
     res.status(400).json({

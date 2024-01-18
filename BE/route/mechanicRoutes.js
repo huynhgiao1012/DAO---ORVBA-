@@ -71,9 +71,16 @@ router.get(
   mechanicController.getGarageStaff
 );
 router.get(
+  "/getCustomer/:id",
+  jwtAuth,
+  authorize("mechanic"),
+  mechanicController.getCustomer
+);
+router.get(
   "/getSubCarSpareMe/:id",
   jwtAuth,
   authorize("mechanic"),
   mechanicController.getSubCarSpare
 );
+
 module.exports = router;
