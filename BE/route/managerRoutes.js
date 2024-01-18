@@ -78,7 +78,7 @@ router.get(
   managerController.getNumForm
 );
 router.post(
-  "/resetMePoint",
+  "/resetMePoint/:id",
   jwtAuth,
   authorize("manager"),
   managerController.resetMePoint
