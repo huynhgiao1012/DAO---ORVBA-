@@ -693,9 +693,7 @@ exports.getCustomer = catchAsync(async (req, res) => {
 exports.resetMePoint = catchAsync(async (req, res) => {
   const { id } = req.params;
   const mechanic = await Mechanic.findByIdAndUpdate(
-    {
-      id,
-    },
+    id,
     { point: 0 },
     { new: true }
   );
