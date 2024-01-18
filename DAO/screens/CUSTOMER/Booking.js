@@ -184,9 +184,9 @@ export default function Booking({route}) {
           validateOnMount={true}
           enableReinitialize={true}
           initialValues={{
-            name: '',
+            name: data.name,
             address: address,
-            phone: '',
+            phone: data.phone,
             date: '',
             time: '',
             automaker: '',
@@ -221,6 +221,7 @@ export default function Booking({route}) {
                   <TextInput
                     style={styles.input}
                     onChangeText={handleChange('name')}
+                    defaultValue={data.name}
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Address</Text>
@@ -244,6 +245,7 @@ export default function Booking({route}) {
                     style={styles.input}
                     onChangeText={handleChange('phone')}
                     keyboardType="numeric"
+                    defaultValue={data.phone}
                   />
                   <View style={styles.titleText}>
                     <Text style={styles.title}>Date</Text>

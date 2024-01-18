@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native';
 import Header2 from '../common/Header2';
 import {useGetGarageDetailMutation} from '../services/Garage';
 import {useGetFormDetailMutation} from '../services/OrderForm';
-useGetFormDetailMutation;
 export default function ViewFormDetail({route}) {
   const {id} = route.params;
   const navigation = useNavigation();
@@ -29,6 +28,12 @@ export default function ViewFormDetail({route}) {
     customerName: '',
     date: '',
     garageId: {
+      _id: '',
+      email: '',
+      name: '',
+      phone: '',
+    },
+    mechanicId: {
       _id: '',
       email: '',
       name: '',
@@ -182,7 +187,7 @@ export default function ViewFormDetail({route}) {
             </View> */}
           </View>
         </View>
-        {data.mechanicId && (
+        {data.mechanicId._id.length > 0 && (
           <View>
             <Text style={styles.title}>Mechanic's Information</Text>
             <View
@@ -201,7 +206,7 @@ export default function ViewFormDetail({route}) {
                     color={themeColors.primaryColor6}
                     size={16}
                   />
-                  <Text style={styles.value2}>{data.name}</Text>
+                  <Text style={styles.value2}>{data.mechanicId.name}</Text>
                 </View>
                 <View style={styles.info}>
                   <Icon
@@ -209,7 +214,7 @@ export default function ViewFormDetail({route}) {
                     color={themeColors.primaryColor6}
                     size={16}
                   />
-                  <Text style={styles.value2}>{data.phone}</Text>
+                  <Text style={styles.value2}>{data.mechanicId.phone}</Text>
                 </View>
               </View>
               <View
@@ -219,7 +224,7 @@ export default function ViewFormDetail({route}) {
                   padding: 6,
                   borderRadius: 10,
                 }}>
-                <Text style={styles.value2}>{data.email}</Text>
+                <Text style={styles.value2}>{data.mechanicId.email}</Text>
               </View>
             </View>
           </View>

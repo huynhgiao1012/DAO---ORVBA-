@@ -125,9 +125,7 @@ export default function MeForm2({route}) {
           paddingBottom: 10,
         }}>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ViewFormDetail', {item: {...item}})
-          }
+          onPress={() => navigation.navigate('ViewFormDetail', {id: item._id})}
           style={{
             backgroundColor: themeColors.primaryColor2,
             padding: 10,

@@ -125,19 +125,19 @@ export default function UpdateAfter({id}) {
           navigation.navigate('Login');
         }
       });
-    if (detail) {
-      getCustomer({id: detail.customerId._id})
-        .unwrap()
-        .then(payload => {
-          setPoint(prev => ({...prev, ...payload.data}));
-        })
-        .catch(error => {
-          if (error.status === 401) {
-            navigation.navigate('Login');
-          }
-        });
-    }
   }, []);
+  useEffect(() => {
+    getCustomer({id: detail.customerId._id})
+      .unwrap()
+      .then(payload => {
+        setPoint(prev => ({...prev, ...payload.data}));
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          navigation.navigate('Login');
+        }
+      });
+  }, [detail]);
   const openImagePicker = () => {
     const options = {
       mediaType: 'photo',
@@ -214,7 +214,7 @@ export default function UpdateAfter({id}) {
           if (payload.success) {
             Alert.alert(payload.message);
             if (payType === 'cash') {
-              navigation.navigate('MeForm', {loading: true});
+              navigation.navigate('MeMainHome', {loading: true});
             } else {
               navigation.navigate('QRCode', {
                 id: detail.garageId._id,
@@ -489,6 +489,7 @@ export default function UpdateAfter({id}) {
                 fontWeight: '700',
                 paddingHorizontal: 10,
                 borderRadius: 10,
+                marginBottom: 10,
               }}
             />
             {point.isVIP && (
