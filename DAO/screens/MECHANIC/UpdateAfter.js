@@ -25,6 +25,7 @@ import {
   useUpdateAfterMutation,
   useGetCarSparesMeMutation,
   useGetSubCarSpareMeMutation,
+  useGetCustomerMutation,
 } from '../../services/Mechanic';
 import SelectDropdown from 'react-native-select-dropdown';
 import {MultipleSelectList} from 'react-native-dropdown-select-list';
@@ -33,6 +34,7 @@ export default function UpdateAfter({id}) {
   const [getFormDetail, {isLoading}] = useGetFormDetailMutation();
   const [getCarSpares] = useGetCarSparesMeMutation();
   const [getSubCarSpare] = useGetSubCarSpareMeMutation();
+  const [getCustomer] = useGetCustomerMutation();
   const [updateAfter, {isSuccess}] = useUpdateAfterMutation();
   const [selectedImage, setSelectedImage] = useState('');
   const [address, setAddress] = useState('');
@@ -63,6 +65,9 @@ export default function UpdateAfter({id}) {
       name: 'Nguyen Van Minh',
       phone: '0735782926',
     },
+    customerId: {
+      _id: '',
+    },
     note: '',
     payType: 'cash',
     phone: '0532169755',
@@ -70,6 +75,12 @@ export default function UpdateAfter({id}) {
     service: 'Bảo dưỡng khẩn cấp',
     status: 'process',
     time: '14:13:41',
+  });
+  const [point, setPoint] = useState({
+    _id: '',
+    accountId: '',
+    isVIP: false,
+    point: 0,
   });
   const getCurrentLocation = () => {
     GetLocation.getCurrentPosition({
@@ -114,6 +125,18 @@ export default function UpdateAfter({id}) {
           navigation.navigate('Login');
         }
       });
+    if (detail) {
+      getCustomer({id: detail.customerId._id})
+        .unwrap()
+        .then(payload => {
+          setPoint(prev => ({...prev, ...payload.data}));
+        })
+        .catch(error => {
+          if (error.status === 401) {
+            navigation.navigate('Login');
+          }
+        });
+    }
   }, []);
   const openImagePicker = () => {
     const options = {
@@ -468,18 +491,63 @@ export default function UpdateAfter({id}) {
                 borderRadius: 10,
               }}
             />
-            <Text style={[styles.text2, {alignSelf: 'flex-end'}]}>
-              TOTAL PRICE :{' '}
+            {point.isVIP && (
+              <Text style={[styles.text3, {alignSelf: 'flex-end'}]}>
+                VIP Discount (5%) : -{' '}
+                {totalPrice !== 0
+                  ? new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(totalPrice * 0.05)
+                  : new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(detail.price * 0.05)}
+              </Text>
+            )}
+            <Text
+              style={[
+                styles.text3,
+                {alignSelf: 'flex-end', marginVertical: 0},
+              ]}>
+              VAT (5%) :{' '}
               {totalPrice !== 0
                 ? new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
                     currency: 'VND',
-                  }).format(totalPrice)
+                  }).format(totalPrice * 0.05)
                 : new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
                     currency: 'VND',
-                  }).format(detail.price)}
+                  }).format(detail.price * 0.05)}
             </Text>
+            {point.isVIP ? (
+              <Text style={[styles.text2, {alignSelf: 'flex-end'}]}>
+                TOTAL PRICE :{' '}
+                {totalPrice !== 0
+                  ? new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(totalPrice - totalPrice * 0.1)
+                  : new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(detail.price - detail.price * 0.1)}
+              </Text>
+            ) : (
+              <Text style={[styles.text2, {alignSelf: 'flex-end'}]}>
+                TOTAL PRICE :{' '}
+                {totalPrice !== 0
+                  ? new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(totalPrice)
+                  : new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(detail.price)}
+              </Text>
+            )}
             <TouchableOpacity
               onPress={handleUpdate}
               style={{
@@ -538,5 +606,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontStyle: 'italic',
     fontSize: 16,
+  },
+  text3: {
+    color: themeColors.primaryColor7,
+    marginVertical: 10,
+    fontWeight: '700',
+    fontStyle: 'italic',
+    fontSize: 14,
   },
 });

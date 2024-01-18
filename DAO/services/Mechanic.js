@@ -90,6 +90,11 @@ export const mechanicApi = createApi({
         url: '/getGarageStaff',
       }),
     }),
+    getCustomer: builder.mutation({
+      query: ({id}) => ({
+        url: `/getCustomer/${id}`,
+      }),
+    }),
   }),
 });
 
@@ -108,4 +113,5 @@ export const {
   useGetHoldingFormsMutation,
   useGetAllServiceMutation,
   useGetGarageStaffMutation,
+  useGetCustomerMutation,
 } = mechanicApi;
