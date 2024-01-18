@@ -14,7 +14,7 @@ const Garage = require("../models/garage");
 const Payment = require("../models/payment");
 const CarSpares = require("../models/carSpares");
 const SubCarSpares = require("../models/subCarSpares");
-const customer = require("../models/customer");
+const Customer = require("../models/customer");
 exports.pickForm = catchAsync(async (req, res) => {
   const mechanicId = req.user;
   const id = req.params;
@@ -163,7 +163,7 @@ exports.getPickedForms = catchAsync(async (req, res) => {
 });
 exports.getCustomer = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const customer = await customer.findOne({
+  const customer = await Customer.findOne({
     accountId: id,
   });
   if (customer) {
