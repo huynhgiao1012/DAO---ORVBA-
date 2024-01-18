@@ -663,10 +663,15 @@ exports.getCustomer = catchAsync(async (req, res) => {
         customerId: val.customerId._id,
         isPaid: true,
       });
-      const customer = await Customer.find({
+      const customer = await Customer.findOne({
         accountId: val.customerId._id,
       });
-      const obj = { ...val.customerId, ...customer, numForm: forms.length };
+      const cus = { point: customer.point, isVip: customer.isVIP };
+      const obj = {
+        ...val.customerId,
+        ...cus,
+        numForm: forms.length,
+      };
       array.push(obj);
       if (index === forms.length - 1) {
         res.status(200).json({
