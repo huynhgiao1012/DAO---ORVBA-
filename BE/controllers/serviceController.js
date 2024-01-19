@@ -39,14 +39,27 @@ exports.addService = catchAsync(async (req, res) => {
 exports.deleteService = catchAsync(async (req, res) => {
   const { id } = req.params;
   const service = await Service.findById(id);
-  if (!service) {
-    throw new ApiError(400, "This service is not available");
+  const subServices = await SubService.find({ serviceId: id });
+  if (!service || !subServices) {
+    throw new ApiError(400, "Service is not available");
   }
   await service.remove();
+  await subServices.remove();
   res.status(200).json({
     success: true,
     message: "Delete successfully!",
-    data: service,
+  });
+});
+exports.deleteSubService = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const subServices = await SubService.findById(id);
+  if (!subServices) {
+    throw new ApiError(400, "Service is not available");
+  }
+  await subServices.remove();
+  res.status(200).json({
+    success: true,
+    message: "Delete successfully!",
   });
 });
 exports.updateService = catchAsync(async (req, res) => {

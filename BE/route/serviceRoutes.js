@@ -29,10 +29,16 @@ router.post(
 );
 
 router.delete(
-  "/:id",
+  "deleteService/:id",
   jwtAuth,
-  authorize("manager", "admin"),
+  authorize("manager"),
   serviceController.deleteService
+);
+router.delete(
+  "deleteSubService/:id",
+  jwtAuth,
+  authorize("manager"),
+  serviceController.deleteSubService
 );
 router.patch(
   "/:id",
