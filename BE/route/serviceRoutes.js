@@ -29,13 +29,13 @@ router.post(
 );
 
 router.delete(
-  "deleteService/:id",
+  "/deleteService/:id",
   jwtAuth,
   authorize("manager"),
   serviceController.deleteService
 );
 router.delete(
-  "deleteSubService/:id",
+  "/deleteSubService/:id",
   jwtAuth,
   authorize("manager"),
   serviceController.deleteSubService
