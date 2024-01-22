@@ -511,7 +511,11 @@ export default function Booking({route}) {
                     paddingTop: 10,
                     alignSelf: 'flex-end',
                   }}>
-                  Estimated Price: {price}
+                  Estimated Price:{' '}
+                  {new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  }).format(price)}
                 </Text>
                 <TouchableOpacity
                   onPress={handleSubmit}
