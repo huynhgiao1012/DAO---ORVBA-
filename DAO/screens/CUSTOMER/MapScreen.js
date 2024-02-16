@@ -33,8 +33,8 @@ import Icon from 'react-native-vector-icons/Entypo';
 const MapScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
-  const [active, setActive] = useState(0);
-  const [distanceNum, setDistanceNum] = useState(10);
+  const [active, setActive] = useState(3);
+  const [distanceNum, setDistanceNum] = useState(0);
   const [markers, setMarkers] = useState([]);
   const [cor, setCor] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
@@ -312,20 +312,37 @@ const MapScreen = () => {
       </MapView>
       {/* {console.log(markers)} */}
       {markers.length === 0 ? (
-        <View style={styles.outerCard}>
-          <Text
-            style={{
-              color: themeColors.black,
-              backgroundColor: themeColors.white,
-              padding: 10,
-              textAlign: 'center',
-              width: '100%',
-              fontWeight: '700',
-              fontStyle: 'italic',
-            }}>
-            No garage found in the selected range
-          </Text>
-        </View>
+        active === 3 ? (
+          <View style={styles.outerCard}>
+            <Text
+              style={{
+                color: themeColors.black,
+                backgroundColor: themeColors.white,
+                padding: 10,
+                textAlign: 'center',
+                width: '100%',
+                fontWeight: '700',
+                fontStyle: 'italic',
+              }}>
+              Please choose distance to get list of nearby garages
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.outerCard}>
+            <Text
+              style={{
+                color: themeColors.black,
+                backgroundColor: themeColors.white,
+                padding: 10,
+                textAlign: 'center',
+                width: '100%',
+                fontWeight: '700',
+                fontStyle: 'italic',
+              }}>
+              No garage found in the selected range
+            </Text>
+          </View>
+        )
       ) : (
         <View style={styles.outerCard}>
           <TouchableOpacity

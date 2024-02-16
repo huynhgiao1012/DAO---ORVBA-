@@ -31,9 +31,9 @@ import ListItem from '../../common/ListItem2';
 // subscribe for more videos like this :)
 export default function ListScreen() {
   const navigation = useNavigation();
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(3);
   const [loading, setLoading] = useState(true);
-  const [distanceNum, setDistanceNum] = useState(10);
+  const [distanceNum, setDistanceNum] = useState(0);
   const [markers, setMarkers] = useState([]);
   const [distanceMatrix] = useDistanceMatrixMutation();
   const [cor, setCor] = useState([]);
@@ -305,6 +305,17 @@ export default function ListScreen() {
           data={markers.length === 0 ? [] : markers}
           renderItem={({item, index}) => <ListItem item={item} key={index} />}
         />
+      ) : active === 3 ? (
+        <View>
+          <Text
+            style={{
+              color: themeColors.black,
+              textAlign: 'center',
+              marginVertical: 15,
+            }}>
+            Please choose distance to get list of nearby garages
+          </Text>
+        </View>
       ) : (
         <View>
           <Text

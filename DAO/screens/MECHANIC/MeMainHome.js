@@ -502,9 +502,7 @@ export default function MeMainHome() {
                       textAlign: 'center',
                       fontSize: 15,
                       backgroundColor: themeColors.gray,
-                    }}>
-                    There are no orders yet
-                  </Text>
+                    }}></Text>
                 );
               }
             }}
@@ -520,9 +518,7 @@ export default function MeMainHome() {
               textAlign: 'center',
               fontSize: 15,
               backgroundColor: themeColors.gray,
-            }}>
-            There are no orders yet
-          </Text>
+            }}></Text>
         )}
       </View>
     </View>
