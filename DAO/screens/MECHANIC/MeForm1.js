@@ -23,7 +23,14 @@ export default function MeForm1({route}) {
     getPickedForms()
       .unwrap()
       .then(payload => {
-        setForms(prev => [...prev, ...payload.orderForm]);
+        let arr = [];
+        payload.orderForm.map(val => {
+          const date = new Date().toISOString().slice(0, 10);
+          if (val.createdAt.slice(0, 10) === date) {
+            arr.push(val);
+          }
+        });
+        setForms(prev => [...prev, ...arr]);
       })
       .catch(error => {
         if (error.status === 401) {
@@ -123,6 +130,15 @@ export default function MeForm1({route}) {
             fontStyle: 'italic',
           }}>
           Phone: {item.phone}
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: 700,
+            color: themeColors.primaryColor2,
+            fontStyle: 'italic',
+          }}>
+          Date: {item.createdAt.slice(0, 10).split('-').reverse().join('-')}
         </Text>
       </View>
       <View

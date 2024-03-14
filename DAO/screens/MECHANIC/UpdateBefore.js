@@ -64,6 +64,7 @@ export default function UpdateBeFore({id}) {
       .then(location => {
         reverseGeo({latitude: location.latitude, longitude: location.longitude})
           .then(payload => {
+            console.log(payload.data.results[0].formatted_address);
             setAddress(payload.data.results[0].formatted_address);
           })
           .catch(error => console.log(error));
@@ -207,6 +208,7 @@ export default function UpdateBeFore({id}) {
             <Text style={styles.content}>
               Address : {detail.address !== 'Update' ? detail.address : address}
             </Text>
+            {console.log(address)}
           </View>
         </View>
         {/* FORM INFORMATION */}
