@@ -48,6 +48,7 @@ export default function NotiScreen() {
 
   const handlePress = id => {
     setStatus('old');
+    setUnread([]);
     updateNoti({id: id})
       .unwrap()
       .then(payload => {
@@ -171,6 +172,7 @@ export default function NotiScreen() {
                         fontSize: 14,
                         fontWeight: '700',
                         fontStyle: 'italic',
+                        textAlign: 'right',
                       }}>
                       {moment(
                         new Date(val.createdAt)

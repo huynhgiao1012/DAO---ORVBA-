@@ -8,17 +8,19 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {createOpenLink} from 'react-native-open-maps';
 import {useNavigation} from '@react-navigation/native';
-import {
-  useGetPickedFormsMutation,
-  useGetHoldingFormsMutation,
-} from '../../services/Mechanic';
+import {useGetPickedFormsMutation} from '../../services/Mechanic';
 import {themeColors} from '../../common/theme';
 import {FlatList} from 'react-native';
+import GetLocation from 'react-native-get-location';
+import {useReverseGeoMutation} from '../../services/Map';
 export default function MeForm1({route}) {
   const [getPickedForms, {isLoading}] = useGetPickedFormsMutation();
   const [forms, setForms] = useState([]);
+  const [address, setAddress] = useState('');
   const navigation = useNavigation();
+  const [reverseGeo] = useReverseGeoMutation();
   const loadData = () => {
     getPickedForms()
       .unwrap()
@@ -41,11 +43,24 @@ export default function MeForm1({route}) {
   useEffect(() => {
     setForms([]);
     loadData();
+    getCurrentLocation();
   }, []);
-  // useEffect(() => {
-  //   setForms([]);
-  //   loadData();
-  // }, [route]);
+  const getCurrentLocation = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: false,
+      timeout: 10000,
+    })
+      .then(location => {
+        reverseGeo({latitude: location.latitude, longitude: location.longitude})
+          .then(payload => {
+            setAddress(payload.data.results[0].formatted_address);
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => {
+        return error;
+      });
+  };
   const openDialScreen = num => {
     if (Platform.OS === 'ios') {
       number = `telprompt:${num}`;
@@ -156,13 +171,33 @@ export default function MeForm1({route}) {
             padding: 10,
             borderRadius: 10,
             marginVertical: 5,
-            width: '40%',
+            width: '20%',
           }}>
           <Text
             style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
-            Contact
+            Call
           </Text>
         </TouchableOpacity>
+        {item.address !== 'Update' && (
+          <TouchableOpacity
+            onPress={createOpenLink({
+              provider: 'google',
+              start: `${address}`,
+              end: `${item.address}`,
+            })}
+            style={{
+              backgroundColor: themeColors.primaryColor2,
+              padding: 10,
+              borderRadius: 10,
+              marginVertical: 5,
+              width: '25%',
+            }}>
+            <Text
+              style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
+              Direction
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => navigation.navigate('UpdateForm', {id: item._id})}
           style={{
@@ -170,11 +205,11 @@ export default function MeForm1({route}) {
             padding: 10,
             borderRadius: 10,
             marginVertical: 5,
-            width: '50%',
+            width: '40%',
           }}>
           <Text
             style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>
-            Update
+            Update form
           </Text>
         </TouchableOpacity>
       </View>

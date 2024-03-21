@@ -36,6 +36,7 @@
     "react-native-image-picker": "^7.0.3",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.8.0",
+    "react-native-open-maps": "^0.4.3",
     "react-native-pager-view": "^6.2.2",
     "react-native-pagination": "^1.5.5",
     "react-native-paper": "^5.11.1",

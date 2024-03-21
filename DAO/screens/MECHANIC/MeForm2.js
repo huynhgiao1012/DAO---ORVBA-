@@ -161,7 +161,7 @@ export default function MeForm2({route}) {
     </View>
   );
   return (
-    <View style={{backgroundColor: themeColors.white, flex: 1}}>
+    <View style={{backgroundColor: themeColors.white}}>
       {isLoading && (
         <Modal isVisible={true} transparent={true}>
           <View
@@ -187,7 +187,11 @@ export default function MeForm2({route}) {
           data={forms}
           renderItem={renderItem}
           keyExtractor={item => item._id}
-          style={{backgroundColor: themeColors.white, padding: 15}}
+          style={{
+            backgroundColor: themeColors.white,
+            paddingHorizontal: 15,
+            paddingBottom: 30,
+          }}
         />
       ) : (
         <Text
