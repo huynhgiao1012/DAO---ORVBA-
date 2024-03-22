@@ -25,6 +25,7 @@ export default function Emergency() {
       .then(payload => {
         const arr = [];
         if (active === 0) {
+          console.log(payload.data);
           payload.data.map(val => {
             if (val.type === 'emergency') {
               arr.push(val);
