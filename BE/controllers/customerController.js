@@ -89,7 +89,7 @@ exports.bookingMaintenance = catchAsync(async (req, res) => {
     receiverName: manager.accountId,
     text: `NEW MAINTENANCE BOOKING - ${customerName} has booked your service`,
   });
-  console.log("sent");
+  console.log("sent sent");
   await Notification.create({
     from: accountId.id,
     to: manager.accountId,
